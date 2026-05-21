@@ -1,0 +1,46 @@
+<?php
+
+return [
+    'title' => 'Unternehmensübersicht',
+    'header' => 'Admin-Dashboard',
+    'subtitle' => 'Verwalten Sie Personal, Urlaub und Compliance für :company.',
+    'role_owner' => 'Inhaber',
+    'role_admin' => 'Administrator',
+    'role_hr' => 'Personalwesen',
+
+    'needs_attention' => 'Erfordert Aufmerksamkeit',
+    'overview' => 'Übersicht',
+    'overview_hint' => 'Wichtige Kennzahlen für Ihren Arbeitsbereich auf einen Blick.',
+    'leave_trend_title' => 'Urlaubstrend',
+    'leave_trend_hint' => 'Genehmigte Urlaubstage und offene Anträge der letzten 6 Monate.',
+    'chart_approved_days' => 'Genehmigte Tage',
+    'chart_pending_count' => 'Offene Anträge',
+    'stat_missing_login' => 'Ohne Anmeldung',
+    'pending_approvals' => 'Offene Urlaubsgenehmigungen',
+    'pending_approvals_hint' => 'Anträge, die auf Ihre Entscheidung warten.',
+    'pending_approvals_empty' => 'Kein Urlaub wartet auf Genehmigung.',
+    'setup_checklist_hint' => 'Schließen Sie die Einrichtung ab, um ZIIFRA optimal zu nutzen.',
+    'team_leave' => 'Team-Urlaub',
+    'team_leave_hint' => 'Wer heute abwesend ist und was bevorsteht.',
+    'people_and_payroll' => 'Personal & Gehaltsabrechnung',
+    'review_request' => 'Prüfen',
+    'submitted' => 'Eingereicht am :date',
+    'setup_checklist' => 'Erste Schritte',
+    'leave_days_month' => ':days genehmigte Tage diesen Monat',
+    'team_members' => ':count Arbeitsbereichsmitglieder',
+
+    'alert_pending_leave' => ':count Urlaubsanträge zur Prüfung',
+    'alert_expiring_docs' => ':count Dokumente laufen bald ab',
+    'alert_missing_login' => ':count Mitarbeiter ohne Anmeldung',
+    'alert_pending_invites' => ':count ausstehende Einladungen',
+    'alert_profile' => 'Unternehmensprofil vervollständigen',
+    'alert_trial' => 'Testphase endet in :days Tagen',
+    'alert_trial_today' => 'Testphase endet heute',
+    'alert_payroll_draft' => 'Gehaltsabrechnungsentwurf muss geprüft werden',
+
+    'checklist' => [
+        'profile' => 'Rechtliche Angaben und Branding hinzufügen',
+        'invite_team' => 'Admin oder HR-Kollegen einladen',
+        'add_employees' => 'Erste Mitarbeiter hinzufügen',
+    ],
+];

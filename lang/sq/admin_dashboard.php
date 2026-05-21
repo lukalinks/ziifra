@@ -1,0 +1,46 @@
+<?php
+
+return [
+    'title' => 'Përmbledhje e kompanisë',
+    'header' => 'Paneli i administratorit',
+    'subtitle' => 'Menaxhoni njerëzit, pushimet dhe përputhshmërinë për :company.',
+    'role_owner' => 'Pronar',
+    'role_admin' => 'Administrator',
+    'role_hr' => 'Burimet njerëzore',
+
+    'needs_attention' => 'Kërkon vëmendje',
+    'overview' => 'Përmbledhje',
+    'overview_hint' => 'Numrat kryesorë për hapësirën tuaj të punës me një shikim.',
+    'leave_trend_title' => 'Tendenca e pushimeve',
+    'leave_trend_hint' => 'Ditët e aprovuara të pushimit dhe kërkesat në pritje gjatë 6 muajve të fundit.',
+    'chart_approved_days' => 'Ditë të aprovuara',
+    'chart_pending_count' => 'Kërkesa në pritje',
+    'stat_missing_login' => 'Pa hyrje',
+    'pending_approvals' => 'Aprovime pushimesh në pritje',
+    'pending_approvals_hint' => 'Kërkesa që presin vendimin tuaj.',
+    'pending_approvals_empty' => 'Nuk ka pushime që presin aprovim.',
+    'setup_checklist_hint' => 'Përfundoni konfigurimin për të përfituar maksimalisht nga ZIIFRA.',
+    'team_leave' => 'Pushimet e ekipit',
+    'team_leave_hint' => 'Kush është jashtë sot dhe çfarë vjen më parë.',
+    'people_and_payroll' => 'Njerëzit dhe pagat',
+    'review_request' => 'Shqyrto',
+    'submitted' => 'Dërguar më :date',
+    'setup_checklist' => 'Si të filloni',
+    'leave_days_month' => ':days ditë të aprovuara këtë muaj',
+    'team_members' => ':count anëtarë të hapësirës së punës',
+
+    'alert_pending_leave' => ':count kërkesa pushimi për shqyrtim',
+    'alert_expiring_docs' => ':count dokumente që skadojnë së shpejti',
+    'alert_missing_login' => ':count punonjës pa hyrje',
+    'alert_pending_invites' => ':count ftesa në pritje',
+    'alert_profile' => 'Plotësoni profilin e kompanisë',
+    'alert_trial' => 'Prova mbaron për :days ditë',
+    'alert_trial_today' => 'Prova mbaron sot',
+    'alert_payroll_draft' => 'Drafti i pagave kërkon shqyrtim',
+
+    'checklist' => [
+        'profile' => 'Shtoni të dhënat ligjore dhe markën',
+        'invite_team' => 'Ftoni një administrator ose koleg nga burimet njerëzore',
+        'add_employees' => 'Shtoni punonjësit e parë',
+    ],
+];

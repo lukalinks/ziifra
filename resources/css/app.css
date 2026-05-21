@@ -1,0 +1,1877 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-ziifra-ink: #0f172a;
+    --color-ziifra-ink-soft: #475569;
+    --color-ziifra-cream: #f6f5f2;
+    --color-ziifra-paper: #ffffff;
+    --color-ziifra-surface: #f8fafc;
+    --color-ziifra-surface-hover: #f1f5f9;
+    --color-ziifra-night: #0a0f1a;
+    --color-ziifra-night-soft: #141c2e;
+    --color-ziifra-accent: #0d9488;
+    --color-ziifra-accent-deep: #0f766e;
+    --color-ziifra-accent-glow: #14b8a6;
+    --color-ziifra-copper: #d97706;
+    --color-ziifra-muted: #64748b;
+    --color-ziifra-line: #e2e8f0;
+    --color-ziifra-on-accent: #ffffff;
+}
+
+[data-theme='dark'] {
+    --color-ziifra-ink: #e8edf5;
+    --color-ziifra-ink-soft: #94a3b8;
+    --color-ziifra-cream: #070b12;
+    --color-ziifra-paper: #111827;
+    --color-ziifra-surface: #0d1117;
+    --color-ziifra-surface-hover: #1a2332;
+    --color-ziifra-night: #0a0f1a;
+    --color-ziifra-night-soft: #141c2e;
+    --color-ziifra-accent: #14b8a6;
+    --color-ziifra-accent-deep: #2dd4bf;
+    --color-ziifra-accent-glow: #5eead4;
+    --color-ziifra-copper: #f59e0b;
+    --color-ziifra-muted: #64748b;
+    --color-ziifra-line: #1e293b;
+    --color-ziifra-on-accent: #041016;
+}
+
+@layer base {
+    html {
+        color-scheme: light;
+    }
+
+    html[data-theme='dark'] {
+        color-scheme: dark;
+    }
+
+    body.ziifra-marketing {
+        @apply bg-ziifra-cream text-ziifra-ink antialiased;
+    }
+
+    .ziifra-marketing-header {
+        @apply sticky top-0 z-50 border-b border-ziifra-line/60 bg-ziifra-paper/85 backdrop-blur-xl;
+        box-shadow: 0 1px 0 rgb(15 23 42 / 0.04);
+    }
+
+    [data-theme='dark'] .ziifra-marketing-header {
+        box-shadow: 0 1px 0 rgb(255 255 255 / 0.04);
+    }
+
+    .ziifra-marketing-header__logo .ziifra-logo-word {
+        @apply text-lg sm:text-xl;
+    }
+
+    .ziifra-marketing-nav__link {
+        @apply rounded-full px-4 py-2 text-sm font-medium text-ziifra-muted transition hover:bg-ziifra-surface hover:text-ziifra-ink;
+    }
+
+    .ziifra-marketing-menu {
+        @apply relative;
+    }
+
+    .ziifra-marketing-menu__trigger {
+        @apply flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-xl border border-ziifra-line/80 bg-ziifra-paper text-ziifra-ink transition hover:border-ziifra-accent/30 hover:bg-ziifra-surface;
+    }
+
+    .ziifra-marketing-menu__trigger::-webkit-details-marker {
+        display: none;
+    }
+
+    .ziifra-marketing-menu__panel {
+        @apply absolute right-0 z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-ziifra-line/80 bg-ziifra-paper p-2 shadow-xl shadow-black/10;
+    }
+
+    [data-theme='dark'] .ziifra-marketing-menu__panel {
+        @apply shadow-black/40;
+    }
+
+    .ziifra-marketing-menu__link {
+        @apply block rounded-xl px-3 py-2.5 text-sm font-medium text-ziifra-ink transition hover:bg-ziifra-surface;
+    }
+
+    .ziifra-marketing-footer {
+        @apply border-t border-ziifra-line bg-ziifra-night text-white;
+    }
+
+    .ziifra-landing-hero {
+        @apply relative isolate overflow-hidden text-white;
+        background:
+            radial-gradient(ellipse 80% 55% at 15% -5%, rgba(20, 184, 166, 0.22), transparent 58%),
+            radial-gradient(ellipse 55% 45% at 95% 15%, rgba(217, 119, 6, 0.1), transparent 52%),
+            linear-gradient(165deg, #070b12 0%, #0f172a 42%, #111827 100%);
+    }
+
+    .ziifra-landing-section {
+        @apply py-24 lg:py-32;
+    }
+
+    .ziifra-landing-section--surface {
+        @apply bg-ziifra-paper;
+    }
+
+    .ziifra-landing-section--muted {
+        background: linear-gradient(180deg, var(--color-ziifra-cream) 0%, var(--color-ziifra-paper) 100%);
+    }
+
+    .ziifra-landing-section-head {
+        @apply mx-auto max-w-3xl text-center;
+    }
+
+    .ziifra-landing-hero-badge {
+        @apply inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur-sm;
+    }
+
+    .ziifra-hero-eyebrow {
+        @apply font-mono text-[0.7rem] font-semibold uppercase leading-relaxed tracking-[0.18em] text-white/90 sm:text-xs sm:tracking-[0.22em];
+    }
+
+    .ziifra-hero-tagline {
+        @apply text-balance;
+    }
+
+    .ziifra-hero-link {
+        @apply inline-flex items-center gap-1 text-sm font-semibold text-white/80 transition hover:text-ziifra-accent-glow;
+    }
+
+    .ziifra-landing-stats-band {
+        @apply relative z-20 mx-auto mt-14 grid max-w-4xl gap-4 px-4 sm:grid-cols-3 lg:mt-16;
+    }
+
+    .ziifra-landing-steps-card {
+        @apply rounded-2xl border border-ziifra-line/80 bg-ziifra-paper p-8 shadow-[0_24px_48px_-32px_rgba(15,23,42,0.18)] lg:p-10;
+    }
+
+    [data-theme='dark'] .ziifra-landing-steps-card {
+        @apply shadow-[0_24px_48px_-32px_rgba(0,0,0,0.45)];
+    }
+
+    .ziifra-landing-pricing-grid {
+        @apply mx-auto mt-14 grid max-w-5xl gap-6 lg:mt-16 lg:grid-cols-2 lg:gap-8;
+    }
+
+    .ziifra-landing-cta {
+        @apply relative overflow-hidden rounded-[2rem] border border-white/10 bg-ziifra-night py-20 lg:py-24;
+    }
+}
+
+@layer components {
+    .ziifra-table th,
+    .ziifra-table td {
+        @apply px-4 py-3 align-middle;
+    }
+
+    .ziifra-form-field {
+        @apply block;
+    }
+
+    .ziifra-display {
+        font-feature-settings: 'ss01' on, 'cv01' on;
+        letter-spacing: -0.03em;
+    }
+
+    .ziifra-label {
+        @apply inline-flex items-center gap-2 font-mono text-[0.65rem] font-medium uppercase tracking-[0.22em] text-ziifra-accent-deep;
+    }
+
+    .ziifra-label::before {
+        content: '';
+        @apply h-px w-6 bg-ziifra-accent;
+    }
+
+    .ziifra-btn-primary {
+        @apply inline-flex items-center justify-center rounded-full bg-ziifra-accent px-6 py-3 text-sm font-semibold text-ziifra-on-accent shadow-[0_0_0_1px_rgba(20,184,166,0.45),0_12px_40px_-12px_rgba(20,184,166,0.45)] transition hover:bg-ziifra-accent-glow hover:shadow-[0_0_0_1px_rgba(94,234,212,0.55),0_16px_48px_-12px_rgba(20,184,166,0.55)];
+    }
+
+    .ziifra-btn-secondary {
+        @apply inline-flex items-center justify-center rounded-full border border-ziifra-line bg-ziifra-paper px-6 py-3 text-sm font-semibold text-ziifra-ink transition hover:border-ziifra-accent/40 hover:bg-ziifra-surface-hover;
+    }
+
+    .ziifra-btn-ghost-light {
+        @apply inline-flex items-center justify-center rounded-full border border-white/15 bg-ziifra-paper/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:border-ziifra-accent/50 hover:bg-ziifra-paper/10;
+    }
+
+    .ziifra-card {
+        @apply rounded-2xl border border-ziifra-line/80 bg-ziifra-paper shadow-[0_1px_0_rgba(15,23,42,0.04),0_24px_48px_-24px_rgba(15,23,42,0.12)];
+    }
+
+    [data-theme='dark'] .ziifra-card {
+        @apply shadow-[0_1px_0_rgba(255,255,255,0.04),0_24px_48px_-24px_rgba(0,0,0,0.55)];
+    }
+
+    .ziifra-card-ink {
+        @apply rounded-2xl border border-white/10 bg-ziifra-night-soft text-white shadow-[0_24px_80px_-24px_rgba(0,0,0,0.5)];
+    }
+
+    .ziifra-mesh {
+        background-image:
+            radial-gradient(ellipse 80% 50% at 20% -10%, rgba(20, 184, 166, 0.18), transparent 55%),
+            radial-gradient(ellipse 60% 40% at 90% 10%, rgba(217, 119, 6, 0.08), transparent 50%),
+            linear-gradient(165deg, var(--color-ziifra-ink) 0%, #0d1528 45%, var(--color-ziifra-ink-soft) 100%);
+    }
+
+    .ziifra-grid-pattern {
+        background-image:
+            linear-gradient(rgba(20, 184, 166, 0.07) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(20, 184, 166, 0.07) 1px, transparent 1px);
+        background-size: 48px 48px;
+        mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, black 20%, transparent 75%);
+    }
+
+    .ziifra-watermark {
+        @apply pointer-events-none absolute select-none font-bold uppercase tracking-[0.35em] text-white/[0.03];
+        font-size: clamp(4rem, 14vw, 11rem);
+        line-height: 1;
+    }
+
+    .ziifra-feature-card {
+        @apply relative overflow-hidden rounded-2xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition duration-300;
+    }
+
+    .ziifra-feature-card::before {
+        content: '';
+        @apply absolute left-0 top-0 h-full w-1 scale-y-0 bg-gradient-to-b from-ziifra-accent to-ziifra-copper transition-transform duration-300 origin-top;
+    }
+
+    .ziifra-feature-card:hover {
+        @apply border-ziifra-accent/30 shadow-[0_20px_50px_-24px_rgba(20,184,166,0.25)];
+    }
+
+    .ziifra-feature-card:hover::before {
+        @apply scale-y-100;
+    }
+
+    .ziifra-features-section {
+        background-image:
+            radial-gradient(ellipse 70% 50% at 50% 0%, rgba(20, 184, 166, 0.08), transparent 60%),
+            linear-gradient(180deg, var(--color-ziifra-cream) 0%, var(--color-ziifra-paper) 100%);
+    }
+
+    .ziifra-feature-group {
+        @apply rounded-2xl border border-ziifra-line/80 bg-ziifra-paper/90 p-5 shadow-[0_1px_0_rgba(10,15,26,0.04),0_20px_40px_-28px_rgba(10,15,26,0.12)] backdrop-blur-sm lg:p-6;
+    }
+
+    .ziifra-feature-group-head {
+        @apply flex items-center gap-3 border-b border-ziifra-line/70 pb-4;
+    }
+
+    .ziifra-feature-group-head::before {
+        content: '';
+        @apply h-2 w-2 rounded-full;
+    }
+
+    .ziifra-feature-group-accent .ziifra-feature-group-head {
+        @apply text-ziifra-accent-deep;
+    }
+
+    .ziifra-feature-group-accent .ziifra-feature-group-head::before {
+        @apply bg-ziifra-accent;
+    }
+
+    .ziifra-feature-group-copper .ziifra-feature-group-head {
+        @apply text-ziifra-copper;
+    }
+
+    .ziifra-feature-group-copper .ziifra-feature-group-head::before {
+        @apply bg-ziifra-copper;
+    }
+
+    .ziifra-feature-group-ink .ziifra-feature-group-head {
+        @apply text-ziifra-ink;
+    }
+
+    .ziifra-feature-group-ink .ziifra-feature-group-head::before {
+        @apply bg-ziifra-night;
+    }
+
+    .ziifra-feature-item {
+        @apply flex gap-4 rounded-xl border border-ziifra-line/70 bg-ziifra-paper p-4 transition duration-300;
+    }
+
+    .ziifra-feature-item:hover {
+        @apply -translate-y-0.5 border-ziifra-accent/25 shadow-[0_16px_40px_-24px_rgba(20,184,166,0.35)];
+    }
+
+    .ziifra-feature-item-icon {
+        @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-ziifra-cream text-ziifra-accent-deep transition duration-300;
+    }
+
+    .ziifra-feature-item:hover .ziifra-feature-item-icon {
+        @apply bg-gradient-to-br from-ziifra-accent/20 to-ziifra-copper/10;
+    }
+
+    .ziifra-feature-group-accent .ziifra-feature-item:hover .ziifra-feature-item-icon {
+        @apply text-ziifra-accent-deep;
+    }
+
+    .ziifra-feature-group-copper .ziifra-feature-item:hover .ziifra-feature-item-icon {
+        @apply text-ziifra-copper;
+    }
+
+    .ziifra-feature-group-ink .ziifra-feature-item:hover .ziifra-feature-item-icon {
+        @apply text-ziifra-ink;
+    }
+
+    .ziifra-stat-pill {
+        @apply relative overflow-hidden rounded-2xl border border-ziifra-line bg-ziifra-paper px-6 py-8 text-center transition duration-300 hover:-translate-y-0.5 hover:border-ziifra-accent/25 hover:shadow-[0_20px_40px_-24px_rgba(20,184,166,0.2)];
+    }
+
+    .ziifra-stat-pill::after {
+        content: '';
+        @apply absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-ziifra-accent to-transparent opacity-60;
+    }
+
+    /* Editorial flash / validation banners (distinct from generic “bootstrap” alerts) */
+    .ziifra-flash-banner {
+        position: relative;
+        margin-bottom: 1rem;
+        overflow: hidden;
+        border-radius: 1rem;
+        border: 1px solid rgb(30 41 59 / 0.92);
+        background-color: var(--color-ziifra-paper);
+        box-shadow:
+            0 1px 0 rgb(255 255 255 / 0.04),
+            0 22px 50px -26px rgb(0 0 0 / 0.45);
+    }
+
+    .ziifra-flash-banner::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        opacity: 0.04;
+        background-image:
+            repeating-linear-gradient(
+                -28deg,
+                transparent,
+                transparent 11px,
+                rgb(20 184 166 / 0.35) 11px,
+                rgb(20 184 166 / 0.35) 12px
+            );
+        pointer-events: none;
+    }
+
+    .ziifra-flash-banner__accent {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        border-radius: 1rem 0 0 1rem;
+        box-shadow: inset -1px 0 0 rgb(255 255 255 / 0.08);
+    }
+
+    .ziifra-flash-banner--success .ziifra-flash-banner__accent {
+        background: linear-gradient(
+            180deg,
+            var(--color-ziifra-accent-glow) 0%,
+            var(--color-ziifra-accent-deep) 55%,
+            var(--color-ziifra-accent) 100%
+        );
+    }
+
+    .ziifra-flash-banner--danger .ziifra-flash-banner__accent {
+        background: linear-gradient(180deg, #fb7185 0%, #be123c 50%, #881337 100%);
+    }
+
+    .ziifra-flash-banner--warning .ziifra-flash-banner__accent {
+        background: linear-gradient(180deg, #fcd34d 0%, var(--color-ziifra-copper) 55%, #b45309 100%);
+    }
+
+    .ziifra-flash-banner--info .ziifra-flash-banner__accent {
+        background: linear-gradient(180deg, #7dd3fc 0%, #0369a1 55%, #0c4a6e 100%);
+    }
+
+    .ziifra-flash-banner__glyph {
+        @apply relative flex h-11 w-11 shrink-0 items-center justify-center text-ziifra-ink;
+    }
+
+    .ziifra-flash-banner__glyph-frame {
+        @apply absolute inset-[3px] rotate-45 rounded-md border-2 border-current;
+        opacity: 0.88;
+    }
+
+    .ziifra-flash-banner--success .ziifra-flash-banner__glyph {
+        @apply text-ziifra-accent-deep;
+    }
+
+    .ziifra-flash-banner--danger .ziifra-flash-banner__glyph {
+        color: #be123c;
+    }
+
+    .ziifra-flash-banner--warning .ziifra-flash-banner__glyph {
+        color: #b45309;
+    }
+
+    .ziifra-flash-banner--info .ziifra-flash-banner__glyph {
+        color: #0369a1;
+    }
+
+    .ziifra-flash-errors {
+        @apply mt-3 space-y-2.5 border-l-2 border-ziifra-line pl-4;
+    }
+
+    .ziifra-flash-banner--danger .ziifra-flash-errors {
+        border-left-color: rgb(251 113 133 / 0.65);
+    }
+
+    .ziifra-flash-errors li {
+        @apply relative pl-3 text-sm leading-relaxed text-ziifra-ink-soft;
+    }
+
+    .ziifra-flash-errors li::before {
+        content: '';
+        @apply absolute left-0 top-[0.55rem] h-1.5 w-1.5 -translate-y-1/2 rotate-45 border border-ziifra-accent-deep bg-ziifra-surface;
+    }
+
+    .ziifra-flash-banner--danger .ziifra-flash-errors li::before {
+        border-color: #be123c;
+        background-color: rgb(127 29 29 / 0.35);
+    }
+
+    .ziifra-diagonal-cut {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 4rem), 0 100%);
+    }
+
+    @media (min-width: 1024px) {
+        .ziifra-diagonal-cut {
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 6rem), 0 100%);
+        }
+    }
+
+    @keyframes ziifra-float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+
+    @keyframes ziifra-glow-pulse {
+        0%, 100% { opacity: 0.45; }
+        50% { opacity: 0.75; }
+    }
+
+    .ziifra-landing-glow {
+        @apply pointer-events-none absolute rounded-full blur-3xl;
+        animation: ziifra-glow-pulse 8s ease-in-out infinite;
+    }
+
+    .ziifra-hero-copy {
+        @apply relative z-10 mx-auto max-w-2xl text-center lg:mx-0 lg:max-w-[34rem] lg:pt-2 lg:text-left xl:max-w-[38rem];
+    }
+
+    .ziifra-hero-meta {
+        @apply flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center lg:items-center lg:justify-start;
+    }
+
+    .ziifra-hero-lead {
+        @apply mx-auto lg:mx-0 lg:max-w-[32rem];
+    }
+
+    .ziifra-hero-actions {
+        @apply flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center lg:justify-start;
+    }
+
+    .ziifra-hero-trust {
+        @apply flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:justify-center sm:gap-x-3 lg:justify-start;
+    }
+
+    .ziifra-landing-mockup-stage {
+        @apply relative mx-auto w-full max-w-[22rem] sm:max-w-none;
+    }
+
+    .ziifra-landing-mockup {
+        animation: ziifra-float 7s ease-in-out infinite;
+    }
+
+    .ziifra-landing-mockup-table {
+        @apply bg-ziifra-paper;
+    }
+
+    .ziifra-landing-mockup-table li:nth-child(even) {
+        @apply bg-ziifra-cream/40;
+    }
+
+    .ziifra-landing-mockup-phone {
+        @apply absolute z-10 w-[6.75rem] sm:w-[7.5rem];
+        bottom: -0.75rem;
+        right: -0.25rem;
+    }
+
+    @media (min-width: 1024px) {
+        .ziifra-landing-mockup-stage {
+            max-width: none;
+            transform: scale(1.06);
+            transform-origin: top center;
+            padding-bottom: 1.5rem;
+        }
+
+        .ziifra-landing-mockup-phone {
+            width: 9.25rem;
+            bottom: 0.5rem;
+            right: -1.5rem;
+            animation: ziifra-float 7s ease-in-out infinite;
+            animation-delay: -1.5s;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .ziifra-landing-mockup-stage {
+            transform: scale(1.1);
+        }
+
+        .ziifra-landing-mockup-phone {
+            width: 10rem;
+            bottom: 1rem;
+            right: -2rem;
+        }
+    }
+
+    @media (max-width: 1023px) {
+        .ziifra-landing-mockup {
+            animation: none;
+        }
+    }
+
+    .ziifra-lang-pill {
+        @apply inline-flex items-center rounded-full border border-white/15 bg-ziifra-paper/10 px-3 py-1 text-xs font-medium text-white/80 backdrop-blur-sm;
+    }
+
+    .ziifra-hero-check {
+        @apply flex items-center justify-center gap-2 rounded-full border border-white/10 bg-ziifra-paper/5 px-3 py-1.5 text-sm text-white/70 lg:justify-start;
+    }
+
+    .ziifra-hero-check svg {
+        @apply h-4 w-4 shrink-0 text-ziifra-accent-glow;
+    }
+
+    .ziifra-module-chip {
+        @apply inline-flex items-center gap-1.5 rounded-lg border border-ziifra-line/70 bg-ziifra-paper px-2.5 py-1 text-[0.65rem] font-medium text-ziifra-ink shadow-sm;
+    }
+
+    .ziifra-pricing-card {
+        @apply transition duration-300 hover:-translate-y-1;
+    }
+
+    .ziifra-pricing-pro {
+        @apply relative overflow-hidden rounded-2xl border-2 border-ziifra-accent/50 bg-ziifra-night p-8 text-white shadow-[0_0_60px_-12px_rgba(20,184,166,0.35)] transition duration-300 lg:scale-[1.02] lg:p-10 lg:hover:scale-[1.04];
+    }
+
+    .ziifra-pricing-pro::before {
+        content: '';
+        @apply pointer-events-none absolute inset-0;
+        background: radial-gradient(ellipse at top right, rgba(20, 184, 166, 0.15), transparent 55%);
+    }
+
+    .ziifra-pricing-pro > * {
+        @apply relative;
+    }
+
+    .ziifra-faq details {
+        @apply rounded-2xl border border-ziifra-line/80 bg-ziifra-paper shadow-[0_1px_0_rgba(10,15,26,0.04),0_24px_48px_-24px_rgba(10,15,26,0.12)];
+    }
+
+    .ziifra-faq details[open] {
+        @apply border-ziifra-accent/30 shadow-[0_16px_40px_-24px_rgba(20,184,166,0.2)];
+    }
+
+    .ziifra-faq summary {
+        @apply flex cursor-pointer list-none items-center justify-between gap-4 font-semibold text-ziifra-ink marker:content-none;
+    }
+
+    .ziifra-faq summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .ziifra-faq summary::after {
+        content: '+';
+        @apply flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-ziifra-line bg-ziifra-cream font-mono text-lg leading-none text-ziifra-muted transition;
+    }
+
+    .ziifra-faq details[open] summary::after {
+        @apply rotate-45 border-ziifra-accent/40 bg-ziifra-accent/10 text-ziifra-accent-deep;
+    }
+
+    .ziifra-cta-ring {
+        @apply pointer-events-none absolute inset-0 rounded-[2rem] border border-ziifra-accent/20;
+        background: radial-gradient(ellipse at 50% 0%, rgba(45, 212, 191, 0.12), transparent 55%);
+    }
+
+    .ziifra-bento-highlight {
+        @apply relative flex min-h-[220px] flex-col justify-between overflow-hidden rounded-2xl border border-ziifra-line/80 bg-gradient-to-br from-ziifra-night-soft via-ziifra-night to-ziifra-night-soft p-8 text-white sm:col-span-2 lg:col-span-2 lg:row-span-2 lg:min-h-[100%];
+    }
+
+    body.ziifra-app {
+        @apply bg-ziifra-cream text-ziifra-ink antialiased min-h-screen;
+        background-image:
+            radial-gradient(ellipse 90% 60% at 50% -30%, rgba(20, 184, 166, 0.09), transparent 55%),
+            radial-gradient(ellipse 50% 40% at 100% 0%, rgba(94, 234, 212, 0.04), transparent 45%);
+    }
+
+    [data-theme='dark'] body.ziifra-app aside {
+        box-shadow: 1px 0 0 rgb(255 255 255 / 0.04), 24px 0 60px -48px rgb(0 0 0 / 0.9);
+    }
+
+    .ziifra-nav-link {
+        @apply relative block rounded-xl px-3 py-2.5 text-ziifra-muted no-underline transition hover:bg-ziifra-surface-hover hover:text-ziifra-ink;
+    }
+
+    .ziifra-nav-link-active {
+        @apply bg-ziifra-accent/15 font-semibold text-ziifra-accent-deep shadow-[inset_0_0_0_1px_rgba(20,184,166,0.2)];
+    }
+
+    .ziifra-nav-link-active::before {
+        content: '';
+        @apply absolute left-1 top-1/2 h-5 w-1 -translate-y-1/2 rounded-full bg-ziifra-accent;
+    }
+
+    .ziifra-nav-link-soon {
+        @apply flex cursor-not-allowed items-center justify-between gap-2 opacity-60 hover:bg-transparent hover:text-ziifra-muted;
+    }
+
+    .ziifra-nav-soon-badge {
+        @apply shrink-0 rounded-md border border-ziifra-line/80 bg-ziifra-cream px-1.5 py-0.5 font-mono text-[0.6rem] font-semibold uppercase tracking-wider text-ziifra-muted;
+    }
+
+    html.ziifra-page-loading .ziifra-page-loader {
+        @apply opacity-100;
+    }
+
+    html.ziifra-page-loading .ziifra-page-loader__shade {
+        @apply pointer-events-auto;
+    }
+
+    .ziifra-page-loader {
+        --ziifra-loader-sidebar: 0px;
+        --ziifra-loader-header: 4rem;
+
+        @apply pointer-events-none fixed inset-0 z-[100] opacity-0 transition-opacity duration-150 ease-out;
+    }
+
+    @media (min-width: 768px) {
+        .ziifra-page-loader {
+            --ziifra-loader-sidebar: 16rem;
+            --ziifra-loader-header: 4rem;
+        }
+    }
+
+    .ziifra-main {
+        @apply pb-[calc(5.5rem+env(safe-area-inset-bottom))] md:pb-8;
+    }
+
+    .ziifra-mobile-tabbar {
+        @apply fixed inset-x-0 bottom-0 z-40 flex items-stretch justify-around border-t border-ziifra-line/80 bg-ziifra-paper/95 px-1 pt-1 backdrop-blur-md;
+        padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+
+    .ziifra-mobile-tab {
+        @apply flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-xl px-1 py-2 text-[0.65rem] font-medium text-ziifra-muted no-underline transition;
+    }
+
+    .ziifra-mobile-tab-active {
+        @apply bg-ziifra-accent/10 text-ziifra-accent-deep;
+    }
+
+    .ziifra-mobile-tab-label {
+        @apply max-w-full truncate text-center leading-tight;
+    }
+
+    body.ziifra-portal-employee {
+        @apply bg-gradient-to-b from-ziifra-cream via-ziifra-paper to-ziifra-cream;
+    }
+
+    .ziifra-employee-hero {
+        @apply relative overflow-hidden rounded-2xl border border-ziifra-line/70 bg-gradient-to-br from-white via-ziifra-paper to-ziifra-accent/[0.08] p-5 shadow-sm sm:p-7;
+    }
+
+    .ziifra-employee-hero::before {
+        content: '';
+        @apply pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-ziifra-accent/15 blur-3xl;
+    }
+
+    .ziifra-employee-avatar {
+        @apply flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-ziifra-accent to-ziifra-accent-deep text-lg font-bold text-white shadow-md;
+    }
+
+    .ziifra-employee-shortcuts {
+        @apply grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4;
+    }
+
+    .ziifra-employee-shortcut {
+        @apply flex flex-col gap-3 rounded-2xl border border-ziifra-line/70 bg-ziifra-paper/90 p-4 no-underline shadow-sm transition hover:border-ziifra-accent/30 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/30;
+    }
+
+    .ziifra-employee-shortcut-icon {
+        @apply flex h-10 w-10 items-center justify-center rounded-xl bg-ziifra-accent/10 text-ziifra-accent-deep;
+    }
+
+    .ziifra-employee-shortcut-label {
+        @apply text-sm font-semibold text-ziifra-ink;
+    }
+
+    .ziifra-employee-shortcut-hint {
+        @apply text-xs text-ziifra-muted;
+    }
+
+    .ziifra-leave-card {
+        @apply block rounded-xl border border-ziifra-line/70 bg-ziifra-paper p-4 no-underline shadow-sm transition hover:border-ziifra-accent/25 hover:shadow-md;
+    }
+
+    .ziifra-leave-card + .ziifra-leave-card {
+        @apply mt-3;
+    }
+
+    .ziifra-notifications {
+        @apply relative;
+    }
+
+    .ziifra-notifications-trigger {
+        @apply relative flex h-10 w-10 items-center justify-center rounded-xl border border-ziifra-line/80 bg-ziifra-paper text-ziifra-muted shadow-sm transition hover:-translate-y-0.5 hover:border-ziifra-accent/35 hover:bg-ziifra-surface hover:text-ziifra-accent-deep hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/30;
+    }
+
+    .ziifra-notifications-admin .ziifra-notifications-trigger {
+        @apply border-ziifra-line/80 bg-ziifra-paper text-ziifra-muted hover:border-ziifra-accent/35 hover:bg-ziifra-surface hover:text-ziifra-accent-deep;
+    }
+
+    .ziifra-notifications-admin .ziifra-notifications-panel {
+        @apply border-ziifra-line/80 bg-ziifra-paper text-ziifra-ink;
+    }
+
+    .ziifra-notifications-admin .ziifra-notifications-panel-head {
+        @apply border-ziifra-line/70;
+    }
+
+    .ziifra-notifications-admin .ziifra-notifications-empty {
+        @apply text-ziifra-muted;
+    }
+
+    .ziifra-notifications-admin .ziifra-notifications-item {
+        @apply border-ziifra-line/50;
+    }
+
+    .ziifra-notifications-admin .ziifra-notifications-item-unread {
+        @apply bg-ziifra-accent/5;
+    }
+
+    .ziifra-notifications-admin .ziifra-notifications-link {
+        @apply hover:bg-ziifra-surface-hover;
+    }
+
+    .ziifra-notifications-admin .ziifra-notifications-link-title {
+        @apply text-ziifra-ink;
+    }
+
+    .ziifra-notifications-admin .ziifra-notifications-link-body {
+        @apply text-ziifra-muted;
+    }
+
+    .ziifra-notifications-admin .ziifra-notifications-link-time {
+        @apply text-ziifra-muted/80;
+    }
+
+    .ziifra-notifications-badge {
+        @apply absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-ziifra-paper bg-ziifra-accent px-1 text-[0.58rem] font-bold leading-none text-ziifra-on-accent shadow-sm;
+    }
+
+    .ziifra-notifications-panel {
+        @apply absolute right-0 z-50 mt-3 w-[min(100vw-2rem,24rem)] overflow-hidden rounded-2xl border border-ziifra-line/80 bg-ziifra-paper/95 shadow-2xl shadow-black/15 backdrop-blur-xl;
+    }
+
+    [data-theme='dark'] .ziifra-notifications-panel {
+        @apply shadow-black/50;
+    }
+
+    .ziifra-notifications-panel-head {
+        @apply flex items-center justify-between gap-3 border-b border-ziifra-line/70 bg-ziifra-surface/60 px-4 py-3.5;
+    }
+
+    .ziifra-notifications-head-icon {
+        @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-ziifra-accent/20 bg-ziifra-accent/10 text-ziifra-accent-deep;
+    }
+
+    .ziifra-notifications-empty {
+        @apply px-6 py-10 text-center text-sm text-ziifra-muted;
+    }
+
+    .ziifra-notifications-list {
+        @apply max-h-[26rem] space-y-1 overflow-y-auto p-2;
+    }
+
+    .ziifra-notifications-item {
+        @apply relative overflow-hidden rounded-xl border border-transparent;
+    }
+
+    .ziifra-notifications-item-unread {
+        @apply border-ziifra-accent/15 bg-ziifra-accent/5;
+    }
+
+    .ziifra-notifications-unread-dot {
+        @apply absolute left-2.5 top-4 z-10 h-2 w-2 rounded-full bg-ziifra-accent shadow-[0_0_0_3px_rgba(20,184,166,0.12)];
+    }
+
+    .ziifra-notifications-link {
+        @apply block rounded-xl px-4 py-3 pl-5 pr-10 no-underline transition hover:bg-ziifra-surface-hover;
+    }
+
+    .ziifra-notifications-item-unread .ziifra-notifications-link {
+        @apply pl-7;
+    }
+
+    .ziifra-notifications-link-title {
+        @apply block text-sm font-semibold leading-snug text-ziifra-ink;
+    }
+
+    .ziifra-notifications-link-body {
+        @apply mt-1 block text-xs leading-relaxed text-ziifra-muted;
+    }
+
+    .ziifra-notifications-link-time {
+        @apply mt-2 inline-flex rounded-full border border-ziifra-line/70 bg-ziifra-surface px-2 py-0.5 text-[0.63rem] font-medium text-ziifra-muted/90;
+    }
+
+    .ziifra-notifications-dismiss {
+        @apply absolute right-2 top-2;
+    }
+
+    .ziifra-notifications-dismiss button {
+        @apply flex h-7 w-7 items-center justify-center rounded-lg text-base leading-none text-ziifra-muted transition hover:bg-ziifra-surface-hover hover:text-ziifra-ink;
+    }
+
+    .ziifra-page-loader__track {
+        @apply absolute right-0 z-[2] h-0.5 overflow-hidden bg-ziifra-line/70;
+        top: var(--ziifra-loader-header);
+        left: var(--ziifra-loader-sidebar);
+    }
+
+    .ziifra-page-loader__bar {
+        @apply h-full w-[38%] bg-gradient-to-r from-ziifra-accent via-ziifra-accent-glow to-ziifra-copper;
+        animation: ziifra-page-loader-bar 1s ease-in-out infinite;
+    }
+
+    .ziifra-page-loader__shade {
+        @apply absolute right-0 bottom-0 flex items-center justify-center bg-ziifra-paper/84 backdrop-blur-[3px];
+        top: var(--ziifra-loader-header);
+        left: var(--ziifra-loader-sidebar);
+    }
+
+    .ziifra-page-loader__panel {
+        @apply flex flex-col items-center justify-center gap-3.5;
+    }
+
+    .ziifra-page-loader__spinner {
+        @apply h-10 w-10 rounded-full border-2 border-ziifra-line/90;
+        border-top-color: var(--color-ziifra-accent);
+        border-right-color: var(--color-ziifra-accent-glow);
+        animation: ziifra-page-loader-spin 0.7s linear infinite;
+    }
+
+    .ziifra-page-loader__label {
+        @apply m-0 text-center font-mono text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-ziifra-muted;
+    }
+
+    @keyframes ziifra-page-loader-bar {
+        0% {
+            transform: translateX(-140%);
+        }
+
+        100% {
+            transform: translateX(360%);
+        }
+    }
+
+    @keyframes ziifra-page-loader-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ziifra-page-loader__bar,
+        .ziifra-page-loader__spinner {
+            animation: none !important;
+        }
+
+        .ziifra-page-loader__bar {
+            @apply w-full translate-x-0;
+        }
+    }
+
+    html.ziifra-confirm-open {
+        @apply overflow-hidden;
+    }
+
+    .ziifra-confirm-dialog {
+        @apply fixed inset-0 z-[110] flex items-center justify-center p-4;
+    }
+
+    .ziifra-confirm-dialog__backdrop {
+        @apply absolute inset-0 border-0 bg-black/60 backdrop-blur-sm;
+    }
+
+    .ziifra-confirm-dialog__panel {
+        @apply relative w-full max-w-md rounded-2xl border border-ziifra-line/80 bg-ziifra-paper p-6 shadow-[0_24px_64px_-24px_rgba(0,0,0,0.65)];
+        animation: ziifra-confirm-panel 0.2s ease-out both;
+    }
+
+    .ziifra-confirm-dialog__icon {
+        @apply mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-ziifra-accent/12 text-ziifra-accent-deep;
+
+        svg {
+            @apply h-6 w-6;
+        }
+    }
+
+    .ziifra-confirm-dialog__title {
+        @apply mt-4 text-center text-lg font-semibold text-ziifra-ink;
+    }
+
+    .ziifra-confirm-dialog__message {
+        @apply mt-2 text-center text-sm leading-relaxed text-ziifra-muted;
+    }
+
+    .ziifra-confirm-dialog__actions {
+        @apply mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end;
+    }
+
+    .ziifra-confirm-dialog__cancel {
+        @apply inline-flex items-center justify-center rounded-lg border border-ziifra-line bg-ziifra-surface px-4 py-2.5 text-sm font-semibold text-ziifra-ink transition hover:bg-ziifra-surface-hover;
+    }
+
+    .ziifra-confirm-dialog__accept {
+        @apply inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold transition;
+    }
+
+    .ziifra-confirm-dialog__accept--primary {
+        @apply bg-ziifra-accent text-ziifra-on-accent shadow-sm hover:bg-ziifra-accent-glow;
+    }
+
+    .ziifra-confirm-dialog__accept--danger {
+        @apply bg-red-600 text-white shadow-sm hover:bg-red-700;
+    }
+
+    @keyframes ziifra-confirm-panel {
+        from {
+            opacity: 0;
+            transform: translateY(8px) scale(0.98);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ziifra-confirm-dialog__panel {
+            animation: none !important;
+        }
+    }
+
+    .ziifra-panel {
+        @apply rounded-xl border border-ziifra-line/80 bg-ziifra-paper;
+    }
+
+    .ziifra-input {
+        @apply mt-1 block w-full rounded-lg border border-ziifra-line bg-ziifra-surface px-3 py-2 text-ziifra-ink shadow-sm transition placeholder:text-ziifra-muted/70 focus:border-ziifra-accent focus:outline-none focus:ring-2 focus:ring-ziifra-accent/25;
+    }
+
+    .ziifra-label-field {
+        @apply block text-sm font-medium text-ziifra-ink;
+    }
+
+    .ziifra-link {
+        @apply font-medium text-ziifra-accent-deep transition hover:text-ziifra-accent;
+    }
+
+    .ziifra-btn-app {
+        @apply inline-flex items-center justify-center rounded-lg bg-ziifra-accent px-4 py-2 text-sm font-semibold text-ziifra-on-accent shadow-sm transition hover:bg-ziifra-accent-glow;
+    }
+
+    .ziifra-btn-app-outline {
+        @apply inline-flex items-center justify-center rounded-lg border border-ziifra-line bg-ziifra-paper px-4 py-2 text-sm font-medium text-ziifra-ink transition hover:border-ziifra-accent/40 hover:bg-ziifra-surface-hover;
+    }
+
+    .ziifra-auth-card {
+        @apply rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-8 shadow-[0_24px_48px_-24px_rgba(10,15,26,0.12)];
+    }
+
+    .ziifra-auth-shell {
+        @apply min-h-screen bg-ziifra-cream;
+    }
+
+    .ziifra-auth-form-panel {
+        @apply flex flex-col bg-gradient-to-b from-ziifra-cream via-ziifra-surface to-ziifra-cream;
+    }
+
+    .ziifra-auth-form-card {
+        @apply rounded-2xl border border-ziifra-line/80 bg-ziifra-paper p-6 shadow-[0_20px_50px_-30px_rgba(15,23,42,0.12)] sm:p-8;
+    }
+
+    [data-theme='dark'] .ziifra-auth-form-card {
+        @apply shadow-[0_20px_50px_-30px_rgba(0,0,0,0.55)];
+    }
+
+    .ziifra-login-head {
+        @apply mb-5 flex items-start gap-3;
+    }
+
+    .ziifra-login-head-icon {
+        @apply mt-1 hidden h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-ziifra-accent/20 bg-ziifra-accent/10 text-ziifra-accent-deep shadow-sm sm:flex;
+    }
+
+    .ziifra-login-form {
+        @apply space-y-4;
+    }
+
+    .ziifra-login-options {
+        @apply flex flex-col gap-3 pt-0.5 sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .ziifra-login-remember {
+        @apply inline-flex cursor-pointer items-center gap-2 rounded-xl border border-transparent py-1 text-sm text-ziifra-muted transition hover:text-ziifra-ink;
+    }
+
+    .ziifra-login-forgot {
+        @apply text-sm font-medium text-ziifra-accent-deep transition hover:text-ziifra-accent hover:underline;
+    }
+
+    .ziifra-login-secondary {
+        @apply rounded-2xl border border-ziifra-line/70 bg-ziifra-paper/70 px-4 py-3 shadow-sm;
+    }
+
+    .ziifra-login-legal a {
+        @apply decoration-ziifra-line underline-offset-4 transition hover:decoration-ziifra-accent;
+    }
+
+    .ziifra-auth-mobile-banner {
+        @apply border-b border-ziifra-line/60 bg-gradient-to-r from-ziifra-accent/10 via-ziifra-surface to-ziifra-paper px-4 py-4 sm:px-8;
+    }
+
+    .ziifra-input-icon {
+        @apply mt-1 block w-full rounded-xl border border-ziifra-line bg-ziifra-surface py-2.5 pl-10 pr-3 text-ziifra-ink shadow-sm transition placeholder:text-ziifra-muted/70 focus:border-ziifra-accent focus:bg-ziifra-paper focus:outline-none focus:ring-2 focus:ring-ziifra-accent/20;
+    }
+
+    .ziifra-google-btn {
+        @apply grid w-full grid-cols-[2.75rem_1fr_2.75rem] items-center rounded-xl border border-ziifra-line bg-ziifra-surface py-3 shadow-sm transition hover:-translate-y-0.5;
+    }
+
+    .ziifra-google-btn:not(.ziifra-google-btn-disabled):hover {
+        @apply border-ziifra-accent/30 bg-ziifra-surface-hover shadow-md;
+    }
+
+    .ziifra-google-btn-icon {
+        @apply col-start-1 flex h-10 w-10 items-center justify-center justify-self-center rounded-lg bg-ziifra-paper shadow-[0_1px_2px_rgba(0,0,0,0.25)] ring-1 ring-ziifra-line/80;
+    }
+
+    .ziifra-auth-viewport {
+        @apply h-dvh overflow-hidden;
+    }
+
+    .ziifra-auth-viewport .ziifra-auth-layout {
+        @apply overflow-hidden lg:items-stretch;
+    }
+
+    .ziifra-auth-aside-viewport {
+        @apply h-full min-h-0 p-10 lg:p-12;
+    }
+
+    @media (max-height: 740px) {
+        .ziifra-auth-viewport main {
+            @apply py-3;
+        }
+
+        .ziifra-auth-viewport .ziifra-auth-form-card {
+            @apply p-4;
+        }
+
+        .ziifra-auth-viewport header {
+            @apply py-2;
+        }
+
+        .ziifra-auth-viewport footer {
+            @apply py-2;
+        }
+    }
+
+    .ziifra-auth-input-wrap {
+        @apply relative mt-1;
+    }
+
+    .ziifra-auth-input-icon {
+        @apply pointer-events-none absolute left-3.5 top-1/2 z-10 -translate-y-1/2 text-ziifra-muted;
+    }
+
+    .ziifra-auth-aside {
+        @apply relative flex flex-col justify-between overflow-hidden p-10 text-white lg:p-14;
+    }
+
+    .ziifra-password-toggle {
+        @apply absolute right-2 top-1/2 -translate-y-1/2 rounded-lg p-2 text-ziifra-muted transition hover:bg-ziifra-surface-hover hover:text-ziifra-ink;
+    }
+
+    .ziifra-logout-button {
+        @apply inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-ziifra-line/80 bg-ziifra-paper px-3 text-sm font-semibold text-ziifra-muted shadow-sm transition hover:-translate-y-0.5 hover:border-red-400/30 hover:bg-red-500/10 hover:text-red-600 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400/30;
+    }
+
+    [data-theme='dark'] .ziifra-logout-button {
+        @apply hover:text-red-300;
+    }
+
+    .ziifra-user-menu-trigger {
+        @apply flex cursor-pointer list-none items-center gap-2 rounded-full border border-ziifra-line/80 bg-ziifra-surface py-1 pl-1 pr-2 text-sm marker:content-none shadow-sm transition hover:border-ziifra-accent/30 hover:bg-ziifra-surface-hover;
+    }
+
+    .ziifra-user-menu-trigger::-webkit-details-marker {
+        display: none;
+    }
+
+    .ziifra-user-menu[open] .ziifra-user-menu-trigger {
+        @apply border-ziifra-accent/35 bg-ziifra-accent/10;
+    }
+
+    .ziifra-user-menu-panel {
+        @apply absolute right-0 z-40 mt-2 w-64 overflow-hidden rounded-2xl border border-ziifra-line/80 bg-ziifra-paper/95 py-1 shadow-2xl shadow-black/15 backdrop-blur-xl;
+    }
+
+    [data-theme='dark'] .ziifra-user-menu-panel {
+        @apply shadow-black/50;
+    }
+
+    .ziifra-user-menu-logout {
+        @apply flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium text-ziifra-muted transition hover:bg-red-500/10 hover:text-red-600;
+    }
+
+    [data-theme='dark'] .ziifra-user-menu-logout {
+        @apply hover:text-red-300;
+    }
+
+    .ziifra-auth-field {
+        @apply relative;
+    }
+
+    .ziifra-auth-field-icon {
+        @apply pointer-events-none absolute left-3.5 top-[2.35rem] text-ziifra-muted;
+    }
+
+    .ziifra-auth-field:has(.ziifra-auth-input-wrap) .ziifra-auth-field-icon {
+        @apply hidden;
+    }
+
+    .ziifra-auth-section-title {
+        @apply font-mono text-[0.65rem] font-medium uppercase tracking-[0.2em] text-ziifra-accent-deep;
+    }
+
+    .ziifra-auth-trust-item {
+        @apply flex items-start gap-3 text-sm text-white/60;
+    }
+
+    .ziifra-google-btn-label {
+        @apply col-start-2 text-center text-sm font-semibold text-ziifra-ink;
+    }
+
+    .ziifra-google-btn-disabled {
+        @apply border-ziifra-line/60 bg-ziifra-cream/60 opacity-75;
+    }
+
+    .ziifra-google-btn-disabled .ziifra-google-btn-label {
+        @apply text-ziifra-muted;
+    }
+
+    .ziifra-leave-tabs {
+        @apply inline-flex gap-1 rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-1 shadow-sm;
+    }
+
+    .ziifra-leave-tab {
+        @apply rounded-lg px-4 py-2 text-sm font-medium text-ziifra-muted transition;
+    }
+
+    .ziifra-leave-tab:hover {
+        @apply text-ziifra-ink bg-ziifra-cream/80;
+    }
+
+    .ziifra-leave-tab-active {
+        @apply bg-ziifra-accent text-ziifra-ink shadow-sm;
+    }
+
+    .ziifra-leave-tab-active:hover {
+        @apply bg-ziifra-accent-glow text-ziifra-ink;
+    }
+
+    .ziifra-calendar {
+        @apply overflow-hidden rounded-2xl border border-ziifra-line/80 bg-ziifra-paper shadow-[0_1px_0_rgba(10,15,26,0.04),0_24px_48px_-24px_rgba(10,15,26,0.1)];
+    }
+
+    .ziifra-calendar-weekdays {
+        @apply grid grid-cols-7 border-b border-ziifra-line/80 bg-gradient-to-b from-ziifra-cream/80 to-ziifra-paper;
+    }
+
+    .ziifra-calendar-weekday {
+        @apply px-2 py-3 text-center font-mono text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-ziifra-muted;
+    }
+
+    .ziifra-calendar-week {
+        @apply grid grid-cols-7 divide-x divide-ziifra-line/50;
+    }
+
+    .ziifra-calendar-week:not(:last-child) {
+        @apply border-b border-ziifra-line/50;
+    }
+
+    .ziifra-calendar-day {
+        @apply relative flex min-h-[6.5rem] flex-col p-2 transition sm:min-h-[7.5rem] sm:p-2.5;
+    }
+
+    .ziifra-calendar-day-out {
+        @apply bg-ziifra-cream/25;
+    }
+
+    .ziifra-calendar-day-weekend {
+        @apply bg-ziifra-cream/40;
+    }
+
+    .ziifra-calendar-day-holiday {
+        @apply bg-gradient-to-b from-sky-50/90 to-ziifra-paper;
+    }
+
+    .ziifra-calendar-day-today {
+        @apply z-[1] bg-ziifra-accent/[0.06] ring-2 ring-inset ring-ziifra-accent/50;
+    }
+
+    .ziifra-calendar-day-num {
+        @apply inline-flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold text-ziifra-ink;
+    }
+
+    .ziifra-calendar-day-num-today {
+        @apply bg-ziifra-accent text-white shadow-[0_4px_12px_-4px_rgba(20,184,166,0.65)];
+    }
+
+    .ziifra-calendar-day-num-muted {
+        @apply text-ziifra-muted/70;
+    }
+
+    .ziifra-calendar-holiday {
+        @apply mt-1 truncate rounded-md bg-sky-100/90 px-1.5 py-0.5 text-[10px] font-medium leading-tight text-sky-800;
+    }
+
+    .ziifra-calendar-chip {
+        @apply flex min-w-0 items-center gap-1.5 rounded-lg border px-2 py-1 text-[11px] font-medium leading-tight shadow-sm transition hover:shadow-md;
+    }
+
+    .ziifra-calendar-chip-approved {
+        @apply border-emerald-200/90 bg-emerald-50 text-emerald-950 hover:border-emerald-300;
+    }
+
+    .ziifra-calendar-chip-pending {
+        @apply border-amber-200/90 bg-amber-50 text-amber-950 hover:border-amber-300;
+    }
+
+    .ziifra-calendar-chip-dot {
+        @apply h-1.5 w-1.5 shrink-0 rounded-full;
+    }
+
+    .ziifra-calendar-more {
+        @apply mt-0.5 w-full rounded-md px-1.5 py-0.5 text-left text-[10px] font-medium text-ziifra-muted transition hover:bg-ziifra-cream hover:text-ziifra-ink;
+    }
+
+    .ziifra-calendar-legend-pill {
+        @apply inline-flex items-center gap-2 rounded-full border border-ziifra-line/80 bg-ziifra-paper px-3 py-1.5 text-xs font-medium text-ziifra-muted shadow-sm;
+    }
+
+    .ziifra-dashboard-hero {
+        @apply relative overflow-hidden rounded-2xl border border-ziifra-line/80 bg-gradient-to-br from-ziifra-paper via-ziifra-surface to-ziifra-accent/[0.08] p-6 shadow-[0_1px_0_rgba(255,255,255,0.04),0_24px_48px_-24px_rgba(0,0,0,0.45)] sm:p-8;
+    }
+
+    .ziifra-dashboard-hero-admin {
+        @apply border-ziifra-accent/25 from-ziifra-paper via-ziifra-accent/[0.06] to-ziifra-cream/80;
+    }
+
+    .ziifra-dashboard-hero-admin::before {
+        @apply bg-ziifra-accent/20;
+    }
+
+    .ziifra-dashboard-alert {
+        @apply inline-flex min-w-[12rem] max-w-xs items-center gap-3 rounded-xl border border-ziifra-line/80 bg-ziifra-paper px-4 py-3 text-sm font-medium text-ziifra-ink no-underline shadow-sm transition hover:border-ziifra-accent/30 hover:shadow-md;
+    }
+
+    .ziifra-dashboard-alert-count {
+        @apply flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ziifra-accent/12 text-sm font-semibold tabular-nums text-ziifra-accent-deep;
+    }
+
+    .ziifra-dashboard-alert-alert {
+        @apply border-ziifra-accent/30 bg-gradient-to-br from-ziifra-accent/[0.06] to-ziifra-paper;
+    }
+
+    .ziifra-dashboard-alert-alert .ziifra-dashboard-alert-count {
+        @apply bg-ziifra-accent/20;
+    }
+
+    .ziifra-dashboard-alert-warn {
+        @apply border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-ziifra-paper;
+    }
+
+    .ziifra-dashboard-alert-warn .ziifra-dashboard-alert-count {
+        @apply bg-amber-500/20 text-amber-200;
+    }
+
+    .ziifra-dashboard-hero::before {
+        content: '';
+        @apply pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-ziifra-accent/15 blur-3xl;
+    }
+
+    .ziifra-dashboard-hero-grid::after {
+        content: '';
+        @apply pointer-events-none absolute inset-0 opacity-[0.2];
+        background-image:
+            linear-gradient(to right, rgb(30 41 59 / 0.55) 1px, transparent 1px),
+            linear-gradient(to bottom, rgb(30 41 59 / 0.55) 1px, transparent 1px);
+        background-size: 28px 28px;
+        mask-image: linear-gradient(to bottom, black 0%, transparent 85%);
+    }
+
+    .ziifra-dashboard-org-card {
+        @apply flex items-center gap-3 rounded-xl border border-ziifra-line/60 bg-ziifra-paper/80 px-4 py-3 shadow-sm backdrop-blur-sm;
+    }
+
+    .ziifra-dashboard-meter {
+        @apply h-2 overflow-hidden rounded-full bg-ziifra-line/60;
+    }
+
+    .ziifra-dashboard-meter-fill {
+        @apply h-full rounded-full bg-gradient-to-r from-ziifra-accent to-ziifra-accent-glow transition-all duration-500;
+    }
+
+    .ziifra-dashboard-meter-fill-warn {
+        @apply from-amber-500 to-amber-400;
+    }
+
+    .ziifra-dashboard-stats {
+        @apply grid gap-4 sm:grid-cols-2 xl:grid-cols-4;
+    }
+
+    .ziifra-dashboard-stat {
+        @apply relative block overflow-hidden rounded-2xl border border-ziifra-line/80 bg-ziifra-paper p-5 no-underline transition duration-200 hover:border-ziifra-accent/25 hover:shadow-[0_16px_40px_-24px_rgba(20,184,166,0.2)] focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/40;
+    }
+
+    .ziifra-dashboard-stat::after {
+        content: '';
+        @apply absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-ziifra-accent/40 to-transparent;
+    }
+
+    .ziifra-dashboard-stat-warn {
+        @apply border-amber-200/90 bg-gradient-to-br from-amber-50/90 to-ziifra-paper hover:border-amber-300/80 hover:shadow-[0_16px_40px_-24px_rgba(217,119,6,0.15)];
+    }
+
+    .ziifra-dashboard-stat-warn::after {
+        @apply via-amber-400/50;
+    }
+
+    .ziifra-dashboard-stat-alert {
+        @apply border-ziifra-accent/30 bg-gradient-to-br from-ziifra-accent/[0.06] to-ziifra-paper ring-1 ring-ziifra-accent/15;
+    }
+
+    .ziifra-dashboard-stat-alert::after {
+        @apply via-ziifra-accent/60;
+    }
+
+    .ziifra-dashboard-stat-icon {
+        @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-ziifra-accent/12 text-ziifra-accent-deep;
+    }
+
+    .ziifra-dashboard-stat-warn .ziifra-dashboard-stat-icon {
+        @apply bg-amber-100 text-amber-800;
+    }
+
+    .ziifra-dashboard-action {
+        @apply flex w-full items-center gap-3 rounded-xl border border-ziifra-line/80 bg-ziifra-paper px-4 py-2.5 text-sm font-medium text-ziifra-ink no-underline shadow-sm transition hover:border-ziifra-accent/35 hover:bg-ziifra-cream/80 hover:text-ziifra-accent-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/30;
+    }
+
+    .ziifra-dashboard-action-icon {
+        @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ziifra-accent/10 text-ziifra-accent-deep;
+    }
+
+    .ziifra-dashboard-panel {
+        @apply flex h-full flex-col rounded-2xl border border-ziifra-line/80 bg-ziifra-paper shadow-[0_1px_0_rgba(10,15,26,0.04),0_20px_40px_-28px_rgba(10,15,26,0.1)];
+    }
+
+    .ziifra-dashboard-panel-head {
+        @apply flex items-center justify-between gap-3 border-b border-ziifra-line/60 bg-gradient-to-r from-ziifra-cream/50 to-ziifra-paper px-5 py-4;
+    }
+
+    .ziifra-dashboard-panel-foot {
+        @apply mt-auto border-t border-ziifra-line/60 bg-ziifra-cream/20 px-5 py-3;
+    }
+
+    .ziifra-dashboard-avatar {
+        @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-ziifra-accent/25 to-ziifra-accent/10 text-xs font-semibold text-ziifra-accent-deep ring-2 ring-white;
+    }
+
+    .ziifra-dashboard-leave-row {
+        @apply flex items-center gap-3 rounded-xl px-3 py-2.5 no-underline transition hover:bg-ziifra-cream/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/25;
+    }
+
+    .ziifra-dashboard-empty {
+        @apply flex flex-col items-center justify-center rounded-xl border border-dashed border-ziifra-line/80 bg-ziifra-cream/30 px-6 py-10 text-center;
+    }
+
+    .ziifra-dashboard-badge {
+        @apply inline-flex min-w-[1.5rem] items-center justify-center rounded-full bg-ziifra-accent/12 px-2.5 py-0.5 text-xs font-semibold tabular-nums text-ziifra-accent-deep;
+    }
+
+    .ziifra-dashboard-empty-icon {
+        @apply flex h-12 w-12 items-center justify-center rounded-full bg-ziifra-cream;
+    }
+
+    .ziifra-dashboard-week {
+        @apply overflow-hidden rounded-2xl border border-ziifra-line/80 bg-ziifra-paper shadow-[0_1px_0_rgba(10,15,26,0.04),0_20px_40px_-28px_rgba(10,15,26,0.1)];
+    }
+
+    .ziifra-dashboard-week-day {
+        @apply flex flex-col items-center rounded-xl border border-transparent bg-ziifra-cream/40 px-1 py-2.5 no-underline transition hover:border-ziifra-accent/25 hover:bg-ziifra-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/30 sm:py-3;
+    }
+
+    .ziifra-dashboard-week-day-today {
+        @apply border-ziifra-accent/40 bg-ziifra-accent/[0.08] ring-1 ring-ziifra-accent/20;
+    }
+
+    .ziifra-dashboard-week-count {
+        @apply mt-2 flex h-6 min-w-[1.5rem] items-center justify-center rounded-full bg-ziifra-line/50 px-1.5 text-[0.65rem] font-semibold tabular-nums text-ziifra-muted;
+    }
+
+    .ziifra-dashboard-week-count-active {
+        @apply bg-ziifra-accent/15 text-ziifra-accent-deep;
+    }
+
+    .ziifra-employee-profile .ziifra-dashboard-panel {
+        @apply flex flex-col;
+    }
+
+    .ziifra-dashboard-insights {
+        @apply flex flex-wrap gap-2;
+    }
+
+    .ziifra-dashboard-insight {
+        @apply inline-flex items-center gap-1.5 rounded-full border border-ziifra-line/80 bg-ziifra-paper/90 px-3 py-1 text-xs font-medium text-ziifra-muted;
+    }
+
+    .ziifra-dashboard-section {
+        @apply space-y-4;
+    }
+
+    .ziifra-dashboard-section-compact {
+        @apply space-y-3;
+    }
+
+    .ziifra-dashboard-section-head {
+        @apply flex flex-col gap-0.5 sm:flex-row sm:items-end sm:justify-between;
+    }
+
+    .ziifra-dashboard-section-title {
+        @apply text-xs font-semibold uppercase tracking-wide text-ziifra-muted;
+    }
+
+    .ziifra-dashboard-section-desc {
+        @apply text-sm text-ziifra-muted;
+    }
+
+    .ziifra-dashboard-alerts {
+        @apply grid gap-3 sm:grid-cols-2 xl:grid-cols-3;
+    }
+
+    .ziifra-dashboard-alerts .ziifra-dashboard-alert {
+        @apply flex w-full max-w-none min-w-0;
+    }
+
+    .ziifra-dashboard-insight strong {
+        @apply font-semibold text-ziifra-ink;
+    }
+
+    .ziifra-dashboard-balance-ring {
+        @apply relative mx-auto flex h-28 w-28 items-center justify-center;
+    }
+
+    .ziifra-dashboard-balance-value {
+        @apply text-center;
+    }
+
+    .ziifra-dashboard-balance-value span:first-child {
+        @apply block text-2xl font-semibold tabular-nums text-ziifra-ink;
+    }
+
+    .ziifra-dashboard-list-row {
+        @apply flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 transition hover:bg-ziifra-cream/70;
+    }
+
+    .ziifra-dashboard-list-row a {
+        @apply font-medium text-ziifra-ink no-underline hover:text-ziifra-accent-deep;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .ziifra-dashboard .ziifra-dashboard-stat,
+        .ziifra-dashboard .ziifra-dashboard-panel {
+            animation: ziifra-dashboard-fade-in 0.45s ease both;
+        }
+
+        .ziifra-dashboard-stats .ziifra-dashboard-stat:nth-child(2) {
+            animation-delay: 0.05s;
+        }
+
+        .ziifra-dashboard-stats .ziifra-dashboard-stat:nth-child(3) {
+            animation-delay: 0.1s;
+        }
+
+        .ziifra-dashboard-stats .ziifra-dashboard-stat:nth-child(4) {
+            animation-delay: 0.15s;
+        }
+    }
+
+    @keyframes ziifra-dashboard-fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(6px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ── Dark theme refinements (app shell) ── */
+    [data-theme='dark'] {
+        .ziifra-app .hover\:bg-ziifra-cream:hover,
+        .ziifra-app .hover\:bg-ziifra-cream\/60:hover,
+        .ziifra-app .hover\:bg-ziifra-cream\/70:hover,
+        .ziifra-app .hover\:bg-ziifra-cream\/80:hover {
+            @apply bg-ziifra-surface-hover;
+        }
+
+        .ziifra-app .bg-white,
+    .ziifra-app .bg-white\/90,
+    .ziifra-app .bg-white\/80 {
+        @apply bg-ziifra-paper;
+    }
+
+    .ziifra-app .hover\:bg-white:hover {
+        @apply bg-ziifra-surface-hover;
+    }
+
+    .ziifra-app .from-white {
+        --tw-gradient-from: var(--color-ziifra-paper);
+    }
+
+    .ziifra-app .to-white {
+        --tw-gradient-to: var(--color-ziifra-paper);
+    }
+
+    .ziifra-app .bg-amber-50 {
+        @apply border-amber-500/25 bg-amber-500/10 text-amber-100;
+    }
+
+    .ziifra-app .text-amber-950,
+    .ziifra-app .text-amber-900,
+    .ziifra-app .text-amber-800 {
+        @apply text-amber-200;
+    }
+
+    .ziifra-app .border-amber-200\/90,
+    .ziifra-app .border-amber-300 {
+        @apply border-amber-500/30;
+    }
+
+    .ziifra-app .from-amber-50\/90 {
+        --tw-gradient-from: rgb(245 158 11 / 0.12);
+    }
+
+    .ziifra-app .bg-emerald-50 {
+        @apply border-emerald-500/25 bg-emerald-500/10 text-emerald-100;
+    }
+
+    .ziifra-app .text-emerald-950,
+    .ziifra-app .text-emerald-900 {
+        @apply text-emerald-200;
+    }
+
+    .ziifra-app .border-emerald-200\/90,
+    .ziifra-app .border-emerald-300 {
+        @apply border-emerald-500/30;
+    }
+
+    .ziifra-app .bg-sky-50,
+    .ziifra-app .from-sky-50\/90 {
+        @apply bg-sky-500/10;
+    }
+
+    .ziifra-app .text-sky-800 {
+        @apply text-sky-200;
+    }
+
+    .ziifra-app .bg-red-50 {
+        @apply bg-red-500/10 text-red-200;
+    }
+
+    .ziifra-app .text-red-600,
+    .ziifra-app .text-red-700 {
+        @apply text-red-400;
+    }
+
+    .ziifra-app .divide-ziifra-line\/60 > :not([hidden]) ~ :not([hidden]) {
+        border-color: rgb(30 41 59 / 0.65);
+    }
+
+    .ziifra-app input:not([type='checkbox']):not([type='radio']):not([type='file']):not([type='hidden']),
+    .ziifra-app select,
+    .ziifra-app textarea {
+        @apply bg-ziifra-surface text-ziifra-ink;
+    }
+
+    .ziifra-app input::placeholder,
+    .ziifra-app textarea::placeholder {
+        @apply text-ziifra-muted/70;
+    }
+
+    .ziifra-app select option {
+        @apply bg-ziifra-paper text-ziifra-ink;
+    }
+
+    .ziifra-employee-hero {
+        @apply relative overflow-hidden rounded-2xl border border-ziifra-line/70 bg-gradient-to-br from-ziifra-paper via-ziifra-surface to-ziifra-accent/[0.08] p-5 shadow-sm sm:p-7;
+    }
+
+    .ziifra-employee-shortcut {
+        @apply flex flex-col gap-3 rounded-2xl border border-ziifra-line/70 bg-ziifra-paper/90 p-4 no-underline shadow-sm transition hover:border-ziifra-accent/30 hover:shadow-md hover:shadow-ziifra-accent/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/30;
+    }
+
+    .ziifra-leave-card {
+        @apply block rounded-xl border border-ziifra-line/70 bg-ziifra-paper p-4 no-underline shadow-sm transition hover:border-ziifra-accent/25 hover:shadow-md hover:shadow-ziifra-accent/5;
+    }
+
+    .ziifra-dashboard-alert {
+        @apply inline-flex min-w-[12rem] max-w-xs items-center gap-3 rounded-xl border border-ziifra-line/80 bg-ziifra-paper px-4 py-3 text-sm font-medium text-ziifra-ink no-underline shadow-sm transition hover:border-ziifra-accent/30 hover:shadow-md;
+    }
+
+    .ziifra-dashboard-alert-alert {
+        @apply border-ziifra-accent/30 bg-gradient-to-br from-ziifra-accent/[0.08] to-ziifra-paper;
+    }
+
+    .ziifra-dashboard-alert-warn {
+        @apply border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-ziifra-paper;
+    }
+
+    .ziifra-dashboard-stat-warn {
+        @apply border-amber-500/30 bg-gradient-to-br from-amber-500/10 to-ziifra-paper hover:border-amber-400/40;
+    }
+
+    .ziifra-dashboard-action {
+        @apply flex w-full items-center gap-3 rounded-xl border border-ziifra-line/80 bg-ziifra-paper px-4 py-2.5 text-sm font-medium text-ziifra-ink no-underline shadow-sm transition hover:border-ziifra-accent/35 hover:bg-ziifra-surface-hover hover:text-ziifra-accent-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/30;
+    }
+
+    .ziifra-dashboard-org-card {
+        @apply flex items-center gap-3 rounded-xl border border-ziifra-line/60 bg-ziifra-paper/80 px-4 py-3 shadow-sm backdrop-blur-sm;
+    }
+
+    .ziifra-dashboard-insight {
+        @apply inline-flex items-center gap-1.5 rounded-full border border-ziifra-line/80 bg-ziifra-paper/90 px-3 py-1 text-xs font-medium text-ziifra-muted;
+    }
+
+    .ziifra-calendar-day-holiday {
+        @apply bg-gradient-to-b from-sky-500/10 to-ziifra-paper;
+    }
+
+    .ziifra-calendar-holiday {
+        @apply mt-1 truncate rounded-md bg-sky-500/15 px-1.5 py-0.5 text-[10px] font-medium leading-tight text-sky-200;
+    }
+
+    .ziifra-calendar-chip-approved {
+        @apply border-emerald-500/30 bg-emerald-500/10 text-emerald-100 hover:border-emerald-400/40;
+    }
+
+    .ziifra-calendar-chip-pending {
+        @apply border-amber-500/30 bg-amber-500/10 text-amber-100 hover:border-amber-400/40;
+    }
+
+    .ziifra-calendar-legend-pill {
+        @apply inline-flex items-center gap-2 rounded-full border border-ziifra-line/80 bg-ziifra-paper px-3 py-1.5 text-xs font-medium text-ziifra-muted shadow-sm;
+    }
+
+    .ziifra-leave-tab-active {
+        @apply bg-ziifra-accent text-ziifra-on-accent shadow-sm;
+    }
+
+    .ziifra-leave-tab-active:hover {
+        @apply bg-ziifra-accent-glow text-ziifra-on-accent;
+    }
+
+    body.ziifra-portal-employee {
+        @apply bg-gradient-to-b from-ziifra-cream via-ziifra-surface to-ziifra-cream;
+    }
+
+    .ziifra-mobile-tabbar {
+        @apply fixed inset-x-0 bottom-0 z-40 flex items-stretch justify-around border-t border-ziifra-line/80 bg-ziifra-paper/95 px-1 pt-1 backdrop-blur-md;
+        padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+
+    .ziifra-page-loader__shade {
+        @apply absolute right-0 bottom-0 flex items-center justify-center bg-ziifra-cream/90 backdrop-blur-[3px];
+        top: var(--ziifra-loader-header);
+        left: var(--ziifra-loader-sidebar);
+    }
+
+    /* Table row hovers */
+    .ziifra-app .hover\:bg-ziifra-cream\/20:hover,
+    .ziifra-app .hover\:bg-ziifra-cream\/30:hover,
+    .ziifra-app .hover\:bg-ziifra-cream\/40:hover {
+        @apply bg-ziifra-surface-hover;
+    }
+
+    /* Admin: remap legacy slate palette */
+    .ziifra-app .text-slate-900,
+    .ziifra-app .text-slate-800 {
+        @apply text-ziifra-ink;
+    }
+
+    .ziifra-app .text-slate-700 {
+        color: #cbd5e1;
+    }
+
+    .ziifra-app .text-slate-600,
+    .ziifra-app .text-slate-500 {
+        @apply text-ziifra-muted;
+    }
+
+    .ziifra-app .text-slate-400 {
+        color: rgb(100 116 139 / 0.75);
+    }
+
+    .ziifra-app .text-indigo-600,
+    .ziifra-app .text-indigo-700 {
+        @apply text-ziifra-accent-deep;
+    }
+
+    .ziifra-app .hover\:text-indigo-600:hover,
+    .ziifra-app .hover\:text-indigo-700:hover {
+        @apply text-ziifra-accent-glow;
+    }
+
+    .ziifra-app .hover\:text-slate-700:hover {
+        @apply text-ziifra-ink;
+    }
+
+    .ziifra-app .border-slate-100,
+    .ziifra-app .border-slate-200,
+    .ziifra-app .border-slate-300 {
+        @apply border-ziifra-line;
+    }
+
+    .ziifra-app .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+    .ziifra-app .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+        border-color: rgb(30 41 59 / 0.75);
+    }
+
+    .ziifra-app .bg-slate-50,
+    .ziifra-app .bg-slate-100 {
+        @apply bg-ziifra-surface;
+    }
+
+    .ziifra-app .hover\:bg-slate-50:hover {
+        @apply bg-ziifra-surface-hover;
+    }
+
+    .ziifra-app .bg-slate-900,
+    .ziifra-app .hover\:bg-slate-800:hover {
+        @apply bg-ziifra-accent text-ziifra-on-accent;
+    }
+
+    .ziifra-app .hover\:bg-slate-800:hover {
+        @apply bg-ziifra-accent-glow;
+    }
+
+    .ziifra-app .disabled\:bg-slate-100:disabled {
+        @apply bg-ziifra-surface text-ziifra-muted;
+    }
+
+    .ziifra-app .disabled\:text-slate-500:disabled {
+        @apply text-ziifra-muted;
+    }
+
+    .ziifra-app .focus\:border-slate-900:focus,
+    .ziifra-app .focus\:ring-slate-900:focus,
+    .ziifra-app .focus\:ring-slate-500:focus {
+        @apply border-ziifra-accent ring-ziifra-accent/30;
+    }
+
+    .ziifra-app .has-\[\:checked\]\:border-slate-900:has(:checked),
+    .ziifra-app .has-\[\:checked\]\:ring-slate-900:has(:checked) {
+        @apply border-ziifra-accent ring-ziifra-accent/40;
+    }
+
+    .ziifra-app .has-\[\:checked\]\:border-slate-400:has(:checked) {
+        @apply border-ziifra-accent/50;
+    }
+
+    .ziifra-app .hover\:border-slate-400:hover {
+        @apply border-ziifra-line;
+    }
+
+    .ziifra-app .text-red-700 {
+        @apply text-red-400;
+    }
+
+    .ziifra-app .text-amber-700 {
+        @apply text-amber-300;
+    }
+
+    .ziifra-app input[type='file']::file-selector-button {
+        @apply bg-ziifra-surface text-ziifra-ink;
+    }
+
+    .ziifra-app input[type='file']::file-selector-button:hover {
+        @apply bg-ziifra-surface-hover;
+    }
+
+    /* Pagination */
+    .ziifra-app nav[role='navigation'] a,
+    .ziifra-app nav[role='navigation'] span {
+        @apply border-ziifra-line bg-ziifra-paper text-ziifra-muted;
+    }
+
+    .ziifra-app nav[role='navigation'] a:hover {
+        @apply bg-ziifra-surface-hover text-ziifra-ink;
+    }
+
+    .ziifra-app nav[role='navigation'] span[aria-current='page'] span {
+        @apply border-ziifra-accent/40 bg-ziifra-accent/15 text-ziifra-accent-deep;
+    }
+
+    /* Marketing / landing mockups */
+    .ziifra-marketing .bg-white,
+    .ziifra-marketing .bg-white\/90,
+    .ziifra-marketing .bg-white\/80 {
+        @apply bg-ziifra-paper;
+    }
+
+    .ziifra-marketing .to-white {
+        --tw-gradient-to: var(--color-ziifra-paper);
+    }
+
+    .ziifra-marketing .hover\:bg-ziifra-cream:hover {
+        @apply bg-ziifra-surface-hover;
+    }
+    }
+
+    .ziifra-theme-option-active {
+        @apply bg-ziifra-surface text-ziifra-accent-deep shadow-sm;
+    }
+
+    [data-theme='dark'] .ziifra-theme-option-active {
+        @apply bg-ziifra-surface-hover;
+    }
+
+    [data-theme='dark'] .ziifra-logo-auto .ziifra-logo-word {
+        @apply text-white;
+    }
+}

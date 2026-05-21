@@ -1,0 +1,46 @@
+<?php
+
+return [
+    'title' => 'Company overview',
+    'header' => 'Admin dashboard',
+    'subtitle' => 'Manage people, leave, and compliance for :company.',
+    'role_owner' => 'Owner',
+    'role_admin' => 'Administrator',
+    'role_hr' => 'HR',
+
+    'needs_attention' => 'Needs attention',
+    'overview' => 'Overview',
+    'overview_hint' => 'Key numbers for your workspace at a glance.',
+    'leave_trend_title' => 'Leave trend',
+    'leave_trend_hint' => 'Approved leave days and pending requests over the last 6 months.',
+    'chart_approved_days' => 'Approved days',
+    'chart_pending_count' => 'Pending requests',
+    'stat_missing_login' => 'Without login',
+    'pending_approvals' => 'Pending leave approvals',
+    'pending_approvals_hint' => 'Requests waiting for your decision.',
+    'pending_approvals_empty' => 'No leave waiting for approval.',
+    'setup_checklist_hint' => 'Finish setup to get the most from ZIIFRA.',
+    'team_leave' => 'Team leave',
+    'team_leave_hint' => 'Who is out today and what is coming up.',
+    'people_and_payroll' => 'People & payroll',
+    'review_request' => 'Review',
+    'submitted' => 'Submitted :date',
+    'setup_checklist' => 'Getting started',
+    'leave_days_month' => ':days days approved this month',
+    'team_members' => ':count workspace members',
+
+    'alert_pending_leave' => ':count leave requests to review',
+    'alert_expiring_docs' => ':count documents expiring soon',
+    'alert_missing_login' => ':count employees without login',
+    'alert_pending_invites' => ':count pending invitations',
+    'alert_profile' => 'Complete company profile',
+    'alert_trial' => 'Trial ends in :days days',
+    'alert_trial_today' => 'Trial ends today',
+    'alert_payroll_draft' => 'Payroll draft needs review',
+
+    'checklist' => [
+        'profile' => 'Add legal details and branding',
+        'invite_team' => 'Invite an admin or HR teammate',
+        'add_employees' => 'Add your first employees',
+    ],
+];
