@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'plan.feature' => \App\Http\Middleware\EnsurePlanFeature::class,
             'employee.code_url' => \App\Http\Middleware\RedirectEmployeeNumericUrlToCode::class,
             'employee.default_tab' => \App\Http\Middleware\RedirectEmployeeDefaultTabQuery::class,
+            'project.code_url' => \App\Http\Middleware\RedirectProjectNumericUrlToCode::class,
             'payroll.period_url' => \App\Http\Middleware\RedirectPayrollNumericUrlToPeriod::class,
             'time.employee_url' => \App\Http\Middleware\RedirectTimeNumericEmployeeIdToCode::class,
         ]);

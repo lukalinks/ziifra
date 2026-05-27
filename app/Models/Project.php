@@ -15,10 +15,64 @@ class Project extends Model
 {
     use BelongsToOrganization, HasWorkspaceRoutes;
 
+    protected static function booted(): void
+    {
+        static::creating(function (Project $project): void {
+            if (blank($project->project_code)) {
+                $project->project_code = static::generateUniqueCode((int) $project->organization_id);
+            }
+        });
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'project_code';
+    }
+
+    public function getRouteKey(): string
+    {
+        return $this->project_code ?? (string) $this->getKey();
+    }
+
+    public static function generateUniqueCode(int $organizationId, ?int $exceptId = null): string
+    {
+        $maxSequence = static::query()
+            ->where('organization_id', $organizationId)
+            ->whereNotNull('project_code')
+            ->pluck('project_code')
+            ->map(function (string $code): int {
+                if (preg_match('/^PRJ-(\d+)$/i', $code, $matches) !== 1) {
+                    return 0;
+                }
+
+                return (int) $matches[1];
+            })
+            ->max() ?? 0;
+
+        $sequence = $maxSequence + 1;
+
+        do {
+            $code = 'PRJ-'.str_pad((string) $sequence, 3, '0', STR_PAD_LEFT);
+            $sequence++;
+        } while (static::query()
+            ->where('organization_id', $organizationId)
+            ->where('project_code', $code)
+            ->when($exceptId !== null, fn ($query) => $query->where('id', '!=', $exceptId))
+            ->exists());
+
+        return $code;
+    }
+
+    public function displayCode(): string
+    {
+        return $this->project_code ?? (string) $this->getKey();
+    }
+
     protected $fillable = [
         'organization_id',
         'created_by_user_id',
         'name',
+        'project_code',
         'description',
         'status',
         'start_date',

@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\EmployeeFieldDefinition;
+use App\Models\EmployeeFieldValue;
 use App\Models\Organization;
 use App\Models\EmployeeAllowance;
 use App\Models\EmployeeHourlyRate;

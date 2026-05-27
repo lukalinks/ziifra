@@ -72,6 +72,46 @@ class ProjectTest extends TestCase
             ->assertSee('Design mockups');
     }
 
+    public function test_project_url_uses_project_code(): void
+    {
+        $result = app(RegisterOrganizationService::class)->register(
+            'Owner',
+            'owner@acme.test',
+            'password123',
+            'Acme SHPK',
+        );
+
+        $this->useOrganizationPlan($result['organization'], SubscriptionPlan::Starter);
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->post($this->workspaceRoute('projects.store', $result['organization']), [
+                'name' => 'Zurich Tower Renovation',
+                'status' => ProjectStatus::Active->value,
+            ])
+            ->assertRedirect();
+
+        $project = Project::query()->first();
+        $this->assertNotNull($project);
+        $this->assertNotNull($project->project_code);
+
+        $codeUrl = $this->workspaceRoute('projects.show', $result['organization'], ['project' => $project]);
+
+        $this->assertStringContainsString('/projects/'.$project->project_code, $codeUrl);
+        $this->assertStringNotContainsString('/projects/'.$project->id, $codeUrl);
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->get($codeUrl)
+            ->assertOk()
+            ->assertSee('Zurich Tower Renovation');
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->get($this->workspaceRoute('projects.show', $result['organization'], ['project' => $project->id]))
+            ->assertRedirect($codeUrl);
+    }
+
     public function test_owner_can_update_task_status(): void
     {
         $result = app(RegisterOrganizationService::class)->register(

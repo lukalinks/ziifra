@@ -136,7 +136,7 @@ Route::middleware('auth')->group(function () {
         ->where('path', '.*');
 
     Route::prefix(Workspace::ROUTE_PREFIX.'/{organization}')
-        ->middleware(['org', 'org.active', 'employee.code_url', 'employee.default_tab', 'payroll.period_url', 'time.employee_url'])
+        ->middleware(['org', 'org.active', 'employee.code_url', 'employee.default_tab', 'project.code_url', 'payroll.period_url', 'time.employee_url'])
         ->group(function () {
             Route::get('/dashboard', DashboardController::class)->name('dashboard');
             Route::get('/team', [TeamInvitationController::class, 'index'])->name('team.index');

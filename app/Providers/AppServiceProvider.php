@@ -43,6 +43,7 @@ use App\Policies\EmployeePolicy;
 use App\Policies\InvitationPolicy;
 use App\Policies\OrganizationContractTemplatePolicy;
 use App\Policies\OrganizationPolicy;
+use App\Policies\PositionPolicy;
 use App\Policies\ProjectDocumentPolicy;
 use App\Policies\WorkspaceNavItemPolicy;
 use Illuminate\Database\Eloquent\Model;
@@ -118,7 +119,7 @@ class AppServiceProvider extends ServiceProvider
         Route::bind('folder', fn (string $value) => $this->resolveTenantModel(DocumentFolder::class, $value));
         Route::bind('invoice', fn (string $value) => $this->resolveTenantModel(Invoice::class, $value));
         Route::bind('expenseClaim', fn (string $value) => $this->resolveTenantModel(ExpenseClaim::class, $value));
-        Route::bind('project', fn (string $value) => $this->resolveTenantModel(Project::class, $value));
+        Route::bind('project', fn (string $value) => $this->resolveProject($value));
         Route::bind('projectDocument', fn (string $value) => $this->resolveTenantModel(ProjectDocument::class, $value));
         Route::bind('navItem', fn (string $value) => $this->resolveTenantModel(WorkspaceNavItem::class, $value));
         Route::bind('rate', fn (string $value) => $this->resolveTenantModel(EmployeeHourlyRate::class, $value));
@@ -212,6 +213,34 @@ class AppServiceProvider extends ServiceProvider
         }
 
         return $run;
+    }
+
+    protected function resolveProject(string $value): Project
+    {
+        $organizationId = \App\Support\CurrentOrganization::id()
+            ?? request()->session()->get('current_organization_id');
+
+        if ($organizationId === null) {
+            abort(404);
+        }
+
+        $project = Project::query()
+            ->where('organization_id', $organizationId)
+            ->where('project_code', $value)
+            ->first();
+
+        if ($project === null && ctype_digit($value)) {
+            $project = Project::query()
+                ->where('organization_id', $organizationId)
+                ->whereKey((int) $value)
+                ->first();
+        }
+
+        if ($project === null) {
+            abort(404);
+        }
+
+        return $project;
     }
 
     protected function resolveTenantModel(string $modelClass, string $key): Model

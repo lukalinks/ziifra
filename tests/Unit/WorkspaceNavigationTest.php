@@ -36,7 +36,7 @@ class WorkspaceNavigationTest extends TestCase
         $labels = array_column($groups, 'label');
 
         $this->assertSame([
-            __('navigation.overview'),
+            __('navigation.primary'),
             __('navigation.people'),
             __('navigation.pay_and_finance'),
             __('navigation.work'),
@@ -91,7 +91,7 @@ class WorkspaceNavigationTest extends TestCase
         $labels = array_column($groups, 'label');
 
         $this->assertSame([
-            __('navigation.overview'),
+            __('navigation.primary'),
             __('navigation.collaborate'),
         ], $labels);
 
@@ -128,7 +128,7 @@ class WorkspaceNavigationTest extends TestCase
         $labels = array_column($groups, 'label');
 
         $this->assertSame([
-            __('navigation.overview'),
+            __('navigation.primary'),
             __('navigation.people'),
             __('navigation.pay_and_finance'),
             __('navigation.work'),
@@ -170,7 +170,8 @@ class WorkspaceNavigationTest extends TestCase
 
         $flatLabels = array_column($flat, 'label');
 
-        $this->assertContains(__('navigation.documents'), $flatLabels);
+        $this->assertContains(__('navigation.hr_documents'), $flatLabels);
+        $this->assertContains(__('navigation.project_documents'), $flatLabels);
         $this->assertContains(__('navigation.chat'), $flatLabels);
     }
 
