@@ -59,7 +59,7 @@ set_env() {
 
 set_env "APP_ENV" "production"
 set_env "APP_DEBUG" "false"
-set_env "APP_URL" "http://187.124.163.32"
+set_env "APP_URL" "https://ziifra.com"
 set_env "DB_CONNECTION" "pgsql"
 set_env "DB_HOST" "127.0.0.1"
 set_env "DB_PORT" "5432"
@@ -87,7 +87,9 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO ziifra;
 SQL
 
 if [[ -f /etc/nginx/sites-available/ziifra ]]; then
-  sed -i 's/server_name .*/server_name _;/' /etc/nginx/sites-available/ziifra
+  if ! grep -q 'server_name ziifra.com' /etc/nginx/sites-available/ziifra; then
+    sed -i 's/server_name .*/server_name ziifra.com www.ziifra.com;/' /etc/nginx/sites-available/ziifra
+  fi
   nginx -t && systemctl reload nginx
 fi
 
