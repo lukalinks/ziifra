@@ -11,7 +11,7 @@
                 <span class="ziifra-dashboard-badge">{{ $outToday->count() }}</span>
             @endif
         </div>
-        <div class="flex min-h-[12rem] flex-1 flex-col p-3">
+        <div class="flex min-h-[8rem] flex-1 flex-col p-3 sm:min-h-[12rem]">
             @if ($outToday->isEmpty())
                 <div class="ziifra-dashboard-empty flex-1">
                     <span class="ziifra-dashboard-empty-icon text-ziifra-accent/70">
@@ -51,7 +51,7 @@
                 <span class="ziifra-dashboard-badge">{{ $upcomingLeave->count() }}</span>
             @endif
         </div>
-        <div class="flex min-h-[12rem] flex-1 flex-col p-3">
+        <div class="flex min-h-[8rem] flex-1 flex-col p-3 sm:min-h-[12rem]">
             @if ($upcomingLeave->isEmpty())
                 <div class="ziifra-dashboard-empty flex-1">
                     <span class="ziifra-dashboard-empty-icon text-ziifra-muted/40">

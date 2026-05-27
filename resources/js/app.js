@@ -1,17 +1,29 @@
 import './charts/leave-trend.js';
 import { initPageLoader } from './page-loader.js';
 import { initExpenseReceiptScan } from './expense-receipt-scan.js';
+import { initEmployeesQuickFilter, initProjectHoursFilter } from './employees-quick-filter.js';
+import { initEmployeeProfileTabs } from './employee-profile-tabs.js';
+import { initPayrollCreateForm } from './payroll-create-form.js';
+import './searchable-select.js';
 
 import { initConfirmDialog } from './confirm-dialog.js';
 import { initNotifications } from './notifications.js';
+import { initAdminMobileNav } from './admin-mobile-nav.js';
+import { initMobileNav } from './mobile-nav.js';
 import { initTheme, initThemeSwitcher } from './theme.js';
 
 initTheme();
 initThemeSwitcher();
+initMobileNav();
+initAdminMobileNav();
 initPageLoader();
 initConfirmDialog();
 initNotifications();
 initExpenseReceiptScan();
+initEmployeesQuickFilter();
+initProjectHoursFilter();
+initEmployeeProfileTabs();
+initPayrollCreateForm();
 
 document.querySelectorAll('[data-password-toggle]').forEach((button) => {
     const inputId = button.getAttribute('data-password-toggle');

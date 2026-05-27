@@ -41,6 +41,9 @@ return [
     'add_another_custom_field' => '+ Shto një fushë tjetër',
     'section_direct_reports' => 'Nënordinuesit e drejtpërdrejtë',
     'section_summary' => 'Me një shikim',
+    'tenure_hint' => ':duration me kompaninë',
+    'documents_count' => '{0} Asnjë dokument|{1} :count dokument|[2,*] :count dokumente',
+    'expiring_documents_count' => '{1} :count kërkon vëmendje|[2,*] :count kërkojnë vëmendje',
 
     'field_email' => 'Email',
     'field_phone' => 'Telefoni',

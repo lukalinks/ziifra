@@ -173,4 +173,24 @@ class WorkspaceNavigationTest extends TestCase
         $this->assertContains(__('navigation.documents'), $flatLabels);
         $this->assertContains(__('navigation.chat'), $flatLabels);
     }
+
+    public function test_primary_mobile_navigation_limits_tab_bar_items(): void
+    {
+        $result = app(RegisterOrganizationService::class)->register(
+            'Owner',
+            'owner@acme.test',
+            'password123',
+            'Acme SHPK',
+        );
+
+        $billing = Mockery::mock(OrganizationBillingService::class);
+        $billing->shouldReceive('hasFeature')->andReturn(true);
+        $this->app->instance(OrganizationBillingService::class, $billing);
+
+        $nav = app(WorkspaceNavigation::class);
+        $primary = $nav->primaryMobile($result['organization'], $result['user']);
+
+        $this->assertCount(3, $primary);
+        $this->assertSame('dashboard', $primary[0]['route']);
+    }
 }

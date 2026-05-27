@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDocumentFromIndexRequest;
+use App\Models\DocumentFolder;
 use App\Models\Employee;
 use App\Models\EmployeeDocument;
 use App\Models\OrganizationContractTemplate;
@@ -25,6 +26,37 @@ class DocumentController extends Controller
         $canManage = $role?->canManageEmployees() ?? false;
         $contractTemplates->ensureDefaults($organization);
 
+        $contractTemplates = OrganizationContractTemplate::query()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        $selectedContractSlug = $request->query('contract');
+        if (! $contractTemplates->contains('slug', $selectedContractSlug)) {
+            $selectedContractSlug = $contractTemplates->first()?->slug;
+        }
+
+        $typeCounts = $index->countsByType();
+        $customFolders = DocumentFolder::query()
+            ->withCount('documents')
+            ->orderBy('name')
+            ->get();
+
+        $selectedType = $request->string('type')->toString();
+        if ($selectedType !== '' && ! in_array($selectedType, array_column(\App\Enums\EmployeeDocumentType::cases(), 'value'), true)) {
+            $selectedType = '';
+        }
+
+        $selectedFolder = null;
+        if ($folderId = $request->integer('folder')) {
+            $selectedFolder = DocumentFolder::query()->findOrFail($folderId);
+            $selectedType = '';
+        }
+
+        $hasFilters = $request->hasAny(['search', 'employee_id', 'expiry']);
+        $summaryStats = $index->summaryStats();
+
         return view('app.documents.index', [
             'organization' => $organization,
             'documents' => $index->paginate($request),
@@ -33,11 +65,16 @@ class DocumentController extends Controller
                 ->orderBy('first_name')
                 ->get(),
             'types' => \App\Enums\EmployeeDocumentType::cases(),
-            'contractTemplates' => OrganizationContractTemplate::query()
-                ->where('is_active', true)
-                ->orderBy('sort_order')
-                ->orderBy('name')
-                ->get(),
+            'typeCounts' => $typeCounts,
+            'customFolders' => $customFolders,
+            'totalDocumentCount' => $summaryStats['total'],
+            'summaryStats' => $summaryStats,
+            'selectedType' => $selectedType !== '' ? $selectedType : null,
+            'selectedFolder' => $selectedFolder,
+            'hasFilters' => $hasFilters,
+            'showFolderContents' => $selectedType !== '' || $selectedFolder !== null || $hasFilters,
+            'contractTemplates' => $contractTemplates,
+            'selectedContractSlug' => $selectedContractSlug,
             'canManage' => $canManage,
             'canManageOrganization' => $role?->canManageOrganization() ?? false,
         ]);
@@ -57,8 +94,13 @@ class DocumentController extends Controller
             $request->user(),
         );
 
+        $validated = $request->validated();
+
         return redirect()
-            ->route('documents.index')
+            ->route('documents.index', array_filter([
+                'folder' => $validated['document_folder_id'] ?? null,
+                'type' => empty($validated['document_folder_id']) ? ($validated['type'] ?? null) : null,
+            ]))
             ->with('status', __('documents.uploaded'));
     }
 }

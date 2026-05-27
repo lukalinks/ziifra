@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\EmployeeDocumentType;
 use App\Models\Employee;
+use App\Support\CurrentOrganization;
 use App\Support\EmployeeDocumentStorage;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -34,6 +35,11 @@ class StoreEmployeeDocumentRequest extends FormRequest
             ],
             'expires_at' => ['nullable', 'date', 'after_or_equal:today'],
             'notes' => ['nullable', 'string', 'max:2000'],
+            'document_folder_id' => [
+                'nullable',
+                'integer',
+                Rule::exists('document_folders', 'id')->where('organization_id', CurrentOrganization::id()),
+            ],
         ];
     }
 }

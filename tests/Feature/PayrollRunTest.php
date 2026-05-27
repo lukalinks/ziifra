@@ -69,15 +69,22 @@ class PayrollRunTest extends TestCase
         $run = PayrollRun::query()->where('organization_id', $organization->id)->first();
         $this->assertNotNull($run);
 
+        $this->assertSame('2026-05', $run->periodSlug());
+
+        $showPath = $this->workspaceRoute('payroll.show', $organization, ['payrollRun' => $run->periodSlug()]);
+
         $this->actingAs($result['user'])
             ->withSession(['current_organization_id' => $organization->id])
-            ->get($run->showUrl())
+            ->get($showPath)
             ->assertOk();
 
-        $this->assertSame(
-            $this->workspaceRoute('payroll.show', $organization, ['payrollRun' => $run->id]),
-            $run->showUrl(),
-        );
+        $this->assertStringContainsString('/payroll/'.$run->periodSlug(), $run->showUrl());
+        $this->assertStringNotContainsString('/payroll/'.$run->id, $run->showUrl());
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $organization->id])
+            ->get($this->workspaceRoute('payroll.show', $organization, ['payrollRun' => $run->id]))
+            ->assertRedirect($run->showUrl());
         $this->assertTrue($run->isDraft());
         $this->assertSame(1, $run->items()->count());
 
@@ -93,7 +100,7 @@ class PayrollRunTest extends TestCase
                     $item->id => ['gross_salary' => 1200],
                 ],
             ])
-            ->assertRedirect($this->workspaceRoute('payroll.show', $organization, ['payrollRun' => $run->id]));
+            ->assertRedirect($run->showUrl());
 
         $item->refresh();
         $this->assertSame('1200.00', (string) $item->gross_salary);
@@ -102,26 +109,29 @@ class PayrollRunTest extends TestCase
 
         $this->actingAs($result['user'])
             ->withSession(['current_organization_id' => $organization->id])
-            ->post($this->workspaceRoute('payroll.lock', $organization, ['payrollRun' => $run->id]))
-            ->assertRedirect($this->workspaceRoute('payroll.show', $organization, ['payrollRun' => $run->id]));
+            ->post($this->workspaceRoute('payroll.lock', $organization, ['payrollRun' => $run]))
+            ->assertRedirect($run->showUrl());
 
         $run->refresh();
         $this->assertTrue($run->isLocked());
         $this->assertSame(PayrollRunStatus::Locked, $run->status);
 
+        $payslipUrl = $this->workspaceRoute('payroll.payslip', $organization, [
+            'payrollRun' => $run,
+            'item' => $item->id,
+        ]);
+        $this->assertStringContainsString('/payroll/'.$run->periodSlug().'/', $payslipUrl);
+
         $this->actingAs($result['user'])
             ->withSession(['current_organization_id' => $organization->id])
-            ->get($this->workspaceRoute('payroll.payslip', $organization, [
-                'payrollRun' => $run->id,
-                'item' => $item->id,
-            ]))
+            ->get($payslipUrl)
             ->assertOk()
             ->assertSee($employee->fullName());
 
         $pdfResponse = $this->actingAs($result['user'])
             ->withSession(['current_organization_id' => $organization->id])
             ->get($this->workspaceRoute('payroll.payslip.pdf', $organization, [
-                'payrollRun' => $run->id,
+                'payrollRun' => $run,
                 'item' => $item->id,
             ]));
         $pdfResponse->assertOk();
@@ -134,7 +144,7 @@ class PayrollRunTest extends TestCase
         $zipResponse = $this->actingAs($result['user'])
             ->withSession(['current_organization_id' => $organization->id])
             ->get($this->workspaceRoute('payroll.export-pdfs', $organization, [
-                'payrollRun' => $run->id,
+                'payrollRun' => $run,
             ]));
         $zipResponse->assertOk();
         $this->assertStringContainsString(
@@ -150,10 +160,10 @@ class PayrollRunTest extends TestCase
         $this->actingAs($result['user'])
             ->withSession(['current_organization_id' => $organization->id])
             ->post($this->workspaceRoute('payroll.payslip.email', $organization, [
-                'payrollRun' => $run->id,
+                'payrollRun' => $run,
                 'item' => $item->id,
             ]))
-            ->assertRedirect($this->workspaceRoute('payroll.show', $organization, ['payrollRun' => $run->id]))
+            ->assertRedirect($run->showUrl())
             ->assertSessionHas('alert');
 
         Mail::assertSent(PayslipMail::class, 1);
@@ -209,8 +219,8 @@ class PayrollRunTest extends TestCase
 
         $this->actingAs($result['user'])
             ->withSession($session)
-            ->post($this->workspaceRoute('payroll.email-payslips', $organization, ['payrollRun' => $run->id]))
-            ->assertRedirect($this->workspaceRoute('payroll.show', $organization, ['payrollRun' => $run->id]))
+            ->post($this->workspaceRoute('payroll.email-payslips', $organization, ['payrollRun' => $run]))
+            ->assertRedirect($run->showUrl())
             ->assertSessionHas('alert');
 
         Mail::assertSent(PayslipMail::class, 1);

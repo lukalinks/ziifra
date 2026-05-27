@@ -41,6 +41,9 @@ return [
     'add_another_custom_field' => '+ Weiteres Feld hinzufügen',
     'section_direct_reports' => 'Direkte Unterstellte',
     'section_summary' => 'Auf einen Blick',
+    'tenure_hint' => ':duration im Unternehmen',
+    'documents_count' => '{0} Keine Dokumente|{1} :count Dokument|[2,*] :count Dokumente',
+    'expiring_documents_count' => '{1} :count erfordert Aufmerksamkeit|[2,*] :count erfordern Aufmerksamkeit',
 
     'field_email' => 'E-Mail',
     'field_phone' => 'Telefon',

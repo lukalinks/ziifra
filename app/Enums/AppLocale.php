@@ -7,6 +7,7 @@ enum AppLocale: string
     case English = 'en';
     case Albanian = 'sq';
     case German = 'de';
+    case Serbian = 'sr';
 
     public function label(): string
     {
@@ -14,6 +15,7 @@ enum AppLocale: string
             self::English => __('locales.english'),
             self::Albanian => __('locales.albanian'),
             self::German => __('locales.german'),
+            self::Serbian => __('locales.serbian'),
         };
     }
 
@@ -23,6 +25,7 @@ enum AppLocale: string
             self::English => 'English',
             self::Albanian => 'Shqip',
             self::German => 'Deutsch',
+            self::Serbian => 'Srpski',
         };
     }
 
@@ -31,6 +34,6 @@ enum AppLocale: string
      */
     public static function configurable(): array
     {
-        return [self::English, self::Albanian, self::German];
+        return [self::English, self::Albanian, self::German, self::Serbian];
     }
 }

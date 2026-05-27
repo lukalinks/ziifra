@@ -26,4 +26,7 @@ return [
     'coming_soon' => 'Bald',
     'coming_soon_hint' => 'Dieses Modul kommt bald',
     'mobile_nav' => 'Hauptnavigation',
+    'menu' => 'Menü',
+    'open_menu' => 'Menü öffnen',
+    'close_menu' => 'Menü schließen',
 ];

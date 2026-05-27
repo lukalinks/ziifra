@@ -9,6 +9,7 @@ return [
     'rejected' => 'Expense claim rejected.',
     'cancelled' => 'Expense claim cancelled.',
     'empty' => 'No expense claims yet.',
+    'count' => ':count claims',
     'filter' => 'Filter',
     'clear_filters' => 'Clear',
     'all_statuses' => 'All statuses',

@@ -7,8 +7,13 @@ use App\Http\Requests\StoreInvoiceRequest;
 use App\Http\Requests\UpdateInvoiceRequest;
 use App\Models\Invoice;
 use App\Models\Organization;
+use App\Models\Project;
+use App\Services\InvoiceExportService;
+use App\Services\InvoiceFromHoursService;
+use App\Services\InvoicePdfService;
 use App\Services\InvoiceService;
 use App\Support\CurrentOrganization;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -51,7 +56,52 @@ class InvoiceController extends Controller
 
         return view('app.invoices.create', [
             'organization' => CurrentOrganization::check(),
+            'projects' => Project::query()->orderBy('name')->get(),
+            'prefillProjectId' => request()->integer('project') ?: null,
+            'prefillPeriodStart' => request('period_start'),
+            'prefillPeriodEnd' => request('period_end'),
         ]);
+    }
+
+    public function storeFromHours(Request $request, InvoiceFromHoursService $fromHours): RedirectResponse
+    {
+        $this->authorize('create', Invoice::class);
+
+        $validated = $request->validate([
+            'project_id' => ['required', 'integer', 'exists:projects,id'],
+            'period_start' => ['required', 'date'],
+            'period_end' => ['required', 'date', 'after_or_equal:period_start'],
+            'client_name' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $project = Project::query()->findOrFail($validated['project_id']);
+
+        $invoice = $fromHours->createFromProjectHours(
+            CurrentOrganization::check(),
+            $project,
+            Carbon::parse($validated['period_start']),
+            Carbon::parse($validated['period_end']),
+            $request->user(),
+            $validated['client_name'] ?? null,
+        );
+
+        return redirect()
+            ->to($invoice->workspaceRoute('invoices.show'))
+            ->with('status', __('invoices.created_from_hours'));
+    }
+
+    public function pdf(Organization $organization, Invoice $invoice, InvoicePdfService $pdf)
+    {
+        $this->authorize('view', $invoice);
+
+        return $pdf->download($invoice, $organization);
+    }
+
+    public function export(Organization $organization, Invoice $invoice, InvoiceExportService $export)
+    {
+        $this->authorize('view', $invoice);
+
+        return $export->exportCsv($invoice);
     }
 
     public function store(StoreInvoiceRequest $request, InvoiceService $invoices): RedirectResponse

@@ -15,14 +15,14 @@
         ->implode('');
 @endphp
 
-<div class="ziifra-dashboard ziifra-dashboard-employee mx-auto max-w-5xl space-y-6 md:space-y-8">
+<div class="ziifra-dashboard-page ziifra-dashboard ziifra-dashboard-employee mx-auto max-w-5xl">
     <section class="ziifra-employee-hero">
-        <div class="relative z-[1] flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
+        <div class="relative z-[1] flex flex-col gap-5">
             <div class="flex min-w-0 items-start gap-4">
                 <span class="ziifra-employee-avatar" aria-hidden="true">{{ $initials }}</span>
-                <div class="min-w-0">
+                <div class="min-w-0 flex-1">
                     <p class="font-mono text-xs uppercase tracking-wider text-ziifra-muted">{{ $todayLabel }}</p>
-                    <h2 class="mt-1 text-2xl font-semibold tracking-tight text-ziifra-ink sm:text-3xl">
+                    <h2 class="mt-1 text-xl font-semibold tracking-tight text-ziifra-ink sm:text-2xl lg:text-3xl">
                         {{ __('dashboard.welcome', ['greeting' => $greeting, 'name' => $firstName]) }}
                     </h2>
                     <p class="mt-2 text-sm leading-relaxed text-ziifra-muted">
@@ -37,7 +37,7 @@
                 </div>
             </div>
             @if ($hasEmployeeProfile)
-                <a href="{{ route('leave.create') }}" data-page-nav class="ziifra-btn-primary shrink-0 self-start sm:self-center">
+                <a href="{{ route('leave.create') }}" data-page-nav class="ziifra-btn-primary w-full justify-center sm:w-auto sm:self-start">
                     {{ __('employee_dashboard.request_leave') }}
                 </a>
             @endif

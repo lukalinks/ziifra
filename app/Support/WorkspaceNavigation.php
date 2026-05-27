@@ -6,6 +6,7 @@ use App\Enums\OrganizationRole;
 use App\Enums\PlanFeature;
 use App\Models\Organization;
 use App\Models\User;
+use App\Models\WorkspaceNavItem;
 use App\Services\EmployeeProfileService;
 use App\Services\OrganizationBillingService;
 
@@ -16,18 +17,7 @@ class WorkspaceNavigation
     ) {}
 
     /**
-     * Grouped workspace navigation for the app sidebar.
-     *
-     * @return list<array{
-     *     label: string,
-     *     items: list<array{
-     *         label: string,
-     *         route: string|null,
-     *         active: bool,
-     *         enabled: bool,
-     *         coming_soon: bool,
-     *     }>
-     * }>
+     * @return list<array{label: string, items: list<array<string, mixed>>}>
      */
     public function groups(?Organization $organization, ?User $user): array
     {
@@ -43,33 +33,71 @@ class WorkspaceNavigation
 
         $profiles = app(EmployeeProfileService::class);
         $linkedEmployee = $profiles->employeeFor($user, $organization);
-
         $groups = [];
 
-        $groups[] = [
-            'label' => __('navigation.overview'),
-            'items' => [
-                $this->link(__('navigation.dashboard'), 'dashboard', request()->routeIs('dashboard')),
-            ],
+        $primaryItems = [
+            $this->link(__('navigation.dashboard'), 'dashboard', request()->routeIs('dashboard')),
         ];
 
-        $peopleItems = [];
-
         if ($role->canViewEmployees()) {
-            $peopleItems[] = $this->link(
+            $primaryItems[] = $this->link(
                 __('navigation.employees'),
                 'employees.index',
                 request()->routeIs('employees.*'),
             );
-
-            if ($this->billing->hasFeature($organization, PlanFeature::Documents)) {
-                $peopleItems[] = $this->link(
-                    __('navigation.documents'),
-                    'documents.index',
-                    request()->routeIs('documents.*'),
-                );
-            }
         }
+
+        if ($role->canViewEmployees() && $this->billing->hasFeature($organization, PlanFeature::Projects)) {
+            $primaryItems[] = $this->link(
+                __('navigation.projects'),
+                'projects.index',
+                request()->routeIs('projects.*'),
+            );
+        }
+
+        if ($role->canViewEmployees() && $this->billing->hasFeature($organization, PlanFeature::Documents)) {
+            $primaryItems[] = $this->link(
+                __('navigation.project_documents'),
+                'project-documents.index',
+                request()->routeIs('project-documents.*'),
+            );
+            $primaryItems[] = $this->link(
+                __('navigation.hr_documents'),
+                'documents.index',
+                request()->routeIs('documents.*'),
+            );
+        }
+
+        if ($role->canManageEmployees() && $this->billing->hasFeature($organization, PlanFeature::Payroll)) {
+            $primaryItems[] = $this->link(
+                __('navigation.payroll'),
+                'payroll.index',
+                request()->routeIs('payroll.*'),
+            );
+        }
+
+        if ($role->canManageFinance() && $this->billing->hasFeature($organization, PlanFeature::Invoices)) {
+            $primaryItems[] = $this->link(
+                __('navigation.invoices'),
+                'invoices.index',
+                request()->routeIs('invoices.*'),
+            );
+        }
+
+        foreach (WorkspaceNavItem::query()->orderBy('sort_order')->get() as $customItem) {
+            $primaryItems[] = [
+                'label' => $customItem->label,
+                'route' => null,
+                'href' => $customItem->url,
+                'active' => false,
+                'enabled' => true,
+                'coming_soon' => false,
+            ];
+        }
+
+        $this->pushGroup($groups, __('navigation.primary'), $primaryItems);
+
+        $peopleItems = [];
 
         if ($this->billing->hasFeature($organization, PlanFeature::Leave)
             && ($role->canViewAllLeave()
@@ -85,22 +113,6 @@ class WorkspaceNavigation
 
         $payItems = [];
 
-        if ($role->canManageEmployees() && $this->billing->hasFeature($organization, PlanFeature::Payroll)) {
-            $payItems[] = $this->link(
-                __('navigation.payroll'),
-                'payroll.index',
-                request()->routeIs('payroll.*'),
-            );
-        }
-
-        if ($role->canManageFinance() && $this->billing->hasFeature($organization, PlanFeature::Invoices)) {
-            $payItems[] = $this->link(
-                __('navigation.invoices'),
-                'invoices.index',
-                request()->routeIs('invoices.*'),
-            );
-        }
-
         if ($this->billing->hasFeature($organization, PlanFeature::Expenses)
             && ($role->canManageFinance()
             || $role->usesTeamDashboard()
@@ -115,14 +127,6 @@ class WorkspaceNavigation
         $this->pushGroup($groups, __('navigation.pay_and_finance'), $payItems);
 
         $workItems = [];
-
-        if ($role->canViewEmployees() && $this->billing->hasFeature($organization, PlanFeature::Projects)) {
-            $workItems[] = $this->link(
-                __('navigation.projects'),
-                'projects.index',
-                request()->routeIs('projects.*'),
-            );
-        }
 
         if ($this->billing->hasFeature($organization, PlanFeature::TimeTracking)
             && ($role->canViewEmployees()
@@ -151,15 +155,9 @@ class WorkspaceNavigation
         $this->pushGroup($groups, __('navigation.insights'), $insightItems);
 
         if ($this->billing->hasFeature($organization, PlanFeature::Chat)) {
-            $collaborateItems = [
-                $this->link(
-                    __('navigation.chat'),
-                    'chat.index',
-                    request()->routeIs('chat.*'),
-                ),
-            ];
-
-            $this->pushGroup($groups, __('navigation.collaborate'), $collaborateItems);
+            $this->pushGroup($groups, __('navigation.collaborate'), [
+                $this->link(__('navigation.chat'), 'chat.index', request()->routeIs('chat.*')),
+            ]);
         }
 
         $adminItems = [];
@@ -186,9 +184,7 @@ class WorkspaceNavigation
     }
 
     /**
-     * Flat list of enabled links (for mobile horizontal nav).
-     *
-     * @return list<array{label: string, route: string, active: bool, enabled: bool, coming_soon: bool}>
+     * @return list<array<string, mixed>>
      */
     public function flat(?Organization $organization, ?User $user): array
     {
@@ -203,6 +199,68 @@ class WorkspaceNavigation
         }
 
         return $items;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    public function primaryMobile(?Organization $organization, ?User $user, int $limit = 3): array
+    {
+        $flat = $this->flat($organization, $user);
+
+        if ($flat === []) {
+            return [];
+        }
+
+        $priorityRoutes = [
+            'dashboard',
+            'employees.index',
+            'projects.index',
+            'project-documents.index',
+            'payroll.index',
+            'leave.index',
+            'time.index',
+            'expenses.index',
+            'chat.index',
+            'documents.index',
+            'invoices.index',
+            'reports.index',
+            'settings.index',
+            'team.index',
+        ];
+
+        $picked = [];
+        $pickedRoutes = [];
+
+        foreach ($priorityRoutes as $route) {
+            if (count($picked) >= $limit) {
+                break;
+            }
+
+            foreach ($flat as $item) {
+                if (($item['route'] ?? null) === $route && ! in_array($route, $pickedRoutes, true)) {
+                    $picked[] = $item;
+                    $pickedRoutes[] = $route;
+
+                    break;
+                }
+            }
+        }
+
+        foreach ($flat as $item) {
+            if (count($picked) >= $limit) {
+                break;
+            }
+
+            $route = $item['route'] ?? null;
+
+            if ($route !== null && ! in_array($route, $pickedRoutes, true)) {
+                $picked[] = $item;
+                $pickedRoutes[] = $route;
+            }
+        }
+
+        return $picked;
     }
 
     /**
@@ -222,30 +280,17 @@ class WorkspaceNavigation
     }
 
     /**
-     * @return array{label: string, route: string, active: bool, enabled: bool, coming_soon: bool}
+     * @return array<string, mixed>
      */
     protected function link(string $label, string $route, bool $active): array
     {
         return [
             'label' => $label,
             'route' => $route,
+            'href' => null,
             'active' => $active,
             'enabled' => true,
             'coming_soon' => false,
-        ];
-    }
-
-    /**
-     * @return array{label: string, route: null, active: bool, enabled: bool, coming_soon: bool}
-     */
-    protected function comingSoon(string $label): array
-    {
-        return [
-            'label' => $label,
-            'route' => null,
-            'active' => false,
-            'enabled' => false,
-            'coming_soon' => true,
         ];
     }
 }

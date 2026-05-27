@@ -7,13 +7,17 @@ use App\Enums\OAuthProvider;
 use App\Models\Department;
 use App\Support\SocialAuth;
 use App\Models\Employee;
+use App\Models\DocumentFolder;
 use App\Models\EmployeeDocument;
 use App\Models\ExpenseClaim;
 use App\Models\Invoice;
 use App\Models\Project;
+use App\Models\ProjectDocument;
 use App\Models\ProjectTask;
+use App\Models\WorkspaceNavItem;
 use App\Models\TimeEntry;
 use App\Models\ChatMessage;
+use App\Models\EmployeeHourlyRate;
 use App\Models\EmployeeFieldDefinition;
 use App\Models\Invitation;
 use App\Models\LeaveRequest;
@@ -22,6 +26,7 @@ use App\Models\Organization;
 use App\Models\PayrollItem;
 use App\Models\PayrollRun;
 use App\Models\Position;
+use App\Policies\DocumentFolderPolicy;
 use App\Policies\DepartmentPolicy;
 use App\Policies\PayrollItemPolicy;
 use App\Policies\PayrollRunPolicy;
@@ -38,7 +43,8 @@ use App\Policies\EmployeePolicy;
 use App\Policies\InvitationPolicy;
 use App\Policies\OrganizationContractTemplatePolicy;
 use App\Policies\OrganizationPolicy;
-use App\Policies\PositionPolicy;
+use App\Policies\ProjectDocumentPolicy;
+use App\Policies\WorkspaceNavItemPolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use App\Services\NotificationFeedService;
@@ -83,9 +89,12 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Invitation::class, InvitationPolicy::class);
         Gate::policy(Employee::class, EmployeePolicy::class);
         Gate::policy(EmployeeDocument::class, EmployeeDocumentPolicy::class);
+        Gate::policy(DocumentFolder::class, DocumentFolderPolicy::class);
         Gate::policy(Invoice::class, InvoicePolicy::class);
         Gate::policy(ExpenseClaim::class, ExpenseClaimPolicy::class);
         Gate::policy(Project::class, ProjectPolicy::class);
+        Gate::policy(ProjectDocument::class, ProjectDocumentPolicy::class);
+        Gate::policy(WorkspaceNavItem::class, WorkspaceNavItemPolicy::class);
         Gate::policy(TimeEntry::class, TimeEntryPolicy::class);
         Gate::policy(ChatMessage::class, ChatMessagePolicy::class);
         Gate::policy(EmployeeFieldDefinition::class, EmployeeFieldDefinitionPolicy::class);
@@ -96,8 +105,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(PayrollRun::class, PayrollRunPolicy::class);
         Gate::policy(PayrollItem::class, PayrollItemPolicy::class);
 
-        Route::bind('employee', fn (string $value) => $this->resolveTenantModel(Employee::class, $value));
-        Route::bind('payrollRun', fn (string $value) => $this->resolveTenantModel(PayrollRun::class, $value));
+        Route::bind('employee', fn (string $value) => $this->resolveEmployee($value));
+        Route::bind('payrollRun', fn (string $value) => $this->resolvePayrollRun($value));
         Route::bind('item', fn (string $value) => $this->resolveTenantModel(PayrollItem::class, $value));
         Route::bind('leaveRequest', fn (string $value) => $this->resolveTenantModel(LeaveRequest::class, $value));
         Route::bind('leaveType', fn (string $value) => $this->resolveTenantModel(LeaveType::class, $value));
@@ -106,9 +115,13 @@ class AppServiceProvider extends ServiceProvider
         Route::bind('invitation', fn (string $value) => $this->resolveTenantModel(Invitation::class, $value));
         Route::bind('fieldDefinition', fn (string $value) => $this->resolveTenantModel(EmployeeFieldDefinition::class, $value));
         Route::bind('document', fn (string $value) => $this->resolveTenantModel(EmployeeDocument::class, $value));
+        Route::bind('folder', fn (string $value) => $this->resolveTenantModel(DocumentFolder::class, $value));
         Route::bind('invoice', fn (string $value) => $this->resolveTenantModel(Invoice::class, $value));
         Route::bind('expenseClaim', fn (string $value) => $this->resolveTenantModel(ExpenseClaim::class, $value));
         Route::bind('project', fn (string $value) => $this->resolveTenantModel(Project::class, $value));
+        Route::bind('projectDocument', fn (string $value) => $this->resolveTenantModel(ProjectDocument::class, $value));
+        Route::bind('navItem', fn (string $value) => $this->resolveTenantModel(WorkspaceNavItem::class, $value));
+        Route::bind('rate', fn (string $value) => $this->resolveTenantModel(EmployeeHourlyRate::class, $value));
         Route::bind('task', fn (string $value) => $this->resolveTenantModel(ProjectTask::class, $value));
         Route::bind('timeEntry', fn (string $value) => $this->resolveTenantModel(TimeEntry::class, $value));
         Route::bind('chatMessage', fn (string $value) => $this->resolveTenantModel(ChatMessage::class, $value));
@@ -140,6 +153,65 @@ class AppServiceProvider extends ServiceProvider
             ->where('organization_id', $organizationId)
             ->where('slug', $slug)
             ->firstOrFail();
+    }
+
+    protected function resolveEmployee(string $value): Employee
+    {
+        $organizationId = \App\Support\CurrentOrganization::id()
+            ?? request()->session()->get('current_organization_id');
+
+        if ($organizationId === null) {
+            abort(404);
+        }
+
+        $employee = Employee::query()
+            ->where('organization_id', $organizationId)
+            ->where('employee_code', $value)
+            ->first();
+
+        if ($employee === null && ctype_digit($value)) {
+            $employee = Employee::query()
+                ->where('organization_id', $organizationId)
+                ->whereKey((int) $value)
+                ->first();
+        }
+
+        if ($employee === null) {
+            abort(404);
+        }
+
+        return $employee;
+    }
+
+    protected function resolvePayrollRun(string $value): PayrollRun
+    {
+        $organizationId = \App\Support\CurrentOrganization::id()
+            ?? request()->session()->get('current_organization_id');
+
+        if ($organizationId === null) {
+            abort(404);
+        }
+
+        $run = null;
+
+        if (preg_match('/^(\d{4})-(\d{2})$/', $value, $matches) === 1) {
+            $run = PayrollRun::query()
+                ->where('organization_id', $organizationId)
+                ->where('year', (int) $matches[1])
+                ->where('month', (int) $matches[2])
+                ->first();
+        } elseif (ctype_digit($value)) {
+            $run = PayrollRun::query()
+                ->where('organization_id', $organizationId)
+                ->whereKey((int) $value)
+                ->first();
+        }
+
+        if ($run === null) {
+            abort(404);
+        }
+
+        return $run;
     }
 
     protected function resolveTenantModel(string $modelClass, string $key): Model

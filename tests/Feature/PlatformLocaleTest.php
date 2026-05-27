@@ -22,7 +22,7 @@ class PlatformLocaleTest extends TestCase
         parent::setUp();
 
         Cache::forget('platform.languages');
-        app(LocaleConfigurationService::class)->update(['en', 'sq', 'de'], 'en');
+        app(LocaleConfigurationService::class)->update(['en', 'sq', 'de', 'sr'], 'en');
     }
 
     /**
@@ -34,6 +34,7 @@ class PlatformLocaleTest extends TestCase
             'english' => ['en'],
             'albanian' => ['sq'],
             'german' => ['de'],
+            'serbian' => ['sr'],
         ];
     }
 
@@ -166,7 +167,7 @@ class PlatformLocaleTest extends TestCase
         $demo = $this->seedDemoOrganization();
         $organization = $demo['organization'];
 
-        foreach (['en', 'sq', 'de'] as $locale) {
+        foreach (['en', 'sq', 'de', 'sr'] as $locale) {
             $this->actingAsOwner($demo)
                 ->put($this->workspaceRoute('settings.company.update', $organization), $this->companySettingsPayload($organization, [
                     'locale' => $locale,

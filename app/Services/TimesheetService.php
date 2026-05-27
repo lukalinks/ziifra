@@ -9,6 +9,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 class TimesheetService
@@ -209,6 +210,32 @@ class TimesheetService
         $self = app(EmployeeProfileService::class)->employeeFor($user, $organization);
 
         return $self ? collect([$self]) : collect();
+    }
+
+    /**
+     * @return array{week?: string, employee?: string}
+     */
+    public function indexQueryParams(CarbonInterface $weekStart, ?Employee $employee = null): array
+    {
+        return array_filter([
+            'week' => $weekStart->toDateString(),
+            'employee' => $employee?->employee_code,
+        ]);
+    }
+
+    public function resolveEmployeeFilter(Request $request, User $user, Organization $organization): ?Employee
+    {
+        $filterable = $this->filterableEmployees($user, $organization);
+
+        if ($request->filled('employee')) {
+            return $filterable->firstWhere('employee_code', $request->string('employee')->toString());
+        }
+
+        if ($request->filled('employee_id')) {
+            return $filterable->firstWhere('id', $request->integer('employee_id'));
+        }
+
+        return null;
     }
 
     protected function canFilterByEmployee(User $user, Organization $organization, int $employeeId): bool

@@ -87,6 +87,10 @@
             </form>
         @endcan
         <a href="{{ route('invoices.index') }}" class="ziifra-btn-app-outline">Back</a>
+        @can('view', $invoice)
+            <a href="{{ route('invoices.pdf', $invoice) }}" class="ziifra-btn-app-outline">{{ __('invoices.download_pdf') }}</a>
+            <a href="{{ route('invoices.export', $invoice) }}" class="ziifra-btn-app-outline">{{ __('invoices.export_excel') }}</a>
+        @endcan
     </div>
 </div>
 @endsection

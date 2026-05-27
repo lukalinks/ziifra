@@ -1,6 +1,7 @@
 @props(['logs', 'platform'])
 
 <div class="overflow-hidden rounded-xl border border-slate-200 bg-ziifra-paper">
+    <div class="ziifra-table-scroll">
     <table class="min-w-full divide-y divide-slate-200 text-sm">
         <thead class="bg-slate-50 text-left text-slate-500">
             <tr>
@@ -40,4 +41,5 @@
             @endforelse
         </tbody>
     </table>
+    </div>
 </div>

@@ -16,6 +16,7 @@ return [
         'en' => 'English',
         'sq' => 'Shqip',
         'de' => 'Deutsch',
+        'sr' => 'Srpski',
     ],
 
     'locale_definitions' => [
@@ -30,6 +31,10 @@ return [
         'de' => [
             'label' => 'German',
             'native' => 'Deutsch',
+        ],
+        'sr' => [
+            'label' => 'Serbian',
+            'native' => 'Srpski',
         ],
     ],
 

@@ -9,6 +9,8 @@ use App\Models\Department;
 use App\Models\Employee;
 use App\Models\LeaveRequest;
 use App\Models\Organization;
+use App\Models\Project;
+use App\Services\DailyHoursService;
 use App\Models\User;
 use App\Services\AdminDashboardService;
 use App\Services\DashboardService;
@@ -98,6 +100,7 @@ class DashboardController extends Controller
         $trialDaysRemaining = $billing->isOnTrial($organization)
             ? $billing->trialDaysRemaining($organization)
             : null;
+        $hoursStats = app(DailyHoursService::class)->organizationStats($organization->id);
 
         return [
             'organization' => $organization,
@@ -135,6 +138,9 @@ class DashboardController extends Controller
             'newHiresThisMonth' => $dashboard->newHiresThisMonth($organization),
             'recentHires' => $dashboard->recentHires($organization),
             'draftPayrollRun' => $draftPayrollRun,
+            'activeProjectsCount' => Project::query()->where('status', \App\Enums\ProjectStatus::Active)->count(),
+            'hoursThisMonth' => $hoursStats['total_hours'],
+            'pendingHoursApprovals' => $hoursStats['pending_count'],
             'currentYear' => (int) now()->year,
             'priorityAlerts' => $adminDashboard->priorityAlerts(
                 $organization,

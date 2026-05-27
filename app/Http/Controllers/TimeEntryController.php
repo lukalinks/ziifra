@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
 use App\Models\Organization;
 use App\Models\TimeEntry;
 use App\Services\EmployeeProfileService;
@@ -32,12 +33,10 @@ class TimeEntryController extends Controller
 
         $weekStart = $this->timesheets->weekStart($request->string('week')->toString() ?: null, $organization);
         $weekEnd = $this->timesheets->weekEnd($weekStart);
-        $employeeId = $request->integer('employee_id') ?: null;
+        $selectedEmployee = $this->timesheets->resolveEmployeeFilter($request, $user, $organization);
+        $employeeId = $selectedEmployee?->id;
 
         $filterableEmployees = $this->timesheets->filterableEmployees($user, $organization);
-        if ($employeeId !== null && ! $filterableEmployees->contains('id', $employeeId)) {
-            $employeeId = null;
-        }
 
         $entries = $this->timesheets
             ->entriesQuery($user, $organization, $weekStart, $weekEnd, $employeeId)
@@ -56,6 +55,8 @@ class TimeEntryController extends Controller
         $canClockForOthers = $clockableEmployees->count() > 1
             || ($this->timeAuth->canViewAll($user, $organization) && $clockableEmployees->isNotEmpty());
 
+        $indexQuery = $this->timesheets->indexQueryParams($weekStart, $selectedEmployee);
+
         return view('app.time.index', [
             'organization' => $organization,
             'entries' => $entries,
@@ -67,11 +68,12 @@ class TimeEntryController extends Controller
             'nextWeek' => $weekStart->copy()->addWeek()->toDateString(),
             'employees' => $filterableEmployees,
             'clockableEmployees' => $clockableEmployees,
-            'selectedEmployeeId' => $employeeId,
+            'selectedEmployee' => $selectedEmployee,
+            'indexQuery' => $indexQuery,
             'canClock' => $user->can('clock', TimeEntry::class),
             'canClockForOthers' => $canClockForOthers,
             'canManageEntries' => $user->can('create', TimeEntry::class),
-            'showEmployeeColumn' => $filterableEmployees->count() > 1 && $employeeId === null,
+            'showEmployeeColumn' => $filterableEmployees->count() > 1 && $selectedEmployee === null,
             'linkedEmployee' => $linkedEmployee,
             'openEntry' => $openEntry,
             'todayTotals' => $todayTotals,
@@ -88,9 +90,9 @@ class TimeEntryController extends Controller
 
         $weekStart = $this->timesheets->weekStart($request->string('week')->toString() ?: null, $organization);
         $weekEnd = $this->timesheets->weekEnd($weekStart);
-        $employeeId = $request->integer('employee_id') ?: null;
+        $selectedEmployee = $this->timesheets->resolveEmployeeFilter($request, $user, $organization);
 
-        $export = $this->timesheets->buildCsvExport($user, $organization, $weekStart, $weekEnd, $employeeId);
+        $export = $this->timesheets->buildCsvExport($user, $organization, $weekStart, $weekEnd, $selectedEmployee?->id);
 
         return response($export['content'], 200, [
             'Content-Type' => 'text/csv; charset=UTF-8',
@@ -103,12 +105,17 @@ class TimeEntryController extends Controller
         $this->authorize('create', TimeEntry::class);
 
         $organization = CurrentOrganization::check();
+        $selectedEmployee = $this->timesheets->resolveEmployeeFilter($request, $request->user(), $organization);
 
         return view('app.time.create', [
             'organization' => $organization,
             'employees' => $this->timeAuth->clockableEmployees($request->user(), $organization),
             'week' => $request->string('week')->toString(),
-            'employeeId' => $request->integer('employee_id') ?: null,
+            'employeeId' => $selectedEmployee?->id,
+            'indexQuery' => $this->timesheets->indexQueryParams(
+                $this->timesheets->weekStart($request->string('week')->toString() ?: null, $organization),
+                $selectedEmployee,
+            ),
         ]);
     }
 
@@ -127,11 +134,11 @@ class TimeEntryController extends Controller
 
         $timeEntries->storeManual($request->user(), $validated);
 
+        $employee = Employee::query()->findOrFail($validated['employee_id']);
+        $weekStart = $this->timesheets->weekStart($validated['week'] ?? null, CurrentOrganization::check());
+
         return redirect()
-            ->route('time.index', array_filter([
-                'week' => $validated['week'] ?? null,
-                'employee_id' => $validated['employee_id'],
-            ]))
+            ->route('time.index', $this->timesheets->indexQueryParams($weekStart, $employee))
             ->with('status', __('time.entry_created'));
     }
 
@@ -161,11 +168,10 @@ class TimeEntryController extends Controller
 
         $timeEntries->updateEntry($request->user(), $timeEntry, $validated);
 
+        $weekStart = $this->timesheets->weekStart($validated['week'] ?? null, $organization);
+
         return redirect()
-            ->route('time.index', array_filter([
-                'week' => $validated['week'] ?? null,
-                'employee_id' => $timeEntry->employee_id,
-            ]))
+            ->route('time.index', $this->timesheets->indexQueryParams($weekStart, $timeEntry->employee))
             ->with('status', __('time.entry_updated'));
     }
 
@@ -173,16 +179,15 @@ class TimeEntryController extends Controller
     {
         $this->authorize('delete', $timeEntry);
 
-        $employeeId = $timeEntry->employee_id;
+        $employee = $timeEntry->employee;
         $week = $request->string('week')->toString();
 
         $timeEntries->deleteEntry($request->user(), $timeEntry);
 
+        $weekStart = $this->timesheets->weekStart($week ?: null, $organization);
+
         return redirect()
-            ->route('time.index', array_filter([
-                'week' => $week ?: null,
-                'employee_id' => $employeeId,
-            ]))
+            ->route('time.index', $this->timesheets->indexQueryParams($weekStart, $employee))
             ->with('status', __('time.entry_deleted'));
     }
 
@@ -194,7 +199,7 @@ class TimeEntryController extends Controller
         $timeEntries->clockIn($request->user(), $employeeId);
 
         return redirect()
-            ->route('time.index', $this->indexQuery($request))
+            ->route('time.index', $this->redirectIndexQuery($request))
             ->with('status', __('time.clocked_in'));
     }
 
@@ -217,18 +222,27 @@ class TimeEntryController extends Controller
         );
 
         return redirect()
-            ->route('time.index', $this->indexQuery($request))
+            ->route('time.index', $this->redirectIndexQuery($request))
             ->with('status', __('time.clocked_out'));
     }
 
     /**
-     * @return array<string, mixed>
+     * @return array{week?: string, employee?: string}
      */
-    protected function indexQuery(Request $request): array
+    protected function redirectIndexQuery(Request $request): array
     {
-        return array_filter([
-            'week' => $request->string('week')->toString() ?: null,
-            'employee_id' => $request->integer('employee_id') ?: null,
-        ]);
+        $organization = CurrentOrganization::check();
+        $weekStart = $this->timesheets->weekStart($request->string('week')->toString() ?: null, $organization);
+
+        $employee = null;
+        if ($request->filled('employee_id')) {
+            $employee = Employee::query()->find($request->integer('employee_id'));
+        } elseif ($request->filled('employee')) {
+            $employee = Employee::query()
+                ->where('employee_code', $request->string('employee')->toString())
+                ->first();
+        }
+
+        return $this->timesheets->indexQueryParams($weekStart, $employee);
     }
 }

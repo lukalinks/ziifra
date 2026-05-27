@@ -110,7 +110,9 @@ class ContractTemplateTest extends TestCase
 
         $this->actingAs($result['user'])
             ->withSession(['current_organization_id' => $result['organization']->id])
-            ->get($this->workspaceRoute('documents.index', $result['organization']))
+            ->get($this->workspaceRoute('documents.index', $result['organization'], [
+                'type' => EmployeeDocumentType::Contract->value,
+            ]))
             ->assertOk()
             ->assertSee(__('documents.templates.title'), false)
             ->assertSee($fullTime->name, false)

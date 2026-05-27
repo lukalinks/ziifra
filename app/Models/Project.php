@@ -52,6 +52,21 @@ class Project extends Model
         return $this->belongsToMany(Employee::class, 'project_employee')->withTimestamps();
     }
 
+    public function dailyHoursEntries(): HasMany
+    {
+        return $this->hasMany(DailyHoursEntry::class);
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(ProjectDocument::class)->latest('uploaded_at');
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
     public function completionPercent(): int
     {
         $total = $this->tasks()->count();

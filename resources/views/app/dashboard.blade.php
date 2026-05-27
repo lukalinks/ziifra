@@ -10,10 +10,10 @@
     $todayLabel = now()->timezone($tz)->format('l, j F Y');
     $showStats = $canViewEmployees || $canViewLeave || ($canManageEmployees && $expiringDocumentCount > 0);
     $actionsColSpan = $canViewLeave ? 'lg:col-span-1' : 'lg:col-span-3';
-    $actionsGrid = $canViewLeave ? 'flex flex-col gap-2' : 'grid gap-2 sm:grid-cols-2 xl:grid-cols-3';
+    $actionsGrid = $canViewLeave ? 'flex flex-col gap-2' : 'grid grid-cols-1 gap-2 sm:grid-cols-2 xl:grid-cols-3';
 @endphp
 
-<div class="ziifra-dashboard space-y-6 lg:space-y-8">
+<div class="ziifra-dashboard-page ziifra-dashboard space-y-5 md:space-y-6 lg:space-y-8">
     {{-- Hero --}}
     <section class="ziifra-dashboard-hero ziifra-dashboard-hero-grid">
         <div class="relative z-[1] flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
@@ -27,7 +27,7 @@
                     @endif
                 </div>
                 <p class="mt-2 font-mono text-xs text-ziifra-muted">{{ $todayLabel }}</p>
-                <h2 class="mt-3 text-2xl font-semibold tracking-tight text-ziifra-ink sm:text-3xl">
+                <h2 class="mt-3 text-xl font-semibold tracking-tight text-ziifra-ink sm:text-2xl lg:text-3xl">
                     {{ __('dashboard.welcome', ['greeting' => $greeting, 'name' => $firstName]) }}
                 </h2>
                 <p class="mt-2 max-w-2xl text-sm leading-relaxed text-ziifra-muted">
@@ -63,7 +63,7 @@
                     </p>
                 @endif
 
-                <div class="mt-6 flex flex-wrap gap-2">
+                <div class="ziifra-dashboard-hero-actions mt-6">
                     @if ($pendingLeaveCount > 0 && $canViewLeave)
                         <a href="{{ route('leave.index', ['status' => 'pending']) }}" class="ziifra-btn-primary !py-2.5 !text-sm">
                             {{ __('dashboard.primary_review_leave', ['count' => $pendingLeaveCount]) }}
@@ -84,12 +84,12 @@
         </div>
 
         @if ($canManageOrganization && ! $organization->isProfileComplete())
-            <div class="relative z-[1] mt-6 flex flex-col gap-3 rounded-xl border border-amber-200/90 bg-amber-50/90 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
-                <div>
+            <div class="relative z-[1] mt-6 ziifra-dashboard-banner">
+                <div class="min-w-0">
                     <p class="font-medium text-amber-950">{{ __('dashboard.complete_profile') }}</p>
                     <p class="mt-0.5 text-sm text-amber-900/90">{{ __('dashboard.complete_profile_hint') }}</p>
                 </div>
-                <a href="{{ route('settings.index') }}" class="ziifra-btn-app shrink-0 !bg-amber-900 !text-amber-50 hover:!bg-amber-950">
+                <a href="{{ route('settings.index') }}" class="ziifra-dashboard-banner-btn ziifra-btn-app shrink-0 !bg-amber-900 !text-amber-50 hover:!bg-amber-950">
                     {{ __('dashboard.setup_company') }}
                 </a>
             </div>
@@ -98,7 +98,8 @@
 
     {{-- Stats --}}
     @if ($showStats)
-        <div class="ziifra-dashboard-stats">
+        <x-dashboard.section :title="__('admin_dashboard.overview')" :description="__('admin_dashboard.overview_hint')">
+            <div class="ziifra-dashboard-stats">
             @if ($canViewEmployees)
                 <x-dashboard.stat
                     :label="__('dashboard.active_employees')"
@@ -169,7 +170,8 @@
                     </x-slot:footer>
                 </x-dashboard.stat>
             @endif
-        </div>
+            </div>
+        </x-dashboard.section>
     @endif
 
     @if ($canViewLeave && count($weekOutlook) > 0)
@@ -205,7 +207,11 @@
             @endif
 
             @if ($canViewLeave)
-                <div class="grid gap-6 {{ count($quickActions) > 0 ? 'lg:col-span-2' : 'lg:col-span-3' }} md:grid-cols-2">
+                <div @class([
+                    'grid gap-6 md:grid-cols-2',
+                    'lg:col-span-2' => count($quickActions) > 0,
+                    'lg:col-span-3' => count($quickActions) === 0,
+                ])>
                     <section class="ziifra-dashboard-panel">
                         <div class="ziifra-dashboard-panel-head">
                             <div>

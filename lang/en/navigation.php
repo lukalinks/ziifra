@@ -8,6 +8,14 @@ return [
     'insights' => 'Insights',
     'collaborate' => 'Collaborate',
     'admin' => 'Admin',
+    'primary' => 'Main',
+    'project_documents' => 'Project documents',
+    'hr_documents' => 'HR documents',
+    'add_category' => '+ Add category',
+    'custom_label' => 'Link label',
+    'custom_url' => 'https://…',
+    'custom_created' => 'Navigation link added.',
+    'custom_deleted' => 'Navigation link removed.',
 
     'dashboard' => 'Dashboard',
     'employees' => 'Employees',
@@ -26,4 +34,8 @@ return [
     'coming_soon' => 'Soon',
     'coming_soon_hint' => 'This module is coming soon',
     'mobile_nav' => 'Main navigation',
+    'menu' => 'Menu',
+    'open_menu' => 'Open menu',
+    'close_menu' => 'Close menu',
+    'browse_all' => 'Browse all pages',
 ];

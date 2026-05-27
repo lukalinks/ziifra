@@ -23,6 +23,14 @@ trait ValidatesEmployeeFields
         return [
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
+            'employee_code' => [
+                'nullable',
+                'string',
+                'max:50',
+                Rule::unique('employees', 'employee_code')
+                    ->where('organization_id', $organizationId)
+                    ->ignore($employee?->id),
+            ],
             'email' => [
                 'nullable',
                 'email',
@@ -60,6 +68,11 @@ trait ValidatesEmployeeFields
                 Rule::unique('employees', 'user_id')
                     ->where('organization_id', $organizationId)
                     ->ignore($employee?->id),
+            ],
+            'project_ids' => ['sometimes', 'nullable', 'array'],
+            'project_ids.*' => [
+                'integer',
+                Rule::exists('projects', 'id')->where('organization_id', $organizationId),
             ],
         ];
     }

@@ -10,7 +10,7 @@
             {{ __('dashboard.view_calendar') }} →
         </a>
     </div>
-    <div class="grid grid-cols-7 gap-2 p-4 sm:gap-3">
+    <div class="ziifra-dashboard-week-scroll">
         @foreach ($days as $day)
             <a href="{{ route('leave.calendar', ['year' => $day['date']->year, 'month' => $day['date']->month]) }}"
                 class="ziifra-dashboard-week-day group {{ $day['is_today'] ? 'ziifra-dashboard-week-day-today' : '' }}"

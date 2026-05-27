@@ -10,7 +10,7 @@
     <div class="ziifra-grid-pattern pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
 
     <div class="relative mx-auto flex w-full max-w-7xl flex-col justify-center px-4 pb-20 pt-10 sm:px-6 lg:min-h-[calc(100vh-4.5rem)] lg:px-8 lg:pb-28 lg:pt-16">
-        <div class="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14 xl:gap-16">
+        <div class="grid items-center gap-8 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14 xl:gap-16">
             <div class="ziifra-hero-copy">
                 <h1 class="ziifra-hero-eyebrow">{{ __('landing.hero.eyebrow') }}</h1>
                 <p class="ziifra-hero-tagline mt-4 text-xl font-semibold leading-snug sm:text-2xl lg:text-[1.65rem]">
@@ -26,17 +26,20 @@
                 </div>
             </div>
 
-            <div class="relative overflow-visible lg:pl-0 xl:pl-2">
-                <div class="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-ziifra-accent/25 blur-3xl lg:h-52 lg:w-52" aria-hidden="true"></div>
+            <div class="relative min-w-0 overflow-hidden sm:overflow-visible lg:pl-0 xl:pl-2">
+                <div class="absolute -right-4 -top-6 h-32 w-32 rounded-full bg-ziifra-accent/25 blur-3xl sm:-right-8 sm:-top-8 sm:h-40 sm:w-40 lg:h-52 lg:w-52" aria-hidden="true"></div>
                 <div class="ziifra-landing-mockup-stage">
                 <div class="ziifra-landing-mockup relative" role="img" aria-label="{{ __('landing.hero.mockup_aria') }}">
-                    <div class="ziifra-card relative overflow-hidden !rounded-3xl !border-white/20 !bg-ziifra-paper/95 p-1 shadow-2xl shadow-black/20 ring-2 ring-ziifra-accent/25">
+                    <div class="ziifra-card relative overflow-hidden !rounded-2xl !border-white/20 !bg-ziifra-paper/95 p-0.5 shadow-2xl shadow-black/20 ring-2 ring-ziifra-accent/25 sm:!rounded-3xl sm:p-1">
                         {{-- Browser chrome --}}
-                        <div class="flex items-center gap-2 rounded-t-2xl border-b border-ziifra-line/60 bg-gradient-to-r from-ziifra-cream to-ziifra-paper px-4 py-3">
-                            <span class="h-2.5 w-2.5 rounded-full bg-red-400/90"></span>
-                            <span class="h-2.5 w-2.5 rounded-full bg-amber-400/90"></span>
-                            <span class="h-2.5 w-2.5 rounded-full bg-emerald-400/90"></span>
-                            <span class="ml-2 flex-1 rounded-md border border-ziifra-line/50 bg-ziifra-surface px-3 py-1 font-mono text-[0.65rem] text-ziifra-muted">demo-corp.ziifra.com/payroll</span>
+                        <div class="flex items-center gap-1.5 rounded-t-[0.9rem] border-b border-ziifra-line/60 bg-gradient-to-r from-ziifra-cream to-ziifra-paper px-2.5 py-2 sm:gap-2 sm:rounded-t-2xl sm:px-4 sm:py-3">
+                            <span class="h-2 w-2 rounded-full bg-red-400/90 sm:h-2.5 sm:w-2.5"></span>
+                            <span class="h-2 w-2 rounded-full bg-amber-400/90 sm:h-2.5 sm:w-2.5"></span>
+                            <span class="h-2 w-2 rounded-full bg-emerald-400/90 sm:h-2.5 sm:w-2.5"></span>
+                            <span class="ml-1 min-w-0 flex-1 truncate rounded-md border border-ziifra-line/50 bg-ziifra-surface px-2 py-0.5 font-mono text-[0.55rem] text-ziifra-muted sm:ml-2 sm:px-3 sm:py-1 sm:text-[0.65rem]">
+                                <span class="sm:hidden">demo.ziifra.com</span>
+                                <span class="hidden sm:inline">demo-corp.ziifra.com/payroll</span>
+                            </span>
                         </div>
 
                         <div class="flex">
@@ -86,23 +89,24 @@
                                         <span class="rounded-full bg-emerald-500/15 px-2.5 py-1 text-[0.6rem] font-semibold text-emerald-300 sm:text-[0.65rem]">Locked</span>
                                     </div>
 
-                                    <div class="grid grid-cols-3 gap-2">
-                                        <div class="rounded-lg border border-ziifra-line/80 bg-ziifra-cream p-2 sm:p-2.5">
-                                            <p class="text-[0.55rem] text-ziifra-muted sm:text-[0.6rem]">Employees</p>
-                                            <p class="mt-0.5 text-base font-semibold tabular-nums text-ziifra-ink sm:text-lg">24</p>
+                                    <div class="grid grid-cols-3 gap-1.5 sm:gap-2">
+                                        <div class="ziifra-landing-mockup-stat rounded-lg border border-ziifra-line/80 bg-ziifra-cream p-2 sm:p-2.5">
+                                            <p class="text-[0.5rem] text-ziifra-muted sm:text-[0.6rem]">Employees</p>
+                                            <p class="ziifra-landing-mockup-stat-value mt-0.5 text-base font-semibold tabular-nums text-ziifra-ink sm:text-lg">24</p>
                                         </div>
-                                        <div class="rounded-lg border border-ziifra-accent/20 bg-gradient-to-br from-ziifra-accent/12 to-transparent p-2 sm:p-2.5">
-                                            <p class="text-[0.55rem] text-ziifra-muted sm:text-[0.6rem]">Net pay</p>
-                                            <p class="mt-0.5 text-base font-semibold tabular-nums text-ziifra-accent-deep sm:text-lg">€18.4k</p>
+                                        <div class="ziifra-landing-mockup-stat rounded-lg border border-ziifra-accent/20 bg-gradient-to-br from-ziifra-accent/12 to-transparent p-2 sm:p-2.5">
+                                            <p class="text-[0.5rem] text-ziifra-muted sm:text-[0.6rem]">Net pay</p>
+                                            <p class="ziifra-landing-mockup-stat-value mt-0.5 text-base font-semibold tabular-nums text-ziifra-accent-deep sm:text-lg">€18.4k</p>
                                         </div>
-                                        <div class="rounded-lg border border-ziifra-line/80 bg-ziifra-cream p-2 sm:p-2.5">
-                                            <p class="text-[0.55rem] text-ziifra-muted sm:text-[0.6rem]">On leave</p>
-                                            <p class="mt-0.5 text-base font-semibold tabular-nums text-ziifra-ink sm:text-lg">3</p>
+                                        <div class="ziifra-landing-mockup-stat rounded-lg border border-ziifra-line/80 bg-ziifra-cream p-2 sm:p-2.5">
+                                            <p class="text-[0.5rem] text-ziifra-muted sm:text-[0.6rem]">On leave</p>
+                                            <p class="ziifra-landing-mockup-stat-value mt-0.5 text-base font-semibold tabular-nums text-ziifra-ink sm:text-lg">3</p>
                                         </div>
                                     </div>
 
                                     {{-- Payroll table --}}
-                                    <div class="ziifra-landing-mockup-table overflow-hidden rounded-xl border border-ziifra-line/80">
+                                    <div class="ziifra-landing-mockup-table-wrap">
+                                    <div class="ziifra-landing-mockup-table min-w-[14rem] overflow-hidden rounded-xl border border-ziifra-line/80 sm:min-w-0">
                                         <div class="grid grid-cols-[1fr_auto] gap-2 border-b border-ziifra-line/60 bg-ziifra-cream px-2.5 py-1.5 font-mono text-[0.55rem] uppercase tracking-wider text-ziifra-muted sm:grid-cols-4 sm:px-3 sm:py-2 sm:text-[0.6rem]">
                                             <span>Employee</span>
                                             <span class="hidden sm:block">Department</span>
@@ -127,8 +131,9 @@
                                             @endforeach
                                         </ul>
                                     </div>
+                                    </div>
 
-                                    <div class="flex flex-wrap gap-1.5">
+                                    <div class="flex flex-wrap gap-1 sm:gap-1.5">
                                         @foreach(['Payslips sent', 'Tax export ready', '3 on leave'] as $chip)
                                             <span class="ziifra-module-chip">{{ $chip }}</span>
                                         @endforeach
@@ -252,7 +257,7 @@
                 <p class="ziifra-label !text-ziifra-accent-glow before:!bg-ziifra-accent-glow">{{ __('landing.compliance.label') }}</p>
                 <h3 class="mt-4 text-2xl font-semibold">{{ __('landing.compliance.title') }}</h3>
                 <p class="mt-3 text-sm leading-relaxed text-white/55">{{ __('landing.compliance.subtitle') }}</p>
-                <div class="mt-10 grid grid-cols-3 gap-3 border-t border-white/10 pt-8">
+                <div class="mt-10 grid grid-cols-1 gap-3 border-t border-white/10 pt-8 sm:grid-cols-3">
                     @foreach(['XK' => __('landing.compliance.country'), 'EUR' => __('landing.compliance.currency'), 'EN·SQ·DE' => __('landing.compliance.languages')] as $code => $name)
                         <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
                             <p class="font-mono text-lg font-bold text-ziifra-accent-glow">{{ $code }}</p>

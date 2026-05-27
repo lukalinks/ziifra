@@ -5,9 +5,17 @@
 <section @class(['ziifra-dashboard-panel' => $embedded, 'mt-8 rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6' => ! $embedded])>
     @if ($embedded)
         <div class="ziifra-dashboard-panel-head">
-            <h2 class="text-sm font-semibold text-ziifra-ink">{{ __('documents.title') }}</h2>
+            <div>
+                <h2 class="text-sm font-semibold text-ziifra-ink">{{ __('documents.title') }}</h2>
+                @if ($employee->documents->isNotEmpty())
+                    <p class="text-xs text-ziifra-muted">{{ trans_choice('employees.documents_count', $employee->documents->count(), ['count' => $employee->documents->count()]) }}</p>
+                @endif
+            </div>
+            @if ($employee->documents->isNotEmpty())
+                <span class="ziifra-dashboard-badge">{{ $employee->documents->count() }}</span>
+            @endif
         </div>
-        <div class="p-5">
+        <div class="p-4 sm:p-5">
     @else
         <h3 class="text-lg font-semibold text-ziifra-ink">{{ __('documents.title') }}</h3>
     @endif
@@ -15,12 +23,17 @@
     @if ($employee->documents->isEmpty())
         <p @class(['text-sm text-ziifra-muted', 'mt-4' => ! $embedded])>{{ __('documents.empty') }}</p>
     @else
-        <ul class="mt-4 divide-y divide-ziifra-line/60">
+        <ul @class(['space-y-2', 'mt-4' => ! $embedded])>
             @foreach ($employee->documents as $document)
-                <li class="flex flex-wrap items-start justify-between gap-3 py-3">
+                <li class="ziifra-employee-doc">
+                    <div class="ziifra-employee-doc-icon" aria-hidden="true">
+                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                        </svg>
+                    </div>
                     <div class="min-w-0 flex-1">
                         <p class="font-medium text-ziifra-ink">{{ $document->title }}</p>
-                        <p class="text-xs text-ziifra-muted">
+                        <p class="mt-0.5 text-xs text-ziifra-muted">
                             {{ $document->type->label() }}
                             @if ($document->uploadedBy)
                                 · {{ $document->uploadedBy->name }}
@@ -29,8 +42,8 @@
                         </p>
                         @if ($document->expires_at)
                             <p @class([
-                                'mt-1 text-xs font-medium',
-                                $document->isExpired() ? 'text-red-700' : ($document->isExpiringSoon() ? 'text-amber-700' : 'text-ziifra-muted'),
+                                'mt-1 inline-flex rounded-full px-2 py-0.5 text-[0.65rem] font-medium',
+                                $document->isExpired() ? 'bg-red-50 text-red-700' : ($document->isExpiringSoon() ? 'bg-amber-50 text-amber-800' : 'bg-ziifra-cream text-ziifra-muted'),
                             ])>
                                 @if ($document->isExpired())
                                     {{ __('documents.expired', ['date' => $document->expires_at->format('M j, Y')]) }}
@@ -45,10 +58,10 @@
                             <p class="mt-1 text-sm text-ziifra-muted">{{ $document->notes }}</p>
                         @endif
                     </div>
-                    <div class="flex shrink-0 items-center gap-2">
+                    <div class="ziifra-employee-doc-actions">
                         <a href="{{ route('employees.documents.download', [$employee, $document]) }}"
-                            class="text-sm font-medium text-ziifra-accent-deep hover:underline">
-                            {{ $document->original_filename }}
+                            class="ziifra-btn-app-outline !px-3 !py-1.5 !text-xs">
+                            {{ __('documents.download') }}
                         </a>
                         @if ($canManage)
                             <form method="POST" action="{{ route('employees.documents.destroy', [$employee, $document]) }}"
@@ -57,7 +70,7 @@
                                 data-confirm-accept="{{ __('common.remove') }}">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="text-sm text-red-600 hover:underline">Remove</button>
+                                <button type="submit" class="ziifra-employee-profile-danger-btn !px-3 !py-1.5 !text-xs">{{ __('common.remove') }}</button>
                             </form>
                         @endif
                     </div>
@@ -67,61 +80,61 @@
     @endif
 
     @if ($canManage)
-        <form method="POST" action="{{ route('employees.documents.store', $employee) }}" enctype="multipart/form-data"
-            class="mt-6 space-y-4 border-t border-ziifra-line/60 pt-6">
-            @csrf
-            <p class="text-sm font-medium text-ziifra-ink">{{ __('documents.upload') }}</p>
-            <div class="grid gap-4 sm:grid-cols-2">
-                <div>
-                    <label for="document_type" class="block text-sm font-medium text-ziifra-muted">{{ __('documents.type') }}</label>
-                    <select id="document_type" name="type" required
-                        class="mt-1 w-full rounded-lg border border-ziifra-line px-3 py-2 text-sm">
-                        @foreach (\App\Enums\EmployeeDocumentType::cases() as $docType)
-                            <option value="{{ $docType->value }}" @selected(old('type') === $docType->value)>{{ $docType->label() }}</option>
-                        @endforeach
-                    </select>
-                    @error('type')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
+        <details class="ziifra-employee-doc-upload mt-4 border-t border-ziifra-line/60 pt-4">
+            <summary class="cursor-pointer text-sm font-medium text-ziifra-accent-deep hover:underline">{{ __('documents.upload') }}</summary>
+            <form method="POST" action="{{ route('employees.documents.store', $employee) }}" enctype="multipart/form-data" class="mt-4 space-y-4">
+                @csrf
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label for="document_type" class="ziifra-label-field">{{ __('documents.type') }}</label>
+                        <select id="document_type" name="type" required class="ziifra-input mt-1 !py-2 !text-sm">
+                            @foreach (\App\Enums\EmployeeDocumentType::cases() as $docType)
+                                <option value="{{ $docType->value }}" @selected(old('type') === $docType->value)>{{ $docType->label() }}</option>
+                            @endforeach
+                        </select>
+                        @error('type')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label for="document_title" class="ziifra-label-field">{{ __('documents.document_title') }}</label>
+                        <input type="text" id="document_title" name="title" value="{{ old('title') }}" required maxlength="255"
+                            class="ziifra-input mt-1 !py-2 !text-sm"
+                            placeholder="e.g. Employment contract 2026">
+                        @error('title')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label for="document_file" class="ziifra-label-field">{{ __('documents.file') }}</label>
+                        <input type="file" id="document_file" name="file" required accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx"
+                            class="mt-1 w-full text-sm text-ziifra-muted file:mr-3 file:rounded-lg file:border-0 file:bg-ziifra-cream file:px-3 file:py-2 file:text-sm file:font-medium file:text-ziifra-ink">
+                        @error('file')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label for="document_expires_at" class="ziifra-label-field">{{ __('documents.expires_at') }}</label>
+                        <input type="date" id="document_expires_at" name="expires_at" value="{{ old('expires_at') }}"
+                            class="ziifra-input mt-1 !py-2 !text-sm">
+                        @error('expires_at')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="document_notes" class="ziifra-label-field">{{ __('documents.notes') }}</label>
+                        <textarea id="document_notes" name="notes" rows="2" maxlength="2000"
+                            class="ziifra-input mt-1 !py-2 !text-sm">{{ old('notes') }}</textarea>
+                        @error('notes')
+                            <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
-                <div>
-                    <label for="document_title" class="block text-sm font-medium text-ziifra-muted">Title</label>
-                    <input type="text" id="document_title" name="title" value="{{ old('title') }}" required maxlength="255"
-                        class="mt-1 w-full rounded-lg border border-ziifra-line px-3 py-2 text-sm"
-                        placeholder="e.g. Employment contract 2026">
-                    @error('title')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div>
-                    <label for="document_file" class="block text-sm font-medium text-ziifra-muted">{{ __('documents.file') }}</label>
-                    <input type="file" id="document_file" name="file" required accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx"
-                        class="mt-1 w-full text-sm text-ziifra-muted file:mr-3 file:rounded-lg file:border-0 file:bg-ziifra-cream file:px-3 file:py-2 file:text-sm file:font-medium file:text-ziifra-ink">
-                    @error('file')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div>
-                    <label for="document_expires_at" class="block text-sm font-medium text-ziifra-muted">{{ __('documents.expires_at') }}</label>
-                    <input type="date" id="document_expires_at" name="expires_at" value="{{ old('expires_at') }}"
-                        class="mt-1 w-full rounded-lg border border-ziifra-line px-3 py-2 text-sm">
-                    @error('expires_at')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-                <div class="sm:col-span-2">
-                    <label for="document_notes" class="block text-sm font-medium text-ziifra-muted">{{ __('documents.notes') }}</label>
-                    <textarea id="document_notes" name="notes" rows="2" maxlength="2000"
-                        class="mt-1 w-full rounded-lg border border-ziifra-line px-3 py-2 text-sm">{{ old('notes') }}</textarea>
-                    @error('notes')
-                        <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
-                    @enderror
-                </div>
-            </div>
-            <button type="submit" class="rounded-lg bg-ziifra-accent px-4 py-2 text-sm font-semibold text-white hover:bg-ziifra-accent-deep">
-                {{ __('documents.upload') }}
-            </button>
-        </form>
+                <button type="submit" class="ziifra-btn-primary !py-2 !text-sm">
+                    {{ __('documents.upload') }}
+                </button>
+            </form>
+        </details>
     @endif
     @if ($embedded)
         </div>

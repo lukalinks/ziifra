@@ -67,7 +67,7 @@ class ProjectTest extends TestCase
 
         $this->actingAs($result['user'])
             ->withSession(['current_organization_id' => $result['organization']->id])
-            ->get($this->workspaceRoute('projects.show', $result['organization'], ['project' => $project]))
+            ->get($this->workspaceRoute('projects.show', $result['organization'], ['project' => $project, 'tab' => 'tasks']))
             ->assertOk()
             ->assertSee('Design mockups');
     }

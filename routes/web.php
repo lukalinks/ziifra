@@ -18,9 +18,12 @@ use App\Http\Controllers\OrganizationContractTemplateController;
 use App\Http\Controllers\OrganizationSettingsController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\DailyHoursController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\DocumentFolderController;
 use App\Http\Controllers\ExpenseClaimController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\ProjectDocumentController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TimeEntryController;
 use App\Http\Controllers\ReportController;
@@ -48,6 +51,7 @@ use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\Admin\BillingSettingsController as AdminBillingSettingsController;
 use App\Http\Controllers\Admin\LanguageSettingsController as AdminLanguageSettingsController;
+use App\Http\Controllers\WorkspaceNavItemController;
 use App\Http\Controllers\WorkspaceRedirectController;
 use App\Support\Workspace;
 use Illuminate\Support\Facades\Route;
@@ -132,7 +136,7 @@ Route::middleware('auth')->group(function () {
         ->where('path', '.*');
 
     Route::prefix(Workspace::ROUTE_PREFIX.'/{organization}')
-        ->middleware(['org', 'org.active'])
+        ->middleware(['org', 'org.active', 'employee.code_url', 'employee.default_tab', 'payroll.period_url', 'time.employee_url'])
         ->group(function () {
             Route::get('/dashboard', DashboardController::class)->name('dashboard');
             Route::get('/team', [TeamInvitationController::class, 'index'])->name('team.index');
@@ -165,6 +169,8 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/documents', [DocumentController::class, 'index'])->name('documents.index')->middleware('plan.feature:documents');
             Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store')->middleware('plan.feature:documents');
+            Route::post('/documents/folders', [DocumentFolderController::class, 'store'])->name('documents.folders.store')->middleware('plan.feature:documents');
+            Route::delete('/documents/folders/{folder}', [DocumentFolderController::class, 'destroy'])->name('documents.folders.destroy')->middleware('plan.feature:documents');
             Route::get('/documents/templates/{template}/download', [ContractTemplateController::class, 'download'])
                 ->name('documents.templates.download')
                 ->middleware('plan.feature:documents');
@@ -175,9 +181,12 @@ Route::middleware('auth')->group(function () {
             Route::middleware('plan.feature:invoices')->group(function () {
                 Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoices.index');
                 Route::get('/invoices/create', [InvoiceController::class, 'create'])->name('invoices.create');
+                Route::post('/invoices/from-hours', [InvoiceController::class, 'storeFromHours'])->name('invoices.from-hours');
                 Route::post('/invoices', [InvoiceController::class, 'store'])->name('invoices.store');
                 Route::get('/invoices/{invoice}', [InvoiceController::class, 'show'])->name('invoices.show');
                 Route::get('/invoices/{invoice}/edit', [InvoiceController::class, 'edit'])->name('invoices.edit');
+                Route::get('/invoices/{invoice}/pdf', [InvoiceController::class, 'pdf'])->name('invoices.pdf');
+                Route::get('/invoices/{invoice}/export', [InvoiceController::class, 'export'])->name('invoices.export');
                 Route::put('/invoices/{invoice}', [InvoiceController::class, 'update'])->name('invoices.update');
                 Route::delete('/invoices/{invoice}', [InvoiceController::class, 'destroy'])->name('invoices.destroy');
                 Route::post('/invoices/{invoice}/send', [InvoiceController::class, 'markSent'])->name('invoices.send');
@@ -201,6 +210,7 @@ Route::middleware('auth')->group(function () {
                 Route::get('/', [PayrollRunController::class, 'index'])->name('index');
                 Route::get('/create', [PayrollRunController::class, 'create'])->name('create');
                 Route::post('/', [PayrollRunController::class, 'store'])->name('store');
+                Route::get('/{payrollRun}/export-csv', [PayrollRunController::class, 'exportCsv'])->name('export-csv');
                 Route::get('/{payrollRun}/export-pdfs', [PayrollRunController::class, 'exportPdfs'])->name('export-pdfs');
                 Route::post('/{payrollRun}/email-payslips', [PayrollRunController::class, 'emailPayslips'])->name('email-payslips');
                 Route::get('/{payrollRun}/items/{item}/pdf', [PayslipController::class, 'pdf'])->name('payslip.pdf');
@@ -211,11 +221,29 @@ Route::middleware('auth')->group(function () {
                 Route::get('/{payrollRun}/items/{item}', [PayslipController::class, 'show'])->name('payslip');
             });
 
+            Route::post('/nav-items', [WorkspaceNavItemController::class, 'store'])->name('nav-items.store');
+            Route::delete('/nav-items/{navItem}', [WorkspaceNavItemController::class, 'destroy'])->name('nav-items.destroy');
+
+            Route::post('/employees/{employee}/hourly-rates', [EmployeeController::class, 'storeHourlyRate'])->name('employees.hourly-rates.store');
+            Route::delete('/employees/{employee}/hourly-rates/{rate}', [EmployeeController::class, 'destroyHourlyRate'])->name('employees.hourly-rates.destroy');
+
+            Route::middleware('plan.feature:documents')->group(function () {
+                Route::get('/project-documents', [ProjectDocumentController::class, 'index'])->name('project-documents.index');
+                Route::post('/project-documents', [ProjectDocumentController::class, 'store'])->name('project-documents.store');
+                Route::get('/project-documents/export', [ProjectDocumentController::class, 'exportSummary'])->name('project-documents.export');
+                Route::get('/project-documents/{projectDocument}/download', [ProjectDocumentController::class, 'download'])->name('project-documents.download');
+                Route::delete('/project-documents/{projectDocument}', [ProjectDocumentController::class, 'destroy'])->name('project-documents.destroy');
+            });
+
             Route::middleware('plan.feature:projects')->group(function () {
                 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
                 Route::get('/projects/create', [ProjectController::class, 'create'])->name('projects.create');
                 Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
                 Route::get('/projects/{project}', [ProjectController::class, 'show'])->name('projects.show');
+                Route::post('/projects/{project}/hours', [DailyHoursController::class, 'upsert'])->name('projects.hours.upsert');
+                Route::post('/projects/{project}/hours/approve-all', [DailyHoursController::class, 'approveAll'])->name('projects.hours.approve-all');
+                Route::post('/projects/{project}/hours/{employee}/approve', [DailyHoursController::class, 'approveRow'])->name('projects.hours.approve');
+                Route::get('/projects/{project}/hours/export', [DailyHoursController::class, 'export'])->name('projects.hours.export');
                 Route::get('/projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
                 Route::put('/projects/{project}', [ProjectController::class, 'update'])->name('projects.update');
                 Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');

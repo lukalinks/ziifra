@@ -16,6 +16,7 @@ class EmployeeDocument extends Model
         'organization_id',
         'employee_id',
         'uploaded_by_user_id',
+        'document_folder_id',
         'type',
         'title',
         'file_path',
@@ -49,6 +50,11 @@ class EmployeeDocument extends Model
     public function uploadedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'uploaded_by_user_id');
+    }
+
+    public function folder(): BelongsTo
+    {
+        return $this->belongsTo(DocumentFolder::class, 'document_folder_id');
     }
 
     public function isExpired(): bool

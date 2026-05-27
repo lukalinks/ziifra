@@ -15,6 +15,8 @@ return [
     'status' => 'Status',
     'search' => 'Search',
     'filter' => 'Filter',
+    'filters' => 'Filters',
+    'clear_filters' => 'Clear filters',
     'yes' => 'Yes',
     'no' => 'No',
     'close' => 'Close',

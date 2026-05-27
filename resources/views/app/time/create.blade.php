@@ -50,7 +50,7 @@
 
     <div class="mt-6 flex gap-3">
         <button type="submit" class="ziifra-btn-primary">{{ __('time.save_entry') }}</button>
-        <a href="{{ route('time.index', array_filter(['week' => $week, 'employee_id' => $employeeId])) }}" class="ziifra-btn-app-outline">{{ __('time.cancel') }}</a>
+        <a href="{{ route('time.index', $indexQuery ?? array_filter(['week' => $week])) }}" class="ziifra-btn-app-outline">{{ __('time.cancel') }}</a>
     </div>
 </form>
 @endsection

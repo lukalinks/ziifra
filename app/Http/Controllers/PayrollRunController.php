@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Organization;
 use App\Models\PayrollRun;
 use App\Http\Requests\UpdatePayrollDraftRequest;
+use App\Enums\PayrollGenerationMode;
+use App\Services\HourlyPayrollService;
 use App\Services\PayrollRunService;
+use App\Services\PayslipExportService;
 use App\Services\PayslipEmailService;
 use App\Services\PayslipPdfService;
 use App\Support\CurrentOrganization;
@@ -33,31 +36,60 @@ class PayrollRunController extends Controller
         ]);
     }
 
-    public function create(): View
+    public function create(Request $request): View
     {
         $this->authorize('create', PayrollRun::class);
 
+        $year = (int) ($request->integer('year') ?: now()->year);
+        $month = (int) ($request->integer('month') ?: now()->month);
+
         return view('app.payroll.create', [
             'organization' => CurrentOrganization::check(),
-            'defaultYear' => (int) now()->year,
-            'defaultMonth' => (int) now()->month,
+            'defaultYear' => $year,
+            'defaultMonth' => $month,
+            'employees' => \App\Models\Employee::query()->orderBy('last_name')->orderBy('first_name')->get(),
+            'generationModes' => PayrollGenerationMode::cases(),
         ]);
     }
 
-    public function store(Request $request, PayrollRunService $payroll): RedirectResponse
+    public function store(Request $request, PayrollRunService $payroll, HourlyPayrollService $hourlyPayroll): RedirectResponse
     {
         $this->authorize('create', PayrollRun::class);
 
         $validated = $request->validate([
             'year' => ['required', 'integer', 'min:2020', 'max:2100'],
             'month' => ['required', 'integer', 'min:1', 'max:12'],
+            'calculation_mode' => ['nullable', 'in:salary,hourly'],
+            'generation_mode' => ['nullable', 'in:all,individual,group'],
+            'employee_id' => ['nullable', 'integer', 'exists:employees,id'],
+            'employee_ids' => ['nullable', 'array'],
+            'employee_ids.*' => ['integer', 'exists:employees,id'],
         ]);
 
-        $run = $payroll->create(
-            CurrentOrganization::check(),
-            (int) $validated['year'],
-            (int) $validated['month'],
-        );
+        $mode = PayrollGenerationMode::tryFrom($validated['generation_mode'] ?? 'all') ?? PayrollGenerationMode::All;
+        $employeeIds = null;
+
+        if ($mode === PayrollGenerationMode::Individual && ! empty($validated['employee_id'])) {
+            $employeeIds = [(int) $validated['employee_id']];
+        } elseif ($mode === PayrollGenerationMode::Group) {
+            $employeeIds = array_map('intval', $validated['employee_ids'] ?? []);
+        }
+
+        if (($validated['calculation_mode'] ?? 'salary') === 'hourly') {
+            $run = $hourlyPayroll->create(
+                CurrentOrganization::check(),
+                (int) $validated['year'],
+                (int) $validated['month'],
+                $mode,
+                $employeeIds,
+            );
+        } else {
+            $run = $payroll->create(
+                CurrentOrganization::check(),
+                (int) $validated['year'],
+                (int) $validated['month'],
+            );
+        }
 
     return redirect()
             ->to($run->showUrl())
@@ -167,6 +199,13 @@ class PayrollRunController extends Controller
         );
 
         return response()->download($tmpBase, $downloadName)->deleteFileAfterSend(true);
+    }
+
+    public function exportCsv(Organization $organization, PayrollRun $payrollRun, PayslipExportService $export)
+    {
+        $this->authorize('view', $payrollRun);
+
+        return $export->exportRunCsv($payrollRun);
     }
 
     public function emailPayslips(Request $request, Organization $organization, PayrollRun $payrollRun, PayslipEmailService $payslipEmail): RedirectResponse

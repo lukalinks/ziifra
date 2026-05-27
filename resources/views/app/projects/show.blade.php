@@ -4,120 +4,187 @@
 @section('header', $project->name)
 
 @section('content')
-<div class="mb-6 flex flex-wrap items-start justify-between gap-4">
-    <div>
-        <p class="text-sm text-ziifra-muted">{{ $project->status->label() }} · {{ $project->completionPercent() }}% {{ __('projects.progress') }}</p>
-        @if ($project->description)
-            <p class="mt-2 max-w-2xl text-sm text-ziifra-ink">{{ $project->description }}</p>
-        @endif
-        @if ($project->members->isNotEmpty())
-            <p class="mt-2 text-xs text-ziifra-muted">
-                {{ __('projects.team') }}:
-                {{ $project->members->map(fn ($e) => $e->fullName())->join(', ') }}
-            </p>
-        @endif
-    </div>
-    @if ($canManage)
-        <div class="flex gap-2">
-            <a href="{{ route('projects.edit', $project) }}" class="ziifra-btn-app-outline">{{ __('projects.edit') }}</a>
-            <form method="POST" action="{{ route('projects.destroy', $project) }}" data-confirm="{{ __('projects.confirm_delete') }}" data-confirm-variant="danger" data-confirm-accept="{{ __('common.delete') }}">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="rounded-lg border border-red-200 px-4 py-2 text-sm text-red-700 hover:bg-red-50">{{ __('projects.delete') }}</button>
-            </form>
-        </div>
-    @endif
-</div>
+@php
+    use App\Enums\ProjectStatus;
 
-<div class="grid gap-6 lg:grid-cols-2">
-    <section class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-5">
-        <h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-ziifra-muted">{{ __('projects.tasks') }}</h2>
-        @if ($canManage)
-            <form method="POST" action="{{ route('projects.tasks.store', $project) }}" class="mb-4 space-y-3 rounded-lg border border-ziifra-line/60 bg-ziifra-cream/30 p-4">
-                @csrf
-                <input type="text" name="title" placeholder="{{ __('projects.task_title') }}" required class="w-full rounded-lg border border-ziifra-line px-3 py-2 text-sm">
-                <div class="grid gap-3 sm:grid-cols-2">
-                    <select name="status" class="rounded-lg border border-ziifra-line px-3 py-2 text-sm">
-                        @foreach ($taskStatuses as $s)
-                            <option value="{{ $s->value }}">{{ $s->label() }}</option>
-                        @endforeach
-                    </select>
-                    <select name="priority" class="rounded-lg border border-ziifra-line px-3 py-2 text-sm">
-                        @foreach ($taskPriorities as $p)
-                            <option value="{{ $p->value }}">{{ $p->label() }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <select name="assigned_employee_id" class="w-full rounded-lg border border-ziifra-line px-3 py-2 text-sm">
-                    <option value="">{{ __('projects.assignee') }}</option>
-                    @foreach ($employees as $employee)
-                        <option value="{{ $employee->id }}">{{ $employee->fullName() }}</option>
-                    @endforeach
-                </select>
-                <div class="flex flex-wrap items-center gap-3">
-                    <input type="date" name="due_date" class="rounded-lg border border-ziifra-line px-3 py-2 text-sm">
-                    <label class="flex items-center gap-2 text-sm">
-                        <input type="checkbox" name="is_milestone" value="1">
-                        {{ __('projects.milestone') }}
-                    </label>
-                    <button type="submit" class="ziifra-btn-primary text-sm">{{ __('projects.add_task') }}</button>
-                </div>
-            </form>
-        @endif
-        @forelse ($project->tasks as $task)
-            <div class="flex flex-wrap items-center justify-between gap-2 border-t border-ziifra-line/40 py-3 first:border-t-0 first:pt-0">
-                <div>
-                    <p class="font-medium text-ziifra-ink">
-                        @if ($task->is_milestone)
-                            <span class="mr-1 text-ziifra-accent-deep">◆</span>
+    $completion = $project->completionPercent();
+    $teamCount = $project->members->count();
+    $taskCount = $project->tasks->count();
+    $milestoneCount = $project->tasks->where('is_milestone', true)->count();
+    $monthHours = $hoursGrid['totals']['hours'] ?? 0;
+    $pendingHours = $hoursGrid['totals']['pending'] ?? 0;
+    $monthCarbon = \Carbon\Carbon::parse($selectedMonth.'-01');
+    $prevMonth = $monthCarbon->copy()->subMonth()->format('Y-m');
+    $nextMonth = $monthCarbon->copy()->addMonth()->format('Y-m');
+    $isCurrentMonth = $selectedMonth === now()->format('Y-m');
+
+    $statusTone = match ($project->status) {
+        ProjectStatus::Active => 'active',
+        ProjectStatus::Planning => 'planning',
+        ProjectStatus::OnHold => 'hold',
+        ProjectStatus::Completed => 'done',
+        ProjectStatus::Cancelled => 'cancelled',
+    };
+@endphp
+
+<div class="ziifra-dashboard-page ziifra-project-detail">
+    @if ($tab !== 'hours')
+        <a href="{{ route('projects.index') }}" class="ziifra-employee-profile-back" data-page-nav>
+            <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+            {{ __('projects.back_to_list') }}
+        </a>
+
+        <section class="ziifra-project-detail-hero">
+        <div class="relative z-[1] grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+            <div class="min-w-0">
+                <div class="ziifra-project-detail-hero-main">
+                    <span class="ziifra-project-detail-icon" aria-hidden="true">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.25-3.75l3 3m0 0l3-3m-3 3V2.25"/>
+                        </svg>
+                    </span>
+                    <div class="min-w-0 flex-1">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span @class(['ziifra-project-detail-status', 'ziifra-project-detail-status-'.$statusTone])>{{ $project->status->label() }}</span>
+                            @if ($project->budget)
+                                <span class="ziifra-employee-profile-chip">{{ number_format((float) $project->budget, 0) }} {{ $project->currency ?? 'EUR' }}</span>
+                            @endif
+                        </div>
+                        <h1 class="mt-2 text-2xl font-semibold tracking-tight text-ziifra-ink sm:text-3xl">{{ $project->name }}</h1>
+                        @if ($project->description)
+                            <p class="mt-2 max-w-3xl text-sm leading-relaxed text-ziifra-muted">{{ $project->description }}</p>
                         @endif
-                        {{ $task->title }}
-                    </p>
-                    <p class="text-xs text-ziifra-muted">
-                        {{ $task->status->label() }} · {{ $task->priority->label() }}
-                        @if ($task->assignee)
-                            · {{ $task->assignee->fullName() }}
+                        @if ($project->start_date || $project->end_date)
+                            <p class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ziifra-muted">
+                                @if ($project->start_date)
+                                    <span>{{ __('projects.start_date') }}: <strong class="font-medium text-ziifra-ink">{{ $project->start_date->format('M j, Y') }}</strong></span>
+                                @endif
+                                @if ($project->end_date)
+                                    <span>{{ __('projects.end_date') }}: <strong class="font-medium text-ziifra-ink">{{ $project->end_date->format('M j, Y') }}</strong></span>
+                                @endif
+                            </p>
                         @endif
-                        @if ($task->due_date)
-                            · {{ $task->due_date->format('M j, Y') }}
-                        @endif
-                    </p>
+                    </div>
                 </div>
+
                 @if ($canManage)
-                    <div class="flex items-center gap-2">
-                        <form method="POST" action="{{ route('projects.tasks.update', [$project, $task]) }}">
-                            @csrf
-                            @method('PUT')
-                            <select name="status" onchange="this.form.submit()" class="rounded border border-ziifra-line px-2 py-1 text-xs">
-                                @foreach ($taskStatuses as $s)
-                                    <option value="{{ $s->value }}" @selected($task->status === $s)>{{ $s->label() }}</option>
-                                @endforeach
-                            </select>
-                        </form>
-                        <form method="POST" action="{{ route('projects.tasks.destroy', [$project, $task]) }}">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-xs text-red-600 hover:underline">×</button>
-                        </form>
+                    <div class="ziifra-project-detail-actions mt-5">
+                        <a href="{{ route('projects.hours.export', ['project' => $project, 'month' => $selectedMonth]) }}" class="ziifra-btn-app-outline !text-sm">{{ __('daily_hours.export') }}</a>
+                        <a href="{{ route('invoices.create', ['project' => $project->id, 'period_start' => $selectedMonth.'-01', 'period_end' => $monthCarbon->copy()->endOfMonth()->toDateString()]) }}" class="ziifra-btn-app-outline !text-sm">{{ __('daily_hours.generate_invoice') }}</a>
+                        <a href="{{ route('projects.edit', $project) }}" class="ziifra-btn-app !text-sm" data-page-nav>{{ __('projects.edit') }}</a>
                     </div>
                 @endif
             </div>
-        @empty
-            <p class="text-sm text-ziifra-muted">{{ __('projects.no_tasks') }}</p>
-        @endforelse
+
+            <div class="ziifra-project-detail-progress-card">
+                <div class="ziifra-project-detail-ring" style="background: conic-gradient(var(--color-ziifra-accent) {{ $completion }}%, rgb(226 232 240 / 0.55) 0)">
+                    <div class="ziifra-project-detail-ring-inner">
+                        <span class="text-2xl font-semibold tabular-nums text-ziifra-ink">{{ $completion }}%</span>
+                        <span class="text-[0.65rem] font-medium text-ziifra-muted">{{ __('projects.progress') }}</span>
+                    </div>
+                </div>
+                <p class="mt-3 text-center text-xs text-ziifra-muted">{{ trans_choice('projects.task_count', $taskCount, ['count' => $taskCount]) }}</p>
+            </div>
+        </div>
     </section>
 
-    <section class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-5">
-        <h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-ziifra-muted">{{ __('projects.milestones') }}</h2>
-        @php $milestones = $project->tasks->where('is_milestone', true); @endphp
-        @forelse ($milestones as $milestone)
-            <p class="border-t border-ziifra-line/40 py-2 text-sm first:border-t-0">
-                {{ $milestone->title }}
-                <span class="text-ziifra-muted">— {{ $milestone->status->label() }}</span>
-            </p>
-        @empty
-            <p class="text-sm text-ziifra-muted">{{ __('projects.no_tasks') }}</p>
-        @endforelse
+    <div class="ziifra-project-detail-stats">
+        <a href="{{ route('projects.show', ['project' => $project, 'tab' => 'hours', 'month' => $selectedMonth, 'search' => $search]) }}" data-page-nav
+            @class(['ziifra-project-detail-stat', 'ziifra-project-detail-stat-active' => $tab === 'hours', 'ziifra-project-detail-stat-warn' => $pendingHours > 0 && $tab !== 'hours'])>
+            <span class="ziifra-project-detail-stat-label">{{ __('daily_hours.tab') }}</span>
+            <span class="ziifra-project-detail-stat-value">{{ number_format($monthHours, 1) }}</span>
+            <span class="ziifra-project-detail-stat-hint">{{ __('daily_hours.hours_this_month') }}</span>
+        </a>
+        <a href="{{ route('projects.show', ['project' => $project, 'tab' => 'team']) }}" data-page-nav
+            @class(['ziifra-project-detail-stat', 'ziifra-project-detail-stat-active' => $tab === 'team'])>
+            <span class="ziifra-project-detail-stat-label">{{ __('projects.team') }}</span>
+            <span class="ziifra-project-detail-stat-value">{{ $teamCount }}</span>
+            <span class="ziifra-project-detail-stat-hint">{{ trans_choice('projects.team_count', $teamCount, ['count' => $teamCount]) }}</span>
+        </a>
+        <a href="{{ route('projects.show', ['project' => $project, 'tab' => 'tasks']) }}" data-page-nav
+            @class(['ziifra-project-detail-stat', 'ziifra-project-detail-stat-active' => $tab === 'tasks'])>
+            <span class="ziifra-project-detail-stat-label">{{ __('projects.tasks') }}</span>
+            <span class="ziifra-project-detail-stat-value">{{ $taskCount }}</span>
+            <span class="ziifra-project-detail-stat-hint">{{ trans_choice('projects.milestone_count', $milestoneCount, ['count' => $milestoneCount]) }}</span>
+        </a>
+        @if ($pendingHours > 0)
+            <div class="ziifra-project-detail-stat ziifra-project-detail-stat-warn">
+                <span class="ziifra-project-detail-stat-label">{{ __('projects.pending_label') }}</span>
+                <span class="ziifra-project-detail-stat-value">{{ $pendingHours }}</span>
+                <span class="ziifra-project-detail-stat-hint">{{ trans_choice('projects.pending_hours', $pendingHours, ['count' => $pendingHours]) }}</span>
+            </div>
+        @endif
+    </div>
+    @endif
+
+    <section @class(['ziifra-project-detail-workspace', 'ziifra-project-detail-workspace--hours' => $tab === 'hours'])>
+        @if ($tab === 'hours')
+            <nav class="ziifra-time-attendance-tabs" aria-label="{{ __('projects.title') }}">
+                <a href="{{ route('projects.show', ['project' => $project, 'tab' => 'hours', 'month' => $selectedMonth, 'search' => $search]) }}" data-page-nav
+                    class="ziifra-time-attendance-tab ziifra-time-attendance-tab--active">
+                    {{ __('daily_hours.tab') }}
+                    @if ($pendingHours > 0)
+                        <span class="ziifra-time-attendance-tab-badge">{{ $pendingHours }}</span>
+                    @endif
+                </a>
+                <a href="{{ route('projects.show', ['project' => $project, 'tab' => 'tasks']) }}" data-page-nav class="ziifra-time-attendance-tab">
+                    {{ __('projects.tasks') }}
+                </a>
+                <a href="{{ route('projects.show', ['project' => $project, 'tab' => 'team']) }}" data-page-nav class="ziifra-time-attendance-tab">
+                    {{ __('projects.team') }}
+                </a>
+            </nav>
+        @else
+        <nav class="ziifra-project-detail-tabs" aria-label="{{ __('projects.title') }}">
+            <a href="{{ route('projects.show', ['project' => $project, 'tab' => 'hours', 'month' => $selectedMonth, 'search' => $search]) }}" data-page-nav
+                @class(['ziifra-project-detail-tab', 'ziifra-project-detail-tab-active' => $tab === 'hours'])>
+                {{ __('daily_hours.tab') }}
+                @if ($pendingHours > 0)
+                    <span class="ziifra-project-detail-tab-badge ziifra-project-detail-tab-badge-warn">{{ $pendingHours }}</span>
+                @endif
+            </a>
+            <a href="{{ route('projects.show', ['project' => $project, 'tab' => 'tasks']) }}" data-page-nav
+                @class(['ziifra-project-detail-tab', 'ziifra-project-detail-tab-active' => $tab === 'tasks'])>
+                {{ __('projects.tasks') }}
+                @if ($taskCount > 0)
+                    <span class="ziifra-project-detail-tab-badge">{{ $taskCount }}</span>
+                @endif
+            </a>
+            <a href="{{ route('projects.show', ['project' => $project, 'tab' => 'team']) }}" data-page-nav
+                @class(['ziifra-project-detail-tab', 'ziifra-project-detail-tab-active' => $tab === 'team'])>
+                {{ __('projects.team') }}
+                @if ($teamCount > 0)
+                    <span class="ziifra-project-detail-tab-badge">{{ $teamCount }}</span>
+                @endif
+            </a>
+        </nav>
+        @endif
+
+        <div @class(['ziifra-project-detail-content', 'ziifra-project-detail-content--hours' => $tab === 'hours'])>
+            @if ($tab === 'hours')
+                @include('app.projects._hours-grid', compact('monthCarbon', 'prevMonth', 'nextMonth', 'isCurrentMonth'))
+            @elseif ($tab === 'team')
+                @include('app.projects._team')
+            @else
+                @include('app.projects._tasks', compact('milestoneCount'))
+            @endif
+        </div>
     </section>
 </div>
 @endsection
+
+@if ($tab === 'hours' && $canManage)
+    @push('scripts')
+        <script>
+            window.ziifraProjectHours = {
+                upsertUrl: @json(route('projects.hours.upsert', $project)),
+                csrf: @json(csrf_token()),
+                standardDayHours: @json(\App\Services\DailyHoursService::STANDARD_DAY_HOURS),
+                currency: @json($hoursGrid['currency'] ?? ($project->currency ?? 'EUR')),
+            };
+        </script>
+        @vite('resources/js/project-hours-grid.js')
+    @endpush
+@endif

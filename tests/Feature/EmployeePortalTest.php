@@ -70,6 +70,8 @@ class EmployeePortalTest extends TestCase
             ->assertSee('ziifra-dashboard-employee', false)
             ->assertSee('ziifra-employee-hero', false)
             ->assertSee('ziifra-mobile-tabbar', false)
+            ->assertSee('id="ziifra-mobile-nav"', false)
+            ->assertSee('data-mobile-nav-open', false)
             ->assertSee('id="ziifra-confirm-dialog"', false)
             ->assertSee('id="ziifra-page-loader"', false)
             ->assertSee(__('navigation.leave'), false)
@@ -146,7 +148,7 @@ class EmployeePortalTest extends TestCase
             ->get($this->workspaceRoute('leave.index', $setup['organization']))
             ->assertOk()
             ->assertSee(__('leave.my_header'), false)
-            ->assertSee('ziifra-leave-card', false)
+            ->assertSee('ziifra-list-card', false)
             ->assertSee($leaveType->name, false)
             ->assertSee(__('leave.all_statuses'), false);
     }

@@ -50,6 +50,16 @@ class PayrollRun extends Model
         return Carbon::create($this->year, $this->month, 1)->format('F Y');
     }
 
+    public function periodSlug(): string
+    {
+        return sprintf('%04d-%02d', $this->year, $this->month);
+    }
+
+    public function getRouteKey(): string
+    {
+        return $this->periodSlug();
+    }
+
     public function isDraft(): bool
     {
         return $this->status === PayrollRunStatus::Draft;
@@ -62,6 +72,8 @@ class PayrollRun extends Model
 
     public function showUrl(): string
     {
-        return $this->workspaceRoute('payroll.show');
+        return $this->workspaceRoute('payroll.show', [
+            'payrollRun' => $this->periodSlug(),
+        ]);
     }
 }

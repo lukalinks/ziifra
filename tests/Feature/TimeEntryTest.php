@@ -94,6 +94,26 @@ class TimeEntryTest extends TestCase
             ->assertSee(__('time.timesheet'));
     }
 
+    public function test_numeric_employee_id_in_time_url_redirects_to_employee_code(): void
+    {
+        $result = app(RegisterOrganizationService::class)->register(
+            'Owner',
+            'owner@acme.test',
+            'password123',
+            'Acme SHPK',
+        );
+
+        $this->useOrganizationPlan($result['organization'], SubscriptionPlan::Starter);
+
+        $employee = Employee::factory()->forOrganization($result['organization'])->create();
+        $week = Carbon::parse('2026-05-25')->startOfWeek(Carbon::MONDAY)->toDateString();
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->get($this->workspaceRoute('time.index', $result['organization']).'?week='.$week.'&employee_id='.$employee->id)
+            ->assertRedirect($this->workspaceRoute('time.index', $result['organization']).'?week='.$week.'&employee='.$employee->employee_code);
+    }
+
     public function test_employee_cannot_clock_in_twice_without_clock_out(): void
     {
         $result = app(RegisterOrganizationService::class)->register(

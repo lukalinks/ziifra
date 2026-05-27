@@ -12,8 +12,10 @@ use App\Models\Employee;
 use App\Models\Organization;
 use App\Models\Project;
 use App\Models\ProjectTask;
+use App\Services\DailyHoursService;
 use App\Services\ProjectService;
 use App\Support\CurrentOrganization;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -67,11 +69,15 @@ class ProjectController extends Controller
             ->with('status', __('projects.created'));
     }
 
-    public function show(Organization $organization, Project $project): View
+    public function show(Organization $organization, Project $project, Request $request, DailyHoursService $hours): View
     {
         $this->authorize('view', $project);
 
         $project->load(['members', 'tasks.assignee', 'createdBy']);
+
+        $month = Carbon::parse($request->string('month')->toString() ?: now()->format('Y-m'))->startOfMonth();
+        $hoursGrid = $hours->gridForProject($project, $month, $request->string('search')->trim()->toString() ?: null);
+        $tab = $request->string('tab')->toString() ?: 'hours';
 
         return view('app.projects.show', [
             'organization' => CurrentOrganization::check(),
@@ -80,6 +86,10 @@ class ProjectController extends Controller
             'employees' => Employee::query()->orderBy('last_name')->orderBy('first_name')->get(),
             'taskStatuses' => ProjectTaskStatus::cases(),
             'taskPriorities' => ProjectTaskPriority::cases(),
+            'hoursGrid' => $hoursGrid,
+            'selectedMonth' => $month->format('Y-m'),
+            'search' => $request->string('search')->trim()->toString(),
+            'tab' => in_array($tab, ['hours', 'tasks', 'team'], true) ? $tab : 'hours',
         ]);
     }
 

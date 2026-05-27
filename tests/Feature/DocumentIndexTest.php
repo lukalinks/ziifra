@@ -61,9 +61,27 @@ class DocumentIndexTest extends TestCase
             ->withSession(['current_organization_id' => $result['organization']->id])
             ->get($this->workspaceRoute('documents.index', $result['organization']))
             ->assertOk()
+            ->assertSee(__('documents.folders.contract'), false)
+            ->assertSee(__('documents.folders.certificate'), false)
+            ->assertDontSee('Contract A', false)
+            ->assertDontSee('Diploma B', false);
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->get($this->workspaceRoute('documents.index', $result['organization'], [
+                'type' => EmployeeDocumentType::Contract->value,
+            ]))
+            ->assertOk()
             ->assertSee('Contract A', false)
+            ->assertDontSee('Diploma B', false);
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->get($this->workspaceRoute('documents.index', $result['organization'], [
+                'type' => EmployeeDocumentType::Certificate->value,
+            ]))
+            ->assertOk()
             ->assertSee('Diploma B', false)
-            ->assertSee('Arben Krasniqi', false)
             ->assertSee('Era Gashi', false);
     }
 
@@ -109,6 +127,48 @@ class DocumentIndexTest extends TestCase
             ->assertDontSee('Only B', false);
     }
 
+    public function test_owner_can_filter_documents_by_type_tab(): void
+    {
+        $result = app(RegisterOrganizationService::class)->register(
+            'Owner',
+            'owner@acme.test',
+            'password123',
+            'Acme SHPK',
+        );
+
+        $employee = Employee::factory()->forOrganization($result['organization'])->create();
+
+        EmployeeDocument::query()->create([
+            'organization_id' => $result['organization']->id,
+            'employee_id' => $employee->id,
+            'uploaded_by_user_id' => $result['user']->id,
+            'type' => EmployeeDocumentType::Contract,
+            'title' => 'Employment contract',
+            'file_path' => 'organizations/1/employees/1/documents/contract.pdf',
+            'original_filename' => 'contract.pdf',
+        ]);
+
+        EmployeeDocument::query()->create([
+            'organization_id' => $result['organization']->id,
+            'employee_id' => $employee->id,
+            'uploaded_by_user_id' => $result['user']->id,
+            'type' => EmployeeDocumentType::Certificate,
+            'title' => 'Degree scan',
+            'file_path' => 'organizations/1/employees/1/documents/degree.pdf',
+            'original_filename' => 'degree.pdf',
+        ]);
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->get($this->workspaceRoute('documents.index', $result['organization'], [
+                'type' => EmployeeDocumentType::Contract->value,
+            ]))
+            ->assertOk()
+            ->assertSee(__('documents.breadcrumb_documents'), false)
+            ->assertSee('Employment contract', false)
+            ->assertDontSee('Degree scan', false);
+    }
+
     public function test_owner_can_upload_document_from_index(): void
     {
         Storage::fake('local');
@@ -130,7 +190,9 @@ class DocumentIndexTest extends TestCase
                 'title' => 'From library',
                 'file' => UploadedFile::fake()->create('contract.pdf', 100, 'application/pdf'),
             ])
-            ->assertRedirect($this->workspaceRoute('documents.index', $result['organization']));
+            ->assertRedirect($this->workspaceRoute('documents.index', $result['organization'], [
+                'type' => EmployeeDocumentType::Contract->value,
+            ]));
 
         $this->assertDatabaseHas('employee_documents', [
             'employee_id' => $employee->id,
@@ -169,7 +231,9 @@ class DocumentIndexTest extends TestCase
 
         $this->actingAs($manager)
             ->withSession(['current_organization_id' => $result['organization']->id])
-            ->get($this->workspaceRoute('documents.index', $result['organization']))
+            ->get($this->workspaceRoute('documents.index', $result['organization'], [
+                'type' => EmployeeDocumentType::IdDocument->value,
+            ]))
             ->assertOk()
             ->assertSee('Passport scan', false)
             ->assertDontSee(__('documents.upload_from_index_hint'), false);
@@ -236,9 +300,59 @@ class DocumentIndexTest extends TestCase
             ->delete($this->workspaceRoute('employees.documents.destroy', $result['organization'], [
                 'employee' => $employee,
                 'document' => $document,
-            ]), ['redirect' => 'documents'])
-            ->assertRedirect($this->workspaceRoute('documents.index', $result['organization']));
+            ]), [
+                'redirect' => 'documents',
+                'type' => EmployeeDocumentType::Other->value,
+            ])
+            ->assertRedirect($this->workspaceRoute('documents.index', $result['organization'], [
+                'type' => EmployeeDocumentType::Other->value,
+            ]));
 
         $this->assertDatabaseMissing('employee_documents', ['id' => $document->id]);
+    }
+
+    public function test_owner_can_create_custom_folder_and_upload_document(): void
+    {
+        Storage::fake('local');
+
+        $result = app(RegisterOrganizationService::class)->register(
+            'Owner',
+            'owner@acme.test',
+            'password123',
+            'Acme SHPK',
+        );
+
+        $employee = Employee::factory()->forOrganization($result['organization'])->create();
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->post($this->workspaceRoute('documents.folders.store', $result['organization']), [
+                'name' => 'Onboarding 2026',
+            ])
+            ->assertRedirect();
+
+        $folderId = \App\Models\DocumentFolder::query()->value('id');
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->post($this->workspaceRoute('documents.store', $result['organization']), [
+                'employee_id' => $employee->id,
+                'document_folder_id' => $folderId,
+                'type' => EmployeeDocumentType::Other->value,
+                'title' => 'Welcome pack',
+                'file' => UploadedFile::fake()->create('pack.pdf', 100, 'application/pdf'),
+            ])
+            ->assertRedirect($this->workspaceRoute('documents.index', $result['organization'], [
+                'folder' => $folderId,
+            ]));
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->get($this->workspaceRoute('documents.index', $result['organization'], [
+                'folder' => $folderId,
+            ]))
+            ->assertOk()
+            ->assertSee('Welcome pack', false)
+            ->assertSee('Onboarding 2026', false);
     }
 }

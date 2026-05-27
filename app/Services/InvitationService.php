@@ -7,6 +7,7 @@ use App\Mail\TeamInvitationMail;
 use App\Models\Invitation;
 use App\Models\Organization;
 use App\Models\User;
+use App\Services\WorkspaceNavItemService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
@@ -37,6 +38,10 @@ class InvitationService
             throw ValidationException::withMessages([
                 'email' => ['An invitation has already been sent to this email.'],
             ]);
+        }
+
+        if (in_array($role, [OrganizationRole::Admin, OrganizationRole::Owner], true)) {
+            app(WorkspaceNavItemService::class)->assertAdminLimitNotExceeded($organization);
         }
 
         $invitation = $organization->invitations()->create([

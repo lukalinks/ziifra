@@ -26,4 +26,7 @@ return [
     'coming_soon' => 'Së shpejti',
     'coming_soon_hint' => 'Ky modul vjen së shpejti',
     'mobile_nav' => 'Navigimi kryesor',
+    'menu' => 'Menu',
+    'open_menu' => 'Hap menunë',
+    'close_menu' => 'Mbyll menunë',
 ];

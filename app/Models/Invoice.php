@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\InvoiceSource;
 use App\Enums\InvoiceStatus;
 use App\Models\Concerns\BelongsToOrganization;
 use App\Models\Concerns\HasWorkspaceRoutes;
@@ -14,6 +15,7 @@ class Invoice extends Model
 
     protected $fillable = [
         'organization_id',
+        'project_id',
         'created_by_user_id',
         'invoice_number',
         'client_name',
@@ -24,10 +26,14 @@ class Invoice extends Model
         'currency',
         'issue_date',
         'due_date',
+        'period_start',
+        'period_end',
         'status',
+        'source',
         'sent_at',
         'paid_at',
         'notes',
+        'line_items',
     ];
 
     protected function casts(): array
@@ -37,7 +43,11 @@ class Invoice extends Model
             'tax_percent' => 'decimal:2',
             'issue_date' => 'date',
             'due_date' => 'date',
+            'period_start' => 'date',
+            'period_end' => 'date',
             'status' => InvoiceStatus::class,
+            'source' => InvoiceSource::class,
+            'line_items' => 'array',
             'sent_at' => 'datetime',
             'paid_at' => 'datetime',
         ];
@@ -46,6 +56,11 @@ class Invoice extends Model
     public function createdBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_user_id');
+    }
+
+    public function project(): BelongsTo
+    {
+        return $this->belongsTo(Project::class);
     }
 
     public function isDraft(): bool

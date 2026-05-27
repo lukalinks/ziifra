@@ -61,7 +61,13 @@ class EmployeeDocumentController extends Controller
         $documents->delete($document);
 
         $redirect = request()->string('redirect')->toString() === 'documents'
-            ? redirect()->route('documents.index')
+            ? redirect()->route('documents.index', array_filter([
+                'folder' => request()->integer('folder') ?: null,
+                'type' => request()->string('type')->toString() ?: null,
+                'search' => request()->string('search')->toString() ?: null,
+                'employee_id' => request()->integer('employee_id') ?: null,
+                'expiry' => request()->string('expiry')->toString() ?: null,
+            ]))
             : redirect()->route('employees.show', $employee);
 
         return $redirect->with('status', __('documents.deleted'));

@@ -35,6 +35,36 @@ class EmployeeManagementTest extends TestCase
         ]);
     }
 
+    public function test_index_filters_employees_by_project(): void
+    {
+        $register = app(RegisterOrganizationService::class);
+        $result = $register->register('Owner', 'owner@acme.test', 'password123', 'Acme SHPK');
+
+        $onProject = Employee::factory()->forOrganization($result['organization'])->create([
+            'first_name' => 'On',
+            'last_name' => 'Project',
+        ]);
+        Employee::factory()->forOrganization($result['organization'])->create([
+            'first_name' => 'Off',
+            'last_name' => 'Project',
+        ]);
+
+        $project = \App\Models\Project::query()->create([
+            'organization_id' => $result['organization']->id,
+            'created_by_user_id' => $result['user']->id,
+            'name' => 'Website',
+            'status' => \App\Enums\ProjectStatus::Active->value,
+        ]);
+        $project->members()->attach($onProject->id);
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->get($this->workspaceRoute('employees.index', $result['organization'], ['project_id' => $project->id]))
+            ->assertOk()
+            ->assertSee('On Project', false)
+            ->assertDontSee('Off Project', false);
+    }
+
     public function test_manager_can_list_but_not_create_employees(): void
     {
         $register = app(RegisterOrganizationService::class);
@@ -84,5 +114,64 @@ class EmployeeManagementTest extends TestCase
             ->withSession(['current_organization_id' => $result['organization']->id])
             ->get($this->workspaceRoute('employees.index', $result['organization']))
             ->assertForbidden();
+    }
+
+    public function test_employee_profile_url_uses_employee_code(): void
+    {
+        $register = app(RegisterOrganizationService::class);
+        $result = $register->register('Owner', 'owner@acme.test', 'password123', 'Acme SHPK');
+
+        $employee = Employee::factory()->forOrganization($result['organization'])->create([
+            'first_name' => 'Jane',
+            'last_name' => 'Doe',
+            'employee_code' => 'EMP-042',
+        ]);
+
+        $codeUrl = $this->workspaceRoute('employees.show', $result['organization'], ['employee' => $employee]);
+
+        $this->assertStringContainsString('/employees/EMP-042', $codeUrl);
+        $this->assertStringNotContainsString('/employees/'.$employee->id, $codeUrl);
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->get($codeUrl)
+            ->assertOk()
+            ->assertSee('Jane Doe', false);
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->get($this->workspaceRoute('employees.show', $result['organization'], ['employee' => $employee->id]))
+            ->assertRedirect($codeUrl);
+    }
+
+    public function test_default_overview_tab_is_omitted_from_employee_profile_url(): void
+    {
+        $register = app(RegisterOrganizationService::class);
+        $result = $register->register('Owner', 'owner@acme.test', 'password123', 'Acme SHPK');
+
+        $employee = Employee::factory()->forOrganization($result['organization'])->create([
+            'employee_code' => 'EMP-002',
+        ]);
+
+        $cleanUrl = $this->workspaceRoute('employees.show', $result['organization'], ['employee' => $employee]);
+
+        $this->actingAs($result['user'])
+            ->withSession(['current_organization_id' => $result['organization']->id])
+            ->get($cleanUrl.'?tab=overview')
+            ->assertRedirect($cleanUrl);
+    }
+
+    public function test_new_employees_receive_auto_generated_code(): void
+    {
+        $register = app(RegisterOrganizationService::class);
+        $result = $register->register('Owner', 'owner@acme.test', 'password123', 'Acme SHPK');
+
+        $employee = Employee::factory()->forOrganization($result['organization'])->create([
+            'first_name' => 'Auto',
+            'last_name' => 'Code',
+        ]);
+
+        $this->assertNotNull($employee->employee_code);
+        $this->assertMatchesRegularExpression('/^EMP-\d+$/', $employee->employee_code);
     }
 }

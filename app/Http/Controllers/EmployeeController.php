@@ -12,11 +12,13 @@ use App\Models\Employee;
 use App\Models\EmployeeFieldDefinition;
 use App\Models\Organization;
 use App\Models\EmployeeAllowance;
-use App\Models\EmployeeFieldValue;
+use App\Models\EmployeeHourlyRate;
 use App\Models\Position;
+use App\Models\Project;
 use App\Services\BillingNotificationService;
 use App\Services\EmployeeCustomFieldService;
 use App\Services\EmployeeLoginActivationService;
+use App\Services\EmployeeRateService;
 use App\Services\OrganizationBillingService;
 use App\Support\CurrentOrganization;
 use Illuminate\Http\RedirectResponse;
@@ -45,8 +47,13 @@ class EmployeeController extends Controller
             $query->where(function ($q) use ($search): void {
                 $q->where('first_name', 'like', "%{$search}%")
                     ->orWhere('last_name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('employee_code', 'like', "%{$search}%");
             });
+        }
+
+        if ($projectId = $request->integer('project_id')) {
+            $query->whereHas('projects', fn ($q) => $q->where('projects.id', $projectId));
         }
 
         if ($status = $request->string('status')->toString()) {
@@ -73,12 +80,18 @@ class EmployeeController extends Controller
         }
 
         $employees = $query->paginate(20)->withQueryString();
+        $projects = Project::query()->orderBy('name')->get(['id', 'name']);
+        $selectedProject = $request->integer('project_id')
+            ? $projects->firstWhere('id', $request->integer('project_id'))
+            : null;
 
         return view('app.employees.index', [
             'organization' => $organization,
             'employees' => $employees,
             'pendingLoginInvites' => $loginActivations->pendingInvitationsByEmail($employees->getCollection()),
             'departments' => Department::query()->orderBy('name')->get(),
+            'projects' => $projects,
+            'selectedProject' => $selectedProject,
             'statuses' => EmploymentStatus::cases(),
             'types' => EmploymentType::cases(),
             'canManage' => $canManage,
@@ -108,6 +121,8 @@ class EmployeeController extends Controller
         }
 
         [$custom, $newCustom] = $this->extractCustomFieldInput($data);
+        $projectIds = $data['project_ids'] ?? null;
+        unset($data['project_ids']);
 
         if ($data['employment_status'] === EmploymentStatus::Terminated->value) {
             $data['terminated_at'] = now();
@@ -118,6 +133,10 @@ class EmployeeController extends Controller
 
         if (is_array($allowanceTemplates)) {
             $this->syncEmployeeAllowances($employee, $allowanceTemplates);
+        }
+
+        if (is_array($projectIds)) {
+            $employee->projects()->sync($projectIds);
         }
 
         $organization = CurrentOrganization::check();
@@ -135,7 +154,7 @@ class EmployeeController extends Controller
     ): View {
         $this->authorize('view', $employee);
 
-        $employee->load(['department', 'position', 'manager', 'user', 'directReports', 'fieldValues.definition', 'documents.uploadedBy', 'organization']);
+        $employee->load(['department', 'position', 'manager', 'user', 'directReports', 'fieldValues.definition', 'documents.uploadedBy', 'organization', 'hourlyRates', 'projects']);
         $org = CurrentOrganization::check();
         $user = auth()->user();
         $canManage = $user->roleIn($org)?->canManageEmployees() ?? false;
@@ -194,7 +213,7 @@ class EmployeeController extends Controller
 
         return view('app.employees.edit', array_merge(
             $this->formData($request, $employee),
-            ['employee' => $employee->load('user')],
+            ['employee' => $employee->load(['user', 'projects'])],
         ));
     }
 
@@ -209,6 +228,8 @@ class EmployeeController extends Controller
         }
 
         [$custom, $newCustom] = $this->extractCustomFieldInput($data);
+        $projectIds = $data['project_ids'] ?? null;
+        unset($data['project_ids']);
 
         if ($data['employment_status'] === EmploymentStatus::Terminated->value) {
             $data['terminated_at'] = $employee->terminated_at ?? now();
@@ -221,6 +242,10 @@ class EmployeeController extends Controller
 
         if (is_array($allowanceTemplates)) {
             $this->syncEmployeeAllowances($employee, $allowanceTemplates);
+        }
+
+        if (is_array($projectIds)) {
+            $employee->projects()->sync($projectIds);
         }
 
         return redirect()
@@ -300,6 +325,7 @@ class EmployeeController extends Controller
             'allowanceTemplateRows' => $employee
                 ? $employee->employeeAllowances()->orderBy('sort_order')->get()
                 : collect(),
+            'projects' => Project::query()->orderBy('name')->get(),
         ];
     }
 
@@ -351,5 +377,38 @@ class EmployeeController extends Controller
         unset($data['custom_fields'], $data['new_custom_fields']);
 
         return [$custom, $newCustom];
+    }
+
+    public function storeHourlyRate(
+        Request $request,
+        Organization $organization,
+        Employee $employee,
+        EmployeeRateService $rates,
+    ): RedirectResponse {
+        $this->authorize('update', $employee);
+
+        $validated = $request->validate([
+            'year' => ['required', 'integer', 'min:2020', 'max:2100'],
+            'month' => ['required', 'integer', 'min:1', 'max:12'],
+            'hourly_rate' => ['required', 'numeric', 'min:0', 'max:999999.99'],
+        ]);
+
+        $rates->upsert($employee, $validated);
+
+        return back()->with('status', __('employees.rate_saved'));
+    }
+
+    public function destroyHourlyRate(
+        Organization $organization,
+        Employee $employee,
+        EmployeeHourlyRate $rate,
+    ): RedirectResponse {
+        $this->authorize('update', $employee);
+
+        abort_unless($rate->employee_id === $employee->id, 404);
+
+        $rate->delete();
+
+        return back()->with('status', __('employees.rate_deleted'));
     }
 }

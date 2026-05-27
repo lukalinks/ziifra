@@ -16,6 +16,8 @@ class PayrollItem extends Model
         'organization_id',
         'payroll_run_id',
         'employee_id',
+        'hours_worked',
+        'hourly_rate',
         'base_gross_salary',
         'allowances',
         'exempt_allowances_total',
@@ -31,6 +33,8 @@ class PayrollItem extends Model
     {
         return [
             'base_gross_salary' => 'decimal:2',
+            'hours_worked' => 'decimal:2',
+            'hourly_rate' => 'decimal:2',
             'allowances' => 'decimal:2',
             'exempt_allowances_total' => 'decimal:2',
             'gross_salary' => 'decimal:2',

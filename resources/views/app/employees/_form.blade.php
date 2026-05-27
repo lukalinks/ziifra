@@ -18,6 +18,13 @@
         @error('last_name')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
+        <label for="employee_code" class="block text-sm font-medium text-ziifra-ink">{{ __('employees.field_employee_code') }}</label>
+        <input id="employee_code" name="employee_code" type="text" maxlength="50"
+            value="{{ old('employee_code', $employee?->employee_code) }}"
+            class="mt-1 block w-full rounded-lg border border-ziifra-line px-3 py-2">
+        @error('employee_code')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+    </div>
+    <div>
         <label for="email" class="block text-sm font-medium text-ziifra-ink">Email</label>
         <input id="email" name="email" type="email"
             value="{{ old('email', $employee?->email) }}"
@@ -86,6 +93,22 @@
             </select>
             <p class="mt-1 text-xs text-ziifra-muted">Links a team member so they can request their own leave.</p>
             @error('user_id')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
+        </div>
+    @endif
+    @if (($projects ?? collect())->isNotEmpty())
+        <div class="sm:col-span-2">
+            <label class="block text-sm font-medium text-ziifra-ink">{{ __('employees.project_assignments') }}</label>
+            <p class="mt-0.5 text-xs text-ziifra-muted">{{ __('employees.project_assignments_hint') }}</p>
+            <div class="mt-2 max-h-48 space-y-2 overflow-y-auto rounded-lg border border-ziifra-line/80 p-3">
+                @foreach ($projects as $project)
+                    <label class="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="project_ids[]" value="{{ $project->id }}"
+                            @checked(collect(old('project_ids', $employee?->projects?->pluck('id')->all() ?? []))->contains($project->id))>
+                        {{ $project->name }}
+                    </label>
+                @endforeach
+            </div>
+            @error('project_ids')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
         </div>
     @endif
     <div>

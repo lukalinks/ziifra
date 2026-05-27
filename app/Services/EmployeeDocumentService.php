@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 class EmployeeDocumentService
 {
     /**
-     * @param  array{type: string, title: string, expires_at?: string|null, notes?: string|null}  $data
+     * @param  array{type: string, title: string, document_folder_id?: int|null, expires_at?: string|null, notes?: string|null}  $data
      */
     public function store(Employee $employee, UploadedFile $file, array $data, User $uploadedBy): EmployeeDocument
     {
@@ -23,6 +23,7 @@ class EmployeeDocumentService
             'organization_id' => $employee->organization_id,
             'employee_id' => $employee->id,
             'uploaded_by_user_id' => $uploadedBy->id,
+            'document_folder_id' => $data['document_folder_id'] ?? null,
             'type' => $data['type'],
             'title' => $data['title'],
             'file_path' => $stored['path'],
@@ -60,6 +61,7 @@ class EmployeeDocumentService
             'organization_id' => $employee->organization_id,
             'employee_id' => $employee->id,
             'uploaded_by_user_id' => $uploadedBy->id,
+            'document_folder_id' => $data['document_folder_id'] ?? null,
             'type' => $data['type'],
             'title' => $data['title'],
             'file_path' => $path,

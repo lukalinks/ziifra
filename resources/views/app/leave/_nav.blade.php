@@ -1,4 +1,4 @@
-<nav class="mb-8 flex flex-wrap items-center justify-between gap-4">
+<nav class="mb-4 flex flex-wrap items-center justify-between gap-4 sm:mb-8">
     <div class="ziifra-leave-tabs">
         <a href="{{ route('leave.index') }}"
             data-page-nav

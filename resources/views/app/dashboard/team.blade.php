@@ -10,7 +10,7 @@
     $todayLabel = now()->timezone($tz)->format('l, j F Y');
 @endphp
 
-<div class="ziifra-dashboard ziifra-dashboard-team space-y-8">
+<div class="ziifra-dashboard-page ziifra-dashboard ziifra-dashboard-team">
     <section class="ziifra-dashboard-hero ziifra-dashboard-hero-grid">
         <div class="relative z-[1] space-y-4">
             <div class="flex flex-wrap items-center gap-2">
@@ -18,7 +18,7 @@
                 <span class="font-mono text-xs text-ziifra-muted">{{ $todayLabel }}</span>
             </div>
             <div>
-                <h2 class="text-2xl font-semibold tracking-tight text-ziifra-ink sm:text-3xl">
+                <h2 class="text-xl font-semibold tracking-tight text-ziifra-ink sm:text-2xl lg:text-3xl">
                     {{ __('dashboard.welcome', ['greeting' => $greeting, 'name' => $firstName]) }}
                 </h2>
                 <p class="mt-2 max-w-2xl text-sm leading-relaxed text-ziifra-muted">
@@ -26,7 +26,7 @@
                 </p>
             </div>
             @if ($pendingLeaveCount > 0)
-                <div class="flex flex-wrap gap-2 pt-1">
+                <div class="ziifra-dashboard-hero-actions pt-1">
                     <a href="{{ route('leave.index', ['status' => 'pending']) }}" class="ziifra-btn-primary !py-2.5 !text-sm">
                         {{ __('dashboard.primary_review_leave', ['count' => $pendingLeaveCount]) }}
                     </a>
@@ -36,7 +36,8 @@
         </div>
     </section>
 
-    <div class="ziifra-dashboard-stats sm:grid-cols-2 lg:max-w-xl">
+    <x-dashboard.section :title="__('admin_dashboard.overview')" :description="__('admin_dashboard.overview_hint')">
+        <div class="ziifra-dashboard-stats">
         <x-dashboard.stat
             :label="__('dashboard.pending_leave')"
             :value="$pendingLeaveCount"
@@ -60,7 +61,8 @@
                 </svg>
             </x-slot:icon>
         </x-dashboard.stat>
-    </div>
+        </div>
+    </x-dashboard.section>
 
     @if ($pendingLeaveRequests->isNotEmpty())
         <x-dashboard.section :title="__('team_dashboard.pending_team_leave')">

@@ -17,10 +17,59 @@ class Employee extends Model
     /** @use HasFactory<EmployeeFactory> */
     use BelongsToOrganization, HasFactory, SoftDeletes;
 
+    protected static function booted(): void
+    {
+        static::creating(function (Employee $employee): void {
+            if (blank($employee->employee_code)) {
+                $employee->employee_code = static::generateUniqueCode((int) $employee->organization_id);
+            }
+        });
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'employee_code';
+    }
+
+    public function getRouteKey(): string
+    {
+        return $this->employee_code ?? (string) $this->getKey();
+    }
+
+    public static function generateUniqueCode(int $organizationId, ?int $exceptId = null): string
+    {
+        $maxSequence = static::query()
+            ->where('organization_id', $organizationId)
+            ->whereNotNull('employee_code')
+            ->pluck('employee_code')
+            ->map(function (string $code): int {
+                if (preg_match('/^EMP-(\d+)$/i', $code, $matches) !== 1) {
+                    return 0;
+                }
+
+                return (int) $matches[1];
+            })
+            ->max() ?? 0;
+
+        $sequence = $maxSequence + 1;
+
+        do {
+            $code = 'EMP-'.str_pad((string) $sequence, 3, '0', STR_PAD_LEFT);
+            $sequence++;
+        } while (static::query()
+            ->where('organization_id', $organizationId)
+            ->where('employee_code', $code)
+            ->when($exceptId !== null, fn ($query) => $query->where('id', '!=', $exceptId))
+            ->exists());
+
+        return $code;
+    }
+
     protected $fillable = [
         'organization_id',
         'first_name',
         'last_name',
+        'employee_code',
         'email',
         'phone',
         'department_id',
@@ -102,6 +151,26 @@ class Employee extends Model
     public function employeeAllowances(): HasMany
     {
         return $this->hasMany(EmployeeAllowance::class)->orderBy('sort_order');
+    }
+
+    public function hourlyRates(): HasMany
+    {
+        return $this->hasMany(EmployeeHourlyRate::class)->orderByDesc('year')->orderByDesc('month');
+    }
+
+    public function dailyHoursEntries(): HasMany
+    {
+        return $this->hasMany(DailyHoursEntry::class);
+    }
+
+    public function projects(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Project::class, 'project_employee')->withTimestamps();
+    }
+
+    public function displayCode(): string
+    {
+        return $this->employee_code ?? (string) $this->id;
     }
 
     public function customFieldValueFor(EmployeeFieldDefinition $definition): ?EmployeeFieldValue
