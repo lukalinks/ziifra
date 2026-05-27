@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Enums\AllowanceTaxTreatment;
 use App\Enums\PayrollAllowanceKind;
+use App\Enums\EmploymentStatus;
+use App\Enums\EmploymentType;
 use App\Enums\ExpenseCategory;
 use App\Enums\ExpenseClaimStatus;
 use App\Enums\InvoiceStatus;
@@ -131,29 +133,38 @@ class DemoDataService
             ],
         );
 
-        $manager = Employee::factory()->forOrganization($organization)->create([
+        $manager = Employee::query()->create([
+            'organization_id' => $organization->id,
             'first_name' => 'Mira',
             'last_name' => 'Manager',
             'email' => 'manager@demo.test',
             'user_id' => $managerUser->id,
             'department_id' => $department->id,
+            'employment_type' => EmploymentType::FullTime,
+            'employment_status' => EmploymentStatus::Active,
             'gross_salary' => 1200,
         ]);
 
-        $staff = Employee::factory()->forOrganization($organization)->create([
+        $staff = Employee::query()->create([
+            'organization_id' => $organization->id,
             'first_name' => 'Era',
             'last_name' => 'Staff',
             'email' => 'employee@demo.test',
             'user_id' => $employeeUser->id,
             'manager_id' => $manager->id,
+            'employment_type' => EmploymentType::FullTime,
+            'employment_status' => EmploymentStatus::Active,
             'gross_salary' => 800,
             'monthly_allowances' => 75,
         ]);
 
-        $other = Employee::factory()->forOrganization($organization)->create([
+        $other = Employee::query()->create([
+            'organization_id' => $organization->id,
             'first_name' => 'Luan',
             'last_name' => 'Krasniqi',
             'manager_id' => $manager->id,
+            'employment_type' => EmploymentType::FullTime,
+            'employment_status' => EmploymentStatus::Active,
             'gross_salary' => 900,
         ]);
 
