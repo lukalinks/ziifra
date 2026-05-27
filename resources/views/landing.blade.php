@@ -26,10 +26,10 @@
                 </div>
             </div>
 
-            <div class="relative min-w-0 overflow-hidden sm:overflow-visible lg:pl-0 xl:pl-2">
-                <div class="absolute -right-4 -top-6 h-32 w-32 rounded-full bg-ziifra-accent/25 blur-3xl sm:-right-8 sm:-top-8 sm:h-40 sm:w-40 lg:h-52 lg:w-52" aria-hidden="true"></div>
+            <div class="ziifra-landing-hero-visual relative min-w-0 lg:pl-0 xl:pl-2">
+                <div class="absolute -right-4 -top-6 hidden h-32 w-32 rounded-full bg-ziifra-accent/25 blur-3xl min-[640px]:block sm:-right-8 sm:-top-8 sm:h-40 sm:w-40 lg:h-52 lg:w-52" aria-hidden="true"></div>
                 <div class="ziifra-landing-mockup-stage">
-                <div class="ziifra-landing-mockup relative" role="img" aria-label="{{ __('landing.hero.mockup_aria') }}">
+                <div class="ziifra-landing-mockup ziifra-landing-mockup-desktop relative" role="img" aria-label="{{ __('landing.hero.mockup_aria') }}">
                     <div class="ziifra-card relative overflow-hidden !rounded-2xl !border-white/20 !bg-ziifra-paper/95 p-0.5 shadow-2xl shadow-black/20 ring-2 ring-ziifra-accent/25 sm:!rounded-3xl sm:p-1">
                         {{-- Browser chrome --}}
                         <div class="flex items-center gap-1.5 rounded-t-[0.9rem] border-b border-ziifra-line/60 bg-gradient-to-r from-ziifra-cream to-ziifra-paper px-2.5 py-2 sm:gap-2 sm:rounded-t-2xl sm:px-4 sm:py-3">
@@ -146,38 +146,53 @@
 
                 {{-- Mobile app preview --}}
                 <div class="ziifra-landing-mockup-phone" aria-hidden="true">
-                    <div class="overflow-hidden rounded-[1.75rem] border-[3px] border-white/25 bg-ziifra-night shadow-2xl shadow-black/40 ring-1 ring-white/10">
-                        <div class="flex items-center justify-between bg-ziifra-night px-3 pb-1 pt-2">
-                            <span class="font-mono text-[0.45rem] text-white/70">9:41</span>
+                    <div class="ziifra-landing-mockup-phone-shell overflow-hidden rounded-[1.75rem] border-[3px] border-white/25 bg-ziifra-night shadow-2xl shadow-black/40 ring-1 ring-white/10 min-[640px]:rounded-[1.75rem]">
+                        <div class="flex items-center justify-between bg-ziifra-night px-3 pb-1 pt-2 sm:px-3">
+                            <span class="font-mono text-[0.5rem] text-white/70 min-[640px]:text-[0.45rem]">9:41</span>
                             <span class="mx-auto h-1 w-8 rounded-full bg-white/20"></span>
                             <span class="flex gap-0.5">
                                 <span class="h-1.5 w-2.5 rounded-sm border border-white/40"></span>
                             </span>
                         </div>
-                        <div class="bg-ziifra-cream px-3 pb-3 pt-2">
-                            <p class="font-mono text-[0.45rem] uppercase tracking-widest text-ziifra-muted">Today</p>
-                            <p class="mt-1 text-[0.7rem] font-semibold text-ziifra-ink">Good morning, Era</p>
-                            <div class="mt-2.5 rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-2.5">
-                                <p class="text-[0.45rem] text-ziifra-muted">Annual leave</p>
-                                <p class="mt-0.5 text-sm font-semibold tabular-nums text-ziifra-accent-deep">18 days</p>
-                                <p class="mt-1 text-[0.45rem] text-ziifra-muted">3 pending approval</p>
+                        <div class="bg-ziifra-cream px-3.5 pb-4 pt-2.5 sm:px-3 sm:pb-3 sm:pt-2">
+                            <p class="font-mono text-[0.5rem] uppercase tracking-widest text-ziifra-muted min-[640px]:text-[0.45rem]">Today</p>
+                            <p class="mt-1 text-sm font-semibold text-ziifra-ink min-[640px]:text-[0.7rem]">Good morning, Era</p>
+                            <div class="mt-3 rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-3 min-[640px]:mt-2.5 min-[640px]:p-2.5">
+                                <p class="text-[0.5rem] text-ziifra-muted min-[640px]:text-[0.45rem]">Annual leave</p>
+                                <p class="mt-0.5 text-base font-semibold tabular-nums text-ziifra-accent-deep min-[640px]:text-sm">18 days</p>
+                                <p class="mt-1 text-[0.5rem] text-ziifra-muted min-[640px]:text-[0.45rem]">3 pending approval</p>
                             </div>
-                            <div class="mt-2 space-y-1.5">
-                                <div class="rounded-lg bg-ziifra-accent px-2 py-1.5 text-center text-[0.55rem] font-semibold text-ziifra-ink">Request leave</div>
-                                <div class="rounded-lg border border-ziifra-line/80 bg-ziifra-paper px-2 py-1.5 text-center text-[0.55rem] font-medium text-ziifra-muted">Team calendar</div>
+                            <div class="mt-3 space-y-2 min-[640px]:mt-2 min-[640px]:space-y-1.5">
+                                <div class="rounded-lg bg-ziifra-accent px-2.5 py-2 text-center text-xs font-semibold text-ziifra-ink min-[640px]:py-1.5 min-[640px]:text-[0.55rem]">Request leave</div>
+                                <div class="rounded-lg border border-ziifra-line/80 bg-ziifra-paper px-2.5 py-2 text-center text-xs font-medium text-ziifra-muted min-[640px]:py-1.5 min-[640px]:text-[0.55rem]">Team calendar</div>
                             </div>
-                            <ul class="mt-2.5 space-y-1">
+                            <ul class="mt-3 space-y-1.5 min-[640px]:mt-2.5 min-[640px]:space-y-1">
                                 @foreach([
                                     ['Leave', 'Approved · 3 days'],
                                     ['Time', 'Clocked in 08:42'],
                                 ] as [$label, $detail])
-                                    <li class="flex items-center justify-between rounded-lg border border-ziifra-line/60 bg-ziifra-paper px-2 py-1.5">
-                                        <span class="text-[0.5rem] font-medium text-ziifra-ink">{{ $label }}</span>
-                                        <span class="text-[0.45rem] text-ziifra-muted">{{ $detail }}</span>
+                                    <li class="flex items-center justify-between rounded-lg border border-ziifra-line/60 bg-ziifra-paper px-2.5 py-2 min-[640px]:px-2 min-[640px]:py-1.5">
+                                        <span class="text-xs font-medium text-ziifra-ink min-[640px]:text-[0.5rem]">{{ $label }}</span>
+                                        <span class="text-[0.625rem] text-ziifra-muted min-[640px]:text-[0.45rem]">{{ $detail }}</span>
                                     </li>
                                 @endforeach
                             </ul>
                         </div>
+                    </div>
+                </div>
+
+                <div class="ziifra-landing-mockup-mobile-stats" aria-hidden="true">
+                    <div class="ziifra-landing-mockup-mobile-stat">
+                        <p class="ziifra-landing-mockup-mobile-stat-value">24</p>
+                        <p class="ziifra-landing-mockup-mobile-stat-label">Employees</p>
+                    </div>
+                    <div class="ziifra-landing-mockup-mobile-stat ziifra-landing-mockup-mobile-stat--accent">
+                        <p class="ziifra-landing-mockup-mobile-stat-value">€18.4k</p>
+                        <p class="ziifra-landing-mockup-mobile-stat-label">Net pay</p>
+                    </div>
+                    <div class="ziifra-landing-mockup-mobile-stat">
+                        <p class="ziifra-landing-mockup-mobile-stat-value">3</p>
+                        <p class="ziifra-landing-mockup-mobile-stat-label">On leave</p>
                     </div>
                 </div>
                 </div>
