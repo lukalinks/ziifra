@@ -41,6 +41,11 @@ class LoginController extends Controller
         $request->session()->regenerate();
 
         $user = $request->user();
+
+        if ($user->isSuperAdmin()) {
+            return redirect()->intended(route('admin.dashboard'));
+        }
+
         $organizations = $user->organizations()->get();
 
         if ($organizations->isEmpty()) {
