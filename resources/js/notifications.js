@@ -43,7 +43,6 @@ export function initNotifications() {
     const closeButtons = root.querySelectorAll('[data-notifications-close]');
     const markAllButton = root.querySelector('[data-notifications-mark-all]');
     const badge = root.querySelector('[data-notifications-badge]');
-    const list = root.querySelector('[data-notifications-list]');
     const csrfToken = root.dataset.csrfToken ?? '';
     const readAllUrl = root.dataset.readAllUrl ?? '';
     const isAdmin = root.hasAttribute('data-notifications-admin');
@@ -54,8 +53,52 @@ export function initNotifications() {
 
     let lastFocused = null;
     let closeTimer = null;
+    let portaled = false;
 
-    const unreadCount = () => root.querySelectorAll('[data-notification-unread]').length;
+    const portalToBody = () => {
+        if (portaled || ! isMobileViewport()) {
+            return;
+        }
+
+        if (backdrop) {
+            document.body.appendChild(backdrop);
+        }
+
+        document.body.appendChild(panel);
+        panel.classList.add('ziifra-notifications-panel-portal');
+        backdrop?.classList.add('ziifra-notifications-backdrop-portal');
+        portaled = true;
+    };
+
+    const restoreToRoot = () => {
+        if (! portaled) {
+            return;
+        }
+
+        if (backdrop) {
+            root.appendChild(backdrop);
+        }
+
+        root.appendChild(panel);
+        panel.classList.remove('ziifra-notifications-panel-portal');
+        backdrop?.classList.remove('ziifra-notifications-backdrop-portal');
+        portaled = false;
+    };
+
+    const syncPortal = () => {
+        if (isMobileViewport()) {
+            portalToBody();
+        } else if (! panel.hidden) {
+            restoreToRoot();
+        } else {
+            restoreToRoot();
+        }
+    };
+
+    syncPortal();
+    window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`).addEventListener('change', syncPortal);
+
+    const unreadCount = () => panel.querySelectorAll('[data-notification-unread]').length;
 
     const updateBadge = () => {
         const count = unreadCount();
@@ -138,6 +181,7 @@ export function initNotifications() {
             closeTimer = null;
         }
 
+        syncPortal();
         lastFocused = document.activeElement;
         panel.hidden = false;
         backdrop?.removeAttribute('hidden');
@@ -188,7 +232,7 @@ export function initNotifications() {
             return;
         }
 
-        if (! root.contains(event.target)) {
+        if (! root.contains(event.target) && ! panel.contains(event.target)) {
             close();
         }
     });
@@ -201,7 +245,7 @@ export function initNotifications() {
         trapFocus(event);
     });
 
-    root.addEventListener('click', async (event) => {
+    panel.addEventListener('click', async (event) => {
         const dismissButton = event.target.closest('[data-notification-dismiss]');
 
         if (dismissButton) {
