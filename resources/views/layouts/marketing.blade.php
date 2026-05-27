@@ -12,7 +12,7 @@
 </head>
 <body class="ziifra-marketing">
     <header class="ziifra-marketing-header">
-        <div class="ziifra-marketing-header__bar mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+        <div class="ziifra-marketing-header__bar mx-auto flex max-w-7xl items-center justify-between gap-2 px-3 py-2.5 sm:gap-4 sm:px-6 sm:py-3 lg:px-8">
             <x-ziifra-logo variant="auto" class="ziifra-marketing-header__logo" />
 
             <nav class="ziifra-marketing-nav hidden items-center gap-1 lg:flex" aria-label="Primary">
@@ -21,7 +21,7 @@
                 <a href="{{ route('home') }}#faq" class="ziifra-marketing-nav__link">{{ __('landing.nav.faq') }}</a>
             </nav>
 
-            <div class="flex items-center gap-2 sm:gap-3">
+            <div class="flex items-center gap-1.5 sm:gap-3">
                 <x-theme-switcher />
                 <x-locale-switcher />
                 <div class="hidden items-center gap-2 md:flex">
@@ -57,8 +57,8 @@
     <main>@yield('content')</main>
 
     <footer class="ziifra-marketing-footer">
-        <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-            <div class="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-start">
+        <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+            <div class="grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-start lg:gap-12">
                 <div class="max-w-md">
                     <x-ziifra-logo variant="light" />
                     <p class="mt-6 text-sm leading-relaxed text-white/55">

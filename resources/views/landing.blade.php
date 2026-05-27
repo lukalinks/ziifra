@@ -9,19 +9,19 @@
     <div class="ziifra-landing-glow right-0 top-1/3 h-96 w-96 bg-ziifra-copper/15" style="animation-delay: -3s" aria-hidden="true"></div>
     <div class="ziifra-grid-pattern pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
 
-    <div class="relative mx-auto flex w-full max-w-7xl flex-col justify-center px-4 pb-20 pt-10 sm:px-6 lg:min-h-[calc(100vh-4.5rem)] lg:px-8 lg:pb-28 lg:pt-16">
-        <div class="grid items-center gap-8 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14 xl:gap-16">
+    <div class="relative mx-auto flex w-full max-w-7xl flex-col justify-center px-4 pb-12 pt-6 sm:px-6 sm:pb-20 sm:pt-10 lg:min-h-[calc(100vh-4.5rem)] lg:px-8 lg:pb-28 lg:pt-16">
+        <div class="grid items-center gap-6 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14 xl:gap-16">
             <div class="ziifra-hero-copy">
                 <h1 class="ziifra-hero-eyebrow">{{ __('landing.hero.eyebrow') }}</h1>
-                <p class="ziifra-hero-tagline mt-4 text-xl font-semibold leading-snug sm:text-2xl lg:text-[1.65rem]">
+                <p class="ziifra-hero-tagline mt-3 text-lg font-semibold leading-snug sm:mt-4 sm:text-2xl lg:text-[1.65rem]">
                     <span class="text-[#84cc16]">{{ __('landing.hero.tagline_connected') }}</span>
                     <span class="text-[#60a5fa]">{{ __('landing.hero.tagline_built') }}</span>
                 </p>
-                <p class="ziifra-hero-lead mt-6 text-base leading-relaxed text-pretty text-white/65 sm:text-lg lg:max-w-xl">
+                <p class="ziifra-hero-lead mt-4 text-[0.9375rem] leading-relaxed text-pretty text-white/65 sm:mt-6 sm:text-lg lg:max-w-xl">
                     {{ __('landing.hero.lead') }}
                 </p>
-                <div class="ziifra-hero-actions mt-8">
-                    <a href="mailto:support@ziifra.com?subject=Book%20a%20demo" class="ziifra-btn-primary shadow-lg shadow-ziifra-accent/20">{{ __('landing.hero.demo') }}</a>
+                <div class="ziifra-hero-actions mt-6 sm:mt-8">
+                    <a href="mailto:support@ziifra.com?subject=Book%20a%20demo" class="ziifra-btn-primary ziifra-hero-cta-primary shadow-lg shadow-ziifra-accent/20">{{ __('landing.hero.demo') }}</a>
                     <a href="#features" class="ziifra-hero-link">{{ __('landing.hero.explore') }}</a>
                 </div>
             </div>
@@ -104,8 +104,8 @@
                                         </div>
                                     </div>
 
-                                    {{-- Payroll table --}}
-                                    <div class="ziifra-landing-mockup-table-wrap">
+                                    {{-- Payroll table (hidden on small phones — stats tell the story) --}}
+                                    <div class="ziifra-landing-mockup-table-wrap hidden min-[480px]:block">
                                     <div class="ziifra-landing-mockup-table min-w-[14rem] overflow-hidden rounded-xl border border-ziifra-line/80 sm:min-w-0">
                                         <div class="grid grid-cols-[1fr_auto] gap-2 border-b border-ziifra-line/60 bg-ziifra-cream px-2.5 py-1.5 font-mono text-[0.55rem] uppercase tracking-wider text-ziifra-muted sm:grid-cols-4 sm:px-3 sm:py-2 sm:text-[0.6rem]">
                                             <span>Employee</span>
@@ -133,7 +133,7 @@
                                     </div>
                                     </div>
 
-                                    <div class="flex flex-wrap gap-1 sm:gap-1.5">
+                                    <div class="ziifra-landing-mockup-chips hidden flex-wrap gap-1 min-[480px]:flex sm:gap-1.5">
                                         @foreach(['Payslips sent', 'Tax export ready', '3 on leave'] as $chip)
                                             <span class="ziifra-module-chip">{{ $chip }}</span>
                                         @endforeach
@@ -187,17 +187,17 @@
 </section>
 
 {{-- Features --}}
-<section id="features" class="ziifra-landing-section ziifra-features-section relative -mt-10 overflow-hidden pt-32 lg:-mt-14 lg:pt-40">
+<section id="features" class="ziifra-landing-section ziifra-features-section relative -mt-4 overflow-hidden pt-20 sm:-mt-10 sm:pt-32 lg:-mt-14 lg:pt-40">
     <div class="pointer-events-none absolute inset-0 ziifra-grid-pattern opacity-[0.35]" aria-hidden="true"></div>
 
     <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="ziifra-landing-section-head">
             <p class="ziifra-label justify-center">{{ __('landing.features.label') }}</p>
-            <h2 class="ziifra-display mt-4 text-3xl font-semibold text-ziifra-ink sm:text-4xl">{{ __('landing.features.title') }}</h2>
-            <p class="mt-4 text-lg leading-relaxed text-ziifra-muted">{{ __('landing.features.subtitle') }}</p>
+            <h2 class="ziifra-display mt-3 text-2xl font-semibold text-ziifra-ink sm:mt-4 sm:text-4xl">{{ __('landing.features.title') }}</h2>
+            <p class="mt-3 text-base leading-relaxed text-ziifra-muted sm:mt-4 sm:text-lg">{{ __('landing.features.subtitle') }}</p>
         </div>
 
-        <div class="mt-14 grid gap-6 lg:mt-16 lg:grid-cols-3 lg:gap-8">
+        <div class="mt-10 grid gap-5 sm:mt-14 sm:gap-6 lg:mt-16 lg:grid-cols-3 lg:gap-8">
             @php
                 $featureIcons = [
                     ['M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z', 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
@@ -251,8 +251,8 @@
 {{-- Why --}}
 <section class="ziifra-landing-section ziifra-landing-section--muted">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="grid gap-16 lg:grid-cols-2 lg:items-start">
-            <div class="ziifra-card-ink relative overflow-hidden p-8 lg:p-10">
+        <div class="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
+            <div class="ziifra-card-ink relative overflow-hidden p-6 sm:p-8 lg:p-10">
                 <div class="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-ziifra-accent/20 blur-3xl" aria-hidden="true"></div>
                 <p class="ziifra-label !text-ziifra-accent-glow before:!bg-ziifra-accent-glow">{{ __('landing.compliance.label') }}</p>
                 <h3 class="mt-4 text-2xl font-semibold">{{ __('landing.compliance.title') }}</h3>
@@ -268,13 +268,13 @@
             </div>
             <div class="lg:pt-4">
                 <p class="ziifra-label">{{ __('landing.why.label') }}</p>
-                <h2 class="ziifra-display mt-4 text-3xl font-semibold text-ziifra-ink sm:text-4xl">
+                <h2 class="ziifra-display mt-3 text-2xl font-semibold text-ziifra-ink sm:mt-4 sm:text-4xl">
                     {{ __('landing.why.title') }}
                 </h2>
-                <p class="mt-5 text-lg leading-relaxed text-ziifra-muted">
+                <p class="mt-4 text-base leading-relaxed text-ziifra-muted sm:mt-5 sm:text-lg">
                     {{ __('landing.why.subtitle') }}
                 </p>
-                <ul class="mt-12 space-y-8">
+                <ul class="mt-8 space-y-6 sm:mt-12 sm:space-y-8">
                     @foreach(__('landing.why.items') as $index => $item)
                         @php $num = str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT); @endphp
                         <li class="flex gap-5 border-l-2 border-ziifra-line pl-6 transition hover:border-ziifra-accent">
@@ -294,15 +294,15 @@
 {{-- Steps --}}
 <section class="ziifra-landing-section ziifra-landing-section--surface">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
+        <div class="grid gap-8 lg:grid-cols-2 lg:gap-16">
             <div class="lg:sticky lg:top-28 lg:self-start">
                 <p class="ziifra-label">{{ __('landing.steps.label') }}</p>
-                <h2 class="ziifra-display mt-4 text-3xl font-semibold text-ziifra-ink sm:text-4xl">{{ __('landing.steps.title') }}</h2>
-                <p class="mt-4 max-w-md text-base leading-relaxed text-ziifra-muted">{{ __('landing.steps.subtitle') }}</p>
-                <ol class="mt-10 space-y-0">
+                <h2 class="ziifra-display mt-3 text-2xl font-semibold text-ziifra-ink sm:mt-4 sm:text-4xl">{{ __('landing.steps.title') }}</h2>
+                <p class="mt-3 max-w-md text-sm leading-relaxed text-ziifra-muted sm:mt-4 sm:text-base">{{ __('landing.steps.subtitle') }}</p>
+                <ol class="mt-8 space-y-0 sm:mt-10">
                     @foreach(__('landing.steps.list') as $index => $stepItem)
                         @php $step = str_pad((string) ($index + 1), 2, '0', STR_PAD_LEFT); @endphp
-                        <li class="relative flex gap-6 border-l border-ziifra-line py-8 pl-8 last:pb-0">
+                        <li class="relative flex gap-4 border-l border-ziifra-line py-6 pl-6 last:pb-0 sm:gap-6 sm:py-8 sm:pl-8">
                             <span class="absolute -left-3 top-8 flex h-6 w-6 items-center justify-center rounded-full border-2 border-ziifra-paper bg-ziifra-accent text-[0.6rem] font-bold text-ziifra-ink">{{ $step }}</span>
                             <div>
                                 <p class="font-semibold text-ziifra-ink">{{ $stepItem['title'] }}</p>
@@ -312,7 +312,7 @@
                     @endforeach
                 </ol>
             </div>
-            <div class="ziifra-landing-steps-card flex flex-col justify-center">
+            <div class="ziifra-landing-steps-card flex flex-col justify-center p-6 sm:p-8">
                 <p class="font-mono text-xs uppercase tracking-widest text-ziifra-accent-deep">{{ __('landing.steps.included_label') }}</p>
                 <ul class="mt-8 grid gap-3 sm:grid-cols-2">
                     @foreach(__('landing.steps.included') as $item)
@@ -332,8 +332,8 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="ziifra-landing-section-head">
             <p class="ziifra-label justify-center">{{ __('landing.pricing.label') }}</p>
-            <h2 class="ziifra-display mt-4 text-3xl font-semibold text-ziifra-ink sm:text-4xl">{{ __('landing.pricing.title') }}</h2>
-            <p class="mt-4 text-lg text-ziifra-muted">{{ __('landing.pricing.subtitle', ['days' => $trialDays]) }}</p>
+            <h2 class="ziifra-display mt-3 text-2xl font-semibold text-ziifra-ink sm:mt-4 sm:text-4xl">{{ __('landing.pricing.title') }}</h2>
+            <p class="mt-3 text-base text-ziifra-muted sm:mt-4 sm:text-lg">{{ __('landing.pricing.subtitle', ['days' => $trialDays]) }}</p>
         </div>
 
         <div class="ziifra-landing-pricing-grid">
@@ -341,11 +341,11 @@
                 $starter = $pricingPlans['starter'];
                 $pro = $pricingPlans['pro'];
             @endphp
-            <div class="ziifra-card ziifra-pricing-card flex flex-col p-8 lg:p-10">
+            <div class="ziifra-card ziifra-pricing-card flex flex-col p-6 sm:p-8 lg:p-10">
                 <p class="font-mono text-xs uppercase tracking-widest text-ziifra-muted">{{ $starter['name'] }}</p>
                 <p class="mt-4 flex items-baseline gap-1">
                     @if ($starter['monthly_price'])
-                        <span class="text-5xl font-semibold tabular-nums text-ziifra-ink">€{{ $starter['monthly_price'] }}</span>
+                        <span class="text-4xl font-semibold tabular-nums text-ziifra-ink sm:text-5xl">€{{ $starter['monthly_price'] }}</span>
                         <span class="text-ziifra-muted">{{ __('landing.pricing.per_month') }}</span>
                     @else
                         <span class="text-3xl font-semibold text-ziifra-ink">{{ $starter['price_label'] }}</span>
@@ -369,12 +369,12 @@
                 <a href="{{ route('register') }}" class="ziifra-btn-secondary mt-8 w-full text-center">{{ __('landing.pricing.get_started') }}</a>
             </div>
 
-            <div class="ziifra-pricing-pro flex flex-col">
+            <div class="ziifra-pricing-pro flex flex-col p-6 sm:p-8 lg:p-10">
                 <span class="self-start rounded-full bg-ziifra-accent/20 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-wider text-ziifra-accent-glow">{{ __('landing.pricing.most_popular') }}</span>
                 <p class="mt-6 font-mono text-xs uppercase tracking-widest text-white/50">{{ $pro['name'] }}</p>
                 <p class="mt-4 flex items-baseline gap-1">
                     @if ($pro['monthly_price'])
-                        <span class="text-5xl font-semibold tabular-nums">€{{ $pro['monthly_price'] }}</span>
+                        <span class="text-4xl font-semibold tabular-nums sm:text-5xl">€{{ $pro['monthly_price'] }}</span>
                         <span class="text-white/45">{{ __('landing.pricing.per_month') }}</span>
                     @else
                         <span class="text-3xl font-semibold">{{ $pro['price_label'] }}</span>
@@ -409,11 +409,11 @@
     <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <div class="ziifra-landing-section-head">
             <p class="ziifra-label justify-center">{{ __('landing.faq.label') }}</p>
-            <h2 class="ziifra-display mt-4 text-3xl font-semibold text-ziifra-ink">{{ __('landing.faq.title') }}</h2>
+            <h2 class="ziifra-display mt-3 text-2xl font-semibold text-ziifra-ink sm:mt-4 sm:text-3xl">{{ __('landing.faq.title') }}</h2>
         </div>
-        <dl class="ziifra-faq mt-14 space-y-4">
+        <dl class="ziifra-faq mt-8 space-y-3 sm:mt-14 sm:space-y-4">
             @foreach(__('landing.faq.items') as $faq)
-                <details class="px-6 py-5">
+                <details class="px-4 py-4 sm:px-6 sm:py-5">
                     <summary>{{ $faq['q'] }}</summary>
                     <dd class="mt-4 border-t border-ziifra-line/80 pt-4 text-sm leading-relaxed text-ziifra-muted">{{ $faq['a'] }}</dd>
                 </details>
@@ -423,18 +423,18 @@
 </section>
 
 {{-- CTA --}}
-<section class="ziifra-landing-section pb-28 lg:pb-32">
+<section class="ziifra-landing-section pb-16 sm:pb-28 lg:pb-32">
     <div class="relative mx-auto max-w-5xl px-4 sm:px-6">
         <div class="ziifra-landing-cta">
             <div class="ziifra-cta-ring" aria-hidden="true"></div>
             <div class="pointer-events-none absolute inset-0 ziifra-grid-pattern opacity-25" aria-hidden="true"></div>
-            <div class="relative px-6 text-center sm:px-10">
+            <div class="relative px-5 text-center sm:px-10">
                 <p class="ziifra-label justify-center !text-ziifra-accent-glow before:!bg-ziifra-accent-glow">{{ __('landing.cta.label') }}</p>
-                <h2 class="ziifra-display mt-6 text-3xl font-semibold text-white sm:text-4xl">
+                <h2 class="ziifra-display mt-4 text-2xl font-semibold text-white sm:mt-6 sm:text-4xl">
                     {{ __('landing.cta.title') }}
                 </h2>
-                <p class="mt-5 text-lg text-white/55">{{ __('landing.cta.subtitle', ['days' => $trialDays]) }}</p>
-                <div class="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <p class="mt-4 text-base text-white/55 sm:mt-5 sm:text-lg">{{ __('landing.cta.subtitle', ['days' => $trialDays]) }}</p>
+                <div class="ziifra-landing-cta-actions mt-8 sm:mt-10">
                     <a href="{{ route('register') }}" class="ziifra-btn-primary">{{ __('landing.cta.primary') }}</a>
                     <a href="{{ route('login') }}" class="ziifra-btn-ghost-light">{{ __('landing.cta.login') }}</a>
                 </div>

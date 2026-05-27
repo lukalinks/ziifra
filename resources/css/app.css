@@ -60,6 +60,7 @@
     .ziifra-marketing-header {
         @apply sticky top-0 z-50 border-b border-ziifra-line/60 bg-ziifra-paper/85 backdrop-blur-xl;
         box-shadow: 0 1px 0 rgb(15 23 42 / 0.04);
+        padding-top: env(safe-area-inset-top, 0px);
     }
 
     [data-theme='dark'] .ziifra-marketing-header {
@@ -100,6 +101,7 @@
 
     .ziifra-marketing-footer {
         @apply border-t border-ziifra-line bg-ziifra-night text-white;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     .ziifra-landing-hero {
@@ -160,6 +162,19 @@
 
     .ziifra-landing-cta {
         @apply relative overflow-hidden rounded-[2rem] border border-white/10 bg-ziifra-night py-20 lg:py-24;
+    }
+
+    .ziifra-landing-cta-actions {
+        @apply flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center;
+    }
+
+    .ziifra-landing-cta-actions .ziifra-btn-primary,
+    .ziifra-landing-cta-actions .ziifra-btn-ghost-light {
+        @apply w-full sm:w-auto;
+    }
+
+    .ziifra-hero-cta-primary {
+        @apply w-full sm:w-auto;
     }
 }
 
@@ -510,16 +525,60 @@
     }
 
     @media (max-width: 639px) {
+        .ziifra-landing-section {
+            @apply py-14;
+        }
+
+        .ziifra-landing-hero {
+            @apply overflow-x-clip;
+        }
+
+        .ziifra-landing-hero .ziifra-landing-glow {
+            opacity: 0.35;
+        }
+
+        .ziifra-landing-hero .ziifra-landing-glow.-left-24 {
+            @apply h-48 w-48;
+        }
+
+        .ziifra-diagonal-cut {
+            clip-path: polygon(0 0, 100% 0, 100% calc(100% - 2rem), 0 100%);
+        }
+
+        .ziifra-hero-eyebrow {
+            @apply text-[0.62rem] tracking-[0.14em];
+        }
+
+        .ziifra-hero-actions {
+            @apply w-full max-w-sm mx-auto lg:mx-0;
+        }
+
+        .ziifra-hero-link {
+            @apply justify-center py-1;
+        }
+
         .ziifra-landing-mockup-stage {
-            padding-bottom: 0.5rem;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            align-items: end;
+            gap: 0.25rem;
+            max-width: 100%;
+            padding-bottom: 0;
+            margin-top: 0.25rem;
+        }
+
+        .ziifra-landing-mockup {
+            grid-column: 1 / -1;
+            min-width: 0;
         }
 
         .ziifra-landing-mockup-phone {
             position: relative;
             bottom: auto;
             right: auto;
-            width: 6.5rem;
-            margin: -1.75rem 0 0 auto;
+            width: 5.75rem;
+            margin: -2rem 0 0 auto;
+            z-index: 12;
         }
 
         .ziifra-landing-mockup-stat {
@@ -528,6 +587,78 @@
 
         .ziifra-landing-mockup-stat-value {
             @apply text-sm;
+        }
+
+        .ziifra-landing-mockup-stat p:first-child {
+            @apply text-[0.45rem];
+        }
+
+        .ziifra-feature-group {
+            @apply p-4;
+        }
+
+        .ziifra-feature-item {
+            @apply gap-3 p-3.5;
+        }
+
+        .ziifra-feature-item-icon {
+            @apply h-10 w-10;
+        }
+
+        .ziifra-landing-pricing-grid {
+            @apply mt-10 gap-5;
+        }
+
+        .ziifra-pricing-pro {
+            transform: none;
+        }
+
+        .ziifra-pricing-pro:hover {
+            transform: none;
+        }
+
+        .ziifra-landing-cta {
+            @apply rounded-[1.25rem] py-12;
+        }
+
+        .ziifra-faq summary {
+            min-height: 2.75rem;
+            @apply text-[0.9375rem];
+        }
+
+        .ziifra-faq summary::after {
+            @apply h-9 w-9;
+        }
+
+        .ziifra-marketing-header .ziifra-theme-switcher button {
+            @apply h-7 w-7;
+        }
+
+        .ziifra-marketing-menu__panel {
+            width: min(calc(100vw - 1.5rem), 15rem);
+        }
+
+        .ziifra-marketing-footer .grid.grid-cols-2 {
+            @apply gap-8;
+        }
+    }
+
+    @media (max-width: 390px) {
+        .ziifra-landing-mockup-phone {
+            display: none;
+        }
+
+        .ziifra-landing-mockup-stage {
+            display: block;
+            max-width: 17rem;
+        }
+
+        .ziifra-hero-tagline {
+            @apply text-base;
+        }
+
+        .ziifra-marketing-header__logo .ziifra-logo-word {
+            @apply text-base;
         }
     }
 
