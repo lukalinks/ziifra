@@ -161,4 +161,83 @@ class NotificationBellTest extends TestCase
 
         $this->assertSame(0, $owner['user']->fresh()->unreadNotifications()->count());
     }
+
+    public function test_mark_all_read_is_scoped_to_current_organization(): void
+    {
+        $owner = app(RegisterOrganizationService::class)->register(
+            'Owner',
+            'owner@acme.test',
+            'password123',
+            'Acme SHPK',
+        );
+
+        $other = app(RegisterOrganizationService::class)->register(
+            'Other',
+            'other@beta.test',
+            'password123',
+            'Beta SHPK',
+        );
+
+        $owner['user']->notifications()->create([
+            'id' => (string) \Illuminate\Support\Str::uuid(),
+            'type' => 'test.notification',
+            'data' => [
+                'title' => 'Acme alert',
+                'body' => 'Acme only',
+                'url' => null,
+                'organization_id' => $owner['organization']->id,
+            ],
+        ]);
+
+        $owner['user']->notifications()->create([
+            'id' => (string) \Illuminate\Support\Str::uuid(),
+            'type' => 'test.notification',
+            'data' => [
+                'title' => 'Beta alert',
+                'body' => 'Beta only',
+                'url' => null,
+                'organization_id' => $other['organization']->id,
+            ],
+        ]);
+
+        $this->actingAs($owner['user'])
+            ->withSession(['current_organization_id' => $owner['organization']->id])
+            ->postJson(route('notifications.read-all'))
+            ->assertOk()
+            ->assertJson(['ok' => true]);
+
+        $remainingUnread = $owner['user']->fresh()->unreadNotifications()->count();
+        $this->assertSame(1, $remainingUnread);
+    }
+
+    public function test_mark_read_returns_json_for_ajax_requests(): void
+    {
+        $owner = app(RegisterOrganizationService::class)->register(
+            'Owner',
+            'owner@acme.test',
+            'password123',
+            'Acme SHPK',
+        );
+
+        $notificationId = (string) \Illuminate\Support\Str::uuid();
+
+        $owner['user']->notifications()->create([
+            'id' => $notificationId,
+            'type' => 'test.notification',
+            'data' => [
+                'title' => 'Test alert',
+                'body' => 'Something happened',
+                'url' => null,
+                'organization_id' => $owner['organization']->id,
+            ],
+        ]);
+
+        $this->actingAs($owner['user'])
+            ->withSession(['current_organization_id' => $owner['organization']->id])
+            ->postJson(route('notifications.read', $notificationId))
+            ->assertOk()
+            ->assertJson(['ok' => true]);
+
+        $this->assertNotNull($owner['user']->fresh()->notifications()->whereKey($notificationId)->first()?->read_at);
+    }
 }

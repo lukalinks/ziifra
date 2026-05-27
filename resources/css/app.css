@@ -1801,12 +1801,79 @@
         @apply mt-2 inline-flex rounded-full border border-ziifra-line/70 bg-ziifra-surface px-2 py-0.5 text-[0.63rem] font-medium text-ziifra-muted/90;
     }
 
-    .ziifra-notifications-dismiss {
-        @apply absolute right-2 top-2;
+    .ziifra-notifications-dismiss-btn {
+        @apply absolute right-2 top-2 flex h-11 w-11 items-center justify-center rounded-xl text-ziifra-muted transition hover:bg-ziifra-surface-hover hover:text-ziifra-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/30;
     }
 
-    .ziifra-notifications-dismiss button {
-        @apply flex h-7 w-7 items-center justify-center rounded-lg text-base leading-none text-ziifra-muted transition hover:bg-ziifra-surface-hover hover:text-ziifra-ink;
+    .ziifra-notifications-close {
+        @apply flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-ziifra-line/70 text-ziifra-muted transition hover:bg-ziifra-surface-hover hover:text-ziifra-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/30 sm:hidden;
+    }
+
+    .ziifra-notifications-backdrop {
+        @apply hidden;
+    }
+
+    @media (max-width: 639px) {
+        .ziifra-notifications-backdrop {
+            @apply fixed inset-0 z-[60] block bg-black/45 opacity-0 transition-opacity duration-300;
+        }
+
+        .ziifra-notifications-backdrop.is-open {
+            @apply opacity-100;
+        }
+
+        .ziifra-notifications-panel {
+            @apply fixed inset-x-0 bottom-0 z-[70] mt-0 flex max-h-[min(88dvh,640px)] w-full translate-y-full flex-col rounded-b-none rounded-t-3xl border-x-0 border-b-0 pt-3 shadow-[0_-18px_48px_rgba(0,0,0,0.22)] transition-transform duration-300 ease-out;
+        }
+
+        .ziifra-notifications-panel::before {
+            @apply pointer-events-none absolute left-1/2 top-2 h-1 w-10 -translate-x-1/2 rounded-full bg-ziifra-line/90 content-[''];
+        }
+
+        .ziifra-notifications-panel.is-open {
+            @apply translate-y-0;
+        }
+
+        .ziifra-notifications-panel-head {
+            @apply shrink-0 px-4 pb-3 pt-3;
+        }
+
+        .ziifra-notifications-list {
+            @apply max-h-none flex-1 overscroll-contain px-3 pb-[calc(1rem+env(safe-area-inset-bottom))];
+        }
+
+        .ziifra-notifications-link {
+            @apply py-3.5 pr-12;
+        }
+
+        .ziifra-notifications-dismiss-btn {
+            @apply right-1.5 top-1/2 h-11 w-11 -translate-y-1/2;
+        }
+
+        body.ziifra-notifications-open {
+            @apply overflow-hidden;
+        }
+
+        body.ziifra-notifications-open .ziifra-mobile-tabbar {
+            @apply pointer-events-none translate-y-full opacity-0;
+        }
+    }
+
+    @media (min-width: 640px) {
+        .ziifra-notifications-panel {
+            @apply opacity-0 translate-y-1 scale-[0.98] transition duration-200 ease-out;
+        }
+
+        .ziifra-notifications-panel.is-open {
+            @apply opacity-100 translate-y-0 scale-100;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ziifra-notifications-panel,
+        .ziifra-notifications-backdrop {
+            @apply transition-none;
+        }
     }
 
     .ziifra-page-loader__track {
