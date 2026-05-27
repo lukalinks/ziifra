@@ -33,7 +33,36 @@ Point your domain A record at **`187.124.163.32`** before running Certbot.
 
 ## Deploy code updates (safe — no DB / .env changes)
 
-For day-to-day changes (UI, translations, bug fixes):
+### GitHub pull (recommended)
+
+If the VPS is linked to GitHub (`/var/www/ziifra` is a git clone):
+
+**From your PC** (one SSH session, no zip upload):
+
+```powershell
+.\deploy\pull-and-deploy.ps1
+```
+
+With migrations when schema changed:
+
+```powershell
+.\deploy\pull-and-deploy.ps1
+# migrations run by default; use -SkipMigrate to skip
+```
+
+**On the server directly** (hPanel browser terminal or SSH):
+
+```bash
+cd /var/www/ziifra
+RUN_MIGRATIONS=1 bash deploy/pull-deploy.sh
+curl -sS http://127.0.0.1/up
+```
+
+**Automatic deploy:** GitHub Actions runs `deploy/pull-deploy.sh` after CI passes on `main`. Add repository secrets: `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY` (optional `SSH_PORT`).
+
+---
+
+For day-to-day changes without git on the server (legacy zip upload):
 
 ```powershell
 .\deploy\release.ps1
