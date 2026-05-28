@@ -69,6 +69,9 @@ class Organization extends Model
         'billing_payment_provider',
         'billing_reminders_sent',
         'payslip_template',
+        'payroll_settings',
+        'invoice_settings',
+        'chat_settings',
     ];
 
     protected function casts(): array
@@ -87,6 +90,9 @@ class Organization extends Model
             'paypal_subscription_ends_at' => 'datetime',
             'billing_reminders_sent' => 'array',
             'payslip_template' => 'array',
+            'payroll_settings' => 'array',
+            'invoice_settings' => 'array',
+            'chat_settings' => 'array',
             'plan' => SubscriptionPlan::class,
         ];
     }
@@ -346,11 +352,58 @@ class Organization extends Model
     public static function supportedTimezones(): array
     {
         return [
-            'Europe/Belgrade',
+            'Europe/Zurich',
             'Europe/Berlin',
             'Europe/London',
             'UTC',
         ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function resolvedPayrollSettings(): array
+    {
+        $defaults = [
+            'trust_employee_percent' => 5.0,
+            'trust_employer_percent' => 5.0,
+            'vat_percent' => 8.0,
+            'show_logo' => true,
+            'show_vat' => true,
+            'footer_note' => null,
+        ];
+
+        return array_merge($defaults, $this->payroll_settings ?? []);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function resolvedInvoiceSettings(): array
+    {
+        $defaults = [
+            'footer_text' => null,
+            'vat_percent' => 8.0,
+            'vat_manual' => false,
+            'bank_name' => $this->bank_name,
+            'bank_iban' => $this->bank_iban,
+        ];
+
+        return array_merge($defaults, $this->invoice_settings ?? []);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function resolvedChatSettings(): array
+    {
+        $defaults = [
+            'enabled' => true,
+            'employees_can_write' => true,
+            'private_chat_enabled' => true,
+        ];
+
+        return array_merge($defaults, $this->chat_settings ?? []);
     }
 
     /**

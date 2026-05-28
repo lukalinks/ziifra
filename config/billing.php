@@ -30,10 +30,10 @@ return [
             ],
         ],
         'starter' => [
-            'name' => 'Starter',
+            'name' => 'Start',
             'employee_limit' => 50,
-            'price_label' => '€49 / month',
-            'monthly_price' => 49,
+            'price_label' => '€20 / month',
+            'monthly_price' => 20,
             'stripe_price_id' => null,
             'paypal_plan_id' => null,
             'enabled_features' => [
@@ -52,8 +52,8 @@ return [
         'pro' => [
             'name' => 'Pro',
             'employee_limit' => 200,
-            'price_label' => '€99 / month',
-            'monthly_price' => 99,
+            'price_label' => '€40 / month',
+            'monthly_price' => 40,
             'stripe_price_id' => null,
             'paypal_plan_id' => null,
             'enabled_features' => PlanFeature::values(),

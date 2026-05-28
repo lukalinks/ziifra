@@ -164,7 +164,7 @@ class Phase1SpecTest extends TestCase
                 'month' => '2026-05',
             ]))
             ->assertOk()
-            ->assertHeader('content-type', 'text/csv; charset=UTF-8');
+            ->assertHeader('content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     }
 
     public function test_hourly_payroll_uses_approved_project_hours(): void

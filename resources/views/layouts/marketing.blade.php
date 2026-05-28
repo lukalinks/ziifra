@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="description" content="{{ __('landing.meta_description') }}">
     <meta name="color-scheme" content="light dark">
     <meta name="theme-color" content="#f6f5f2">
     <title>@yield('title', config('app.name').' — HR for Kosovo')</title>
+    @include('partials.social-meta')
     @include('partials.theme-init')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

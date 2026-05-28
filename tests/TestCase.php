@@ -40,7 +40,7 @@ abstract class TestCase extends BaseTestCase
             'name' => $organization->name,
             'slug' => $organization->slug,
             'country_code' => $organization->country_code ?? 'XK',
-            'timezone' => $organization->timezone ?? 'Europe/Belgrade',
+            'timezone' => $organization->timezone === 'Europe/Belgrade' ? 'Europe/Zurich' : ($organization->timezone ?? 'Europe/Zurich'),
             'currency' => $organization->currency ?? 'EUR',
             'locale' => $organization->locale ?? 'en',
             'work_week_days' => $organization->workWeekDayValues(),

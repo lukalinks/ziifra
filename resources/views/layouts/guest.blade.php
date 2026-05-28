@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
     <meta name="theme-color" content="#f6f5f2">
-    <title>@yield('title') — {{ config('app.name') }}</title>
+    <title>@yield('title') — {{ (View::shared('socialOrganization'))?->name ?? config('app.name') }}</title>
+    @include('partials.social-meta')
     @include('partials.theme-init')
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

@@ -22,6 +22,26 @@ class OrganizationSettingsService
 
         unset($attributes['logo'], $attributes['remove_logo']);
 
+        if (blank($attributes['name'] ?? null)) {
+            $attributes['name'] = $organization->name ?: 'Company';
+        }
+
+        if (blank($attributes['slug'] ?? null)) {
+            $attributes['slug'] = $organization->slug;
+        }
+
+        if (blank($attributes['timezone'] ?? null)) {
+            $attributes['timezone'] = $organization->timezone ?: 'Europe/Zurich';
+        }
+
+        if (blank($attributes['currency'] ?? null)) {
+            $attributes['currency'] = $organization->currency ?: 'EUR';
+        }
+
+        if (blank($attributes['locale'] ?? null)) {
+            $attributes['locale'] = $organization->locale ?: 'en';
+        }
+
         $organization->fill($attributes);
         $organization->save();
 

@@ -32,13 +32,18 @@ class StoreEmployeeRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        if (! $this->filled('employment_type')) {
-            $organization = CurrentOrganization::check();
+        $organization = CurrentOrganization::check();
 
-            $this->merge([
-                'employment_type' => $organization->default_employment_type ?? \App\Enums\EmploymentType::FullTime->value,
-            ]);
-        }
+        $this->merge([
+            'first_name' => $this->filled('first_name') ? $this->input('first_name') : __('employees.unnamed'),
+            'last_name' => $this->input('last_name') ?? '',
+            'employment_type' => $this->filled('employment_type')
+                ? $this->input('employment_type')
+                : ($organization->default_employment_type ?? \App\Enums\EmploymentType::FullTime->value),
+            'employment_status' => $this->filled('employment_status')
+                ? $this->input('employment_status')
+                : \App\Enums\EmploymentStatus::Active->value,
+        ]);
     }
 
     public function withValidator(Validator $validator): void

@@ -32,38 +32,6 @@
 @endphp
 
 <section class="ziifra-time-attendance" data-time-attendance>
-    <header class="ziifra-time-attendance-header">
-        <nav class="ziifra-time-attendance-breadcrumb" aria-label="{{ __('projects.title') }}">
-            <a href="{{ route('projects.index') }}" class="ziifra-time-attendance-breadcrumb-link" data-page-nav>{{ __('projects.title') }}</a>
-            <span class="ziifra-time-attendance-breadcrumb-sep" aria-hidden="true">›</span>
-            <span class="ziifra-time-attendance-breadcrumb-current">{{ $project->name }}</span>
-        </nav>
-
-        <div class="ziifra-time-attendance-title-row">
-            <h2 class="ziifra-time-attendance-title">{{ $project->name }}</h2>
-            <div class="ziifra-time-attendance-title-actions">
-                @if ($canManage)
-                    <a href="{{ route('projects.hours.export', ['project' => $project, 'month' => $selectedMonth]) }}" class="ziifra-time-attendance-btn-outline">
-                        {{ __('daily_hours.export_excel') }}
-                    </a>
-                    <button type="button" class="ziifra-time-attendance-btn-primary" data-time-attendance-save hidden>
-                        {{ __('daily_hours.save_changes') }}
-                    </button>
-                @endif
-            </div>
-        </div>
-
-        <div class="ziifra-time-attendance-stats">
-            <span @class(['ziifra-time-attendance-stat-badge', 'ziifra-time-attendance-stat-badge--'.$statusTone])>{{ $project->status->label() }}</span>
-            <span class="ziifra-time-attendance-stat">{{ trans_choice('daily_hours.stat_employees', $employeeCount, ['count' => $employeeCount]) }}</span>
-            <span class="ziifra-time-attendance-stat">{{ __('daily_hours.stat_total_hours', ['hours' => number_format($hoursGrid['totals']['hours'], 0)]) }}</span>
-            <span class="ziifra-time-attendance-stat">{{ __('daily_hours.stat_projected_payroll', ['amount' => number_format($projectedPayroll, 0), 'currency' => $currency]) }}</span>
-            @if ($project->start_date)
-                <span class="ziifra-time-attendance-stat">{{ __('daily_hours.stat_started', ['date' => $project->start_date->format('F Y')]) }}</span>
-            @endif
-        </div>
-    </header>
-
     <div class="ziifra-time-attendance-toolbar">
         <form method="GET" action="{{ route('projects.show', $project) }}" class="ziifra-time-attendance-search" data-project-hours-filter>
             <input type="hidden" name="tab" value="hours">
@@ -247,10 +215,6 @@
                     <span class="ziifra-time-attendance-footer-stat-label">{{ __('daily_hours.footer_hours') }}</span>
                 </div>
                 <div class="ziifra-time-attendance-footer-stat">
-                    <span class="ziifra-time-attendance-footer-stat-value" data-footer-payroll>{{ $currency }} {{ number_format($projectedPayroll, 0) }}</span>
-                    <span class="ziifra-time-attendance-footer-stat-label">{{ __('daily_hours.footer_payroll') }}</span>
-                </div>
-                <div class="ziifra-time-attendance-footer-stat">
                     <span class="ziifra-time-attendance-footer-stat-value" data-footer-pending>{{ $pendingEmployees }}</span>
                     <span class="ziifra-time-attendance-footer-stat-label">{{ __('daily_hours.footer_pending') }}</span>
                 </div>
@@ -265,10 +229,6 @@
                             <button type="submit" class="ziifra-time-attendance-btn-ghost">{{ __('daily_hours.approve_all') }}</button>
                         </form>
                     @endif
-                    <a href="{{ route('payroll.create', ['year' => $monthCarbon->year, 'month' => $monthCarbon->month]) }}"
-                        class="ziifra-time-attendance-btn-outline ziifra-time-attendance-btn-outline--success" data-page-nav>
-                        {{ __('daily_hours.generate_payroll') }}
-                    </a>
                     <button type="button" class="ziifra-time-attendance-btn-primary" data-time-attendance-save hidden>
                         {{ __('daily_hours.save_all') }}
                     </button>

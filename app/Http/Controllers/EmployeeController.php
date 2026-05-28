@@ -19,6 +19,7 @@ use App\Models\Project;
 use App\Services\BillingNotificationService;
 use App\Services\EmployeeCustomFieldService;
 use App\Services\EmployeeLoginActivationService;
+use App\Services\EmployeeListPdfService;
 use App\Services\EmployeeRateService;
 use App\Services\OrganizationBillingService;
 use App\Support\CurrentOrganization;
@@ -30,6 +31,13 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EmployeeController extends Controller
 {
+    public function exportPdf(EmployeeListPdfService $pdf)
+    {
+        $this->authorize('viewAny', Employee::class);
+
+        return $pdf->download(CurrentOrganization::check());
+    }
+
     public function index(Request $request, EmployeeLoginActivationService $loginActivations): View
     {
         $this->authorize('viewAny', Employee::class);
@@ -86,7 +94,7 @@ class EmployeeController extends Controller
             ? $projects->firstWhere('id', $request->integer('project_id'))
             : null;
 
-        return view('app.employees.index', [
+        $data = [
             'organization' => $organization,
             'employees' => $employees,
             'pendingLoginInvites' => $loginActivations->pendingInvitationsByEmail($employees->getCollection()),
@@ -98,7 +106,13 @@ class EmployeeController extends Controller
             'canManage' => $canManage,
             'canActivateLogin' => $canActivateLogin,
             'filterMissingLogin' => $request->boolean('missing_login'),
-        ]);
+        ];
+
+        if ($request->ajax()) {
+            return view('app.employees._index-results', $data);
+        }
+
+        return view('app.employees.index', $data);
     }
 
     public function create(Request $request): View
@@ -149,6 +163,7 @@ class EmployeeController extends Controller
     }
 
     public function show(
+        Request $request,
         Organization $organization,
         Employee $employee,
         EmployeeLoginActivationService $loginActivations,
@@ -159,15 +174,27 @@ class EmployeeController extends Controller
         $org = CurrentOrganization::check();
         $user = auth()->user();
         $canManage = $user->roleIn($org)?->canManageEmployees() ?? false;
+        $viewingOwn = $employee->user_id !== null && $employee->user_id === $user->id;
+        $canViewOtherEmployees = $user->roleIn($org)?->canViewEmployees() ?? false;
+        $canUpdate = $user->can('update', $employee);
 
-        return view('app.employees.show', [
+        $data = [
             'organization' => $org,
             'employee' => $employee,
             'canManage' => $canManage,
+            'canUpdate' => $canUpdate,
+            'viewingOwn' => $viewingOwn,
+            'canViewOtherEmployees' => $canViewOtherEmployees,
             'canActivateLogin' => $canManage && $user->can('inviteMembers', $org),
             'loginStatus' => $loginActivations->statusFor($employee),
             'pendingLoginInvitation' => $loginActivations->pendingInvitation($employee),
-        ]);
+        ];
+
+        if ($canUpdate) {
+            $data = array_merge($this->formData($request, $employee), $data);
+        }
+
+        return view('app.employees.show', $data);
     }
 
     public function activateLogin(

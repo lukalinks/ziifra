@@ -9,6 +9,8 @@ return [
         'title' => 'Company settings',
         'complete_profile' => 'Complete your company profile',
         'complete_profile_hint' => 'Add your fiscal number (NUI), address, and company email so ZIIFRA can use them on documents and payroll later.',
+        'profile_completion' => 'Profile completion',
+        'save_hint' => 'Changes apply across your workspace, documents, and payslips.',
         'identity' => 'Company identity',
         'identity_help' => 'Legal and trading names used on contracts and payslips.',
         'display_name' => 'Display name',
@@ -106,6 +108,26 @@ return [
         'days_per_year' => 'Days per year',
         'list' => 'Leave types',
         'empty' => 'No leave types yet.',
+    ],
+
+    'invoices' => [
+        'title' => 'Invoice settings',
+        'card' => 'Footer text, TVSH, IBAN, and bank details for outgoing invoices.',
+        'saved' => 'Invoice settings saved.',
+        'footer_text' => 'Footer text on invoices',
+        'vat_percent' => 'Default TVSH (%)',
+        'vat_manual' => 'Allow manual TVSH per invoice',
+    ],
+
+    'chat' => [
+        'title' => 'Chat settings',
+        'card' => 'Enable workspace chat and control whether employees can post messages.',
+        'saved' => 'Chat settings saved.',
+        'enabled' => 'Enable chat',
+        'employees_can_write' => 'Employees can write messages',
+        'employees_can_write_help' => 'When off, only company admins and HR can post; employees can still read messages.',
+        'private_chat_enabled' => 'Allow private messages',
+        'private_chat_enabled_help' => 'When on, team members can send direct messages to each other.',
     ],
 
     'employee_fields' => [

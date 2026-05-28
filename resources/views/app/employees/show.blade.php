@@ -16,13 +16,22 @@
     $roleLine = collect([$employee->position?->title, $employee->department?->name])->filter()->implode(' · ');
 @endphp
 
-<div class="ziifra-dashboard-page ziifra-employee-shell">
-    <a href="{{ route('employees.index') }}" class="ziifra-employee-profile-back" data-page-nav>
-        <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-        </svg>
-        {{ __('employees.back_to_list') }}
-    </a>
+<div class="ziifra-dashboard-page ziifra-employee-shell" data-employee-profile @if(($canUpdate ?? false) && $errors->any()) data-edit-open @endif>
+    @unless ($viewingOwn ?? false)
+        <a href="{{ route('employees.index') }}" class="ziifra-employee-profile-back" data-page-nav>
+            <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+            {{ __('employees.back_to_list') }}
+        </a>
+    @else
+        <a href="{{ route('dashboard') }}" class="ziifra-employee-profile-back" data-page-nav>
+            <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+            {{ __('navigation.dashboard') }}
+        </a>
+    @endunless
 
     <section class="ziifra-employee-shell-hero">
         <div class="ziifra-employee-hero-card">
@@ -60,14 +69,18 @@
                     </div>
                 </div>
             </div>
-            @if ($canManage)
-                <div class="ziifra-employee-shell-actions">
-                    <a href="{{ route('employees.edit', $employee) }}" class="ziifra-btn-app !py-2 !text-sm" data-page-nav>{{ __('employees.edit') }}</a>
-                    <form method="POST" action="{{ route('employees.destroy', $employee) }}" data-confirm="{{ __('employees.remove_confirm') }}" data-confirm-variant="danger" data-confirm-accept="{{ __('common.remove') }}">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="ziifra-employee-profile-danger-btn !py-2 !text-sm">{{ __('employees.remove') }}</button>
-                    </form>
+            @if ($canManage || ($canUpdate ?? false))
+                <div class="ziifra-employee-shell-actions" data-employee-view-actions>
+                    @if ($canUpdate ?? false)
+                        <button type="button" class="ziifra-btn-app !py-2 !text-sm" data-employee-edit-toggle>{{ __('employees.edit') }}</button>
+                    @endif
+                    @if ($canManage)
+                        <form method="POST" action="{{ route('employees.destroy', $employee) }}" data-confirm="{{ __('employees.remove_confirm') }}" data-confirm-variant="danger" data-confirm-accept="{{ __('common.remove') }}">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="ziifra-employee-profile-danger-btn !py-2 !text-sm">{{ __('employees.remove') }}</button>
+                        </form>
+                    @endif
                 </div>
             @endif
         </div>
@@ -100,11 +113,14 @@
         </div>
     </section>
 
-    <section class="ziifra-employee-workspace" data-employee-profile-tabs>
+    <section class="ziifra-employee-workspace" data-employee-profile-tabs data-employee-view>
         <nav class="ziifra-employee-workspace-tabs" role="tablist" aria-label="{{ $employee->fullName() }}">
             <button type="button" role="tab" class="ziifra-employee-workspace-tab ziifra-employee-workspace-tab-active" data-employee-tab="overview" aria-selected="true">{{ __('employees.tab_overview') }}</button>
+            @if ($canManage)
+                <button type="button" role="tab" class="ziifra-employee-workspace-tab" data-employee-tab="payroll" aria-selected="false">{{ __('employees.tab_payroll') }}</button>
+            @endif
             <button type="button" role="tab" class="ziifra-employee-workspace-tab" data-employee-tab="work" aria-selected="false">
-                {{ __('employees.tab_work') }}
+                {{ __('employees.tab_projects') }}
                 @if ($workCount > 0)
                     <span class="ziifra-employee-workspace-tab-badge">{{ $workCount }}</span>
                 @endif
@@ -115,7 +131,9 @@
                     <span @class(['ziifra-employee-workspace-tab-badge', 'ziifra-employee-workspace-tab-badge-warn' => $expiringDocumentsCount > 0])>{{ $employee->documents->count() }}</span>
                 @endif
             </button>
-            <button type="button" role="tab" class="ziifra-employee-workspace-tab" data-employee-tab="access" aria-selected="false">{{ __('employees.tab_access') }}</button>
+            @if (! ($viewingOwn ?? false) || $canManage)
+                <button type="button" role="tab" class="ziifra-employee-workspace-tab" data-employee-tab="access" aria-selected="false">{{ __('employees.tab_access') }}</button>
+            @endif
         </nav>
 
         <div class="ziifra-employee-workspace-panels">
@@ -136,7 +154,11 @@
                         <span class="ziifra-employee-info-label">{{ __('employees.field_manager') }}</span>
                         <span class="ziifra-employee-info-value">
                             @if ($employee->manager)
-                                <a href="{{ route('employees.show', $employee->manager) }}" class="text-ziifra-accent-deep hover:underline" data-page-nav>{{ $employee->manager->fullName() }}</a>
+                                @if ($canViewOtherEmployees ?? false)
+                                    <a href="{{ route('employees.show', $employee->manager) }}" class="text-ziifra-accent-deep hover:underline" data-page-nav>{{ $employee->manager->fullName() }}</a>
+                                @else
+                                    {{ $employee->manager->fullName() }}
+                                @endif
                             @else
                                 —
                             @endif
@@ -177,6 +199,48 @@
                 @endif
             </div>
 
+            @if ($canManage)
+                <div class="ziifra-employee-workspace-panel" data-employee-panel="payroll" role="tabpanel" hidden>
+                    @php
+                        $compType = $employee->compensation_type;
+                    @endphp
+                    <header class="ziifra-employee-panel-head ziifra-employee-panel-head--compact">
+                        <h2 class="ziifra-employee-panel-title">{{ __('employees.section_payroll') }}</h2>
+                        @if ($canUpdate ?? false)
+                            <button type="button" class="ziifra-btn-app-outline !py-1.5 !text-xs" data-employee-edit-toggle>{{ __('employees.edit') }}</button>
+                        @endif
+                    </header>
+                    <div class="ziifra-employee-info-grid ziifra-employee-info-grid--compact">
+                        <div class="ziifra-employee-info-item">
+                            <span class="ziifra-employee-info-label">{{ __('employees.compensation_type') }}</span>
+                            <span class="ziifra-employee-info-value">{{ $compType?->label() ?? '—' }}</span>
+                        </div>
+                        @if ($compType === \App\Enums\CompensationType::Hourly)
+                            <div class="ziifra-employee-info-item ziifra-employee-info-item-highlight">
+                                <span class="ziifra-employee-info-label">{{ __('employees.fixed_hourly_rate') }}</span>
+                                <span class="ziifra-employee-info-value">
+                                    {{ $employee->fixed_hourly_rate ? number_format((float) $employee->fixed_hourly_rate, 2).' '.($employee->fixed_hourly_currency ?? $organization->currency).'/h' : '—' }}
+                                </span>
+                            </div>
+                        @elseif ($compType === \App\Enums\CompensationType::Monthly)
+                            <div class="ziifra-employee-info-item ziifra-employee-info-item-highlight">
+                                <span class="ziifra-employee-info-label">{{ __('employees.fixed_monthly_salary') }}</span>
+                                <span class="ziifra-employee-info-value">
+                                    {{ $employee->fixed_monthly_salary ? number_format((float) $employee->fixed_monthly_salary, 2).' '.($employee->fixed_salary_currency ?? $organization->currency) : '—' }}
+                                </span>
+                            </div>
+                        @endif
+                        @if ($employee->gross_salary)
+                            <div class="ziifra-employee-info-item">
+                                <span class="ziifra-employee-info-label">{{ __('employees.field_gross_salary') }}</span>
+                                <span class="ziifra-employee-info-value">{{ number_format((float) $employee->gross_salary, 2) }}</span>
+                            </div>
+                        @endif
+                    </div>
+                    <p class="mt-3 text-xs text-ziifra-muted">{{ __('employees.payroll_calendar_hint') }}</p>
+                </div>
+            @endif
+
             <div class="ziifra-employee-workspace-panel" data-employee-panel="work" role="tabpanel" hidden>
                 <header class="ziifra-employee-panel-head ziifra-employee-panel-head--compact">
                     <h2 class="ziifra-employee-panel-title">{{ __('employees.tab_work') }}</h2>
@@ -187,13 +251,21 @@
                         <h3 class="ziifra-employee-workspace-subtitle">{{ __('employees.section_direct_reports') }}</h3>
                         <div class="ziifra-employee-work-grid">
                             @foreach ($employee->directReports as $report)
+                                @if ($canViewOtherEmployees ?? false)
                                 <a href="{{ route('employees.show', $report) }}" class="ziifra-employee-work-card" data-page-nav>
+                                @else
+                                <div class="ziifra-employee-work-card">
+                                @endif
                                     <span class="ziifra-employee-compact-card-avatar" aria-hidden="true">{{ $report->initials() }}</span>
                                     <span class="min-w-0 flex-1">
                                         <span class="block truncate text-sm font-semibold text-ziifra-ink">{{ $report->fullName() }}</span>
                                         <span class="mt-0.5 block truncate text-xs text-ziifra-muted">{{ $report->position?->title ?? '—' }}</span>
                                     </span>
+                                @if ($canViewOtherEmployees ?? false)
                                 </a>
+                                @else
+                                </div>
+                                @endif
                             @endforeach
                         </div>
                     </div>
@@ -219,8 +291,8 @@
                 @if ($workCount === 0)
                     <div class="ziifra-dashboard-empty py-8">
                         <p class="text-sm text-ziifra-muted">{{ __('employees.project_assignments_hint') }}</p>
-                        @if ($canManage)
-                            <a href="{{ route('employees.edit', $employee) }}" class="ziifra-btn-primary mt-3 !text-sm" data-page-nav>{{ __('employees.edit') }}</a>
+                        @if ($canUpdate ?? false)
+                            <button type="button" class="ziifra-btn-primary mt-3 !text-sm" data-employee-edit-toggle>{{ __('employees.edit') }}</button>
                         @endif
                     </div>
                 @endif
@@ -230,41 +302,39 @@
                 @include('app.employees._documents', ['employee' => $employee, 'canManage' => $canManage, 'embedded' => true])
             </div>
 
-            <div class="ziifra-employee-workspace-panel" data-employee-panel="access" role="tabpanel" hidden>
-                @include('app.employees._login-access', ['embedded' => true])
-
-                @if ($canManage)
-                    <section class="ziifra-employee-rates-panel">
-                        <div class="ziifra-employee-rates-head">
-                            <h2 class="text-sm font-semibold text-ziifra-ink">{{ __('employees.hourly_rates') }}</h2>
-                        </div>
-                        <div class="p-4">
-                            @if ($employee->hourlyRates->isNotEmpty())
-                                <ul class="ziifra-employee-rates-list">
-                                    @foreach ($employee->hourlyRates as $rate)
-                                        <li class="ziifra-employee-rates-row">
-                                            <span>{{ \Carbon\Carbon::create($rate->year, $rate->month, 1)->format('F Y') }}</span>
-                                            <span class="font-semibold tabular-nums text-ziifra-ink">{{ number_format((float) $rate->hourly_rate, 2) }} {{ $rate->currency }}/h</span>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            @else
-                                <p class="text-sm text-ziifra-muted">{{ __('employees.no_hourly_rates') }}</p>
-                            @endif
-                            <form method="POST" action="{{ route('employees.hourly-rates.store', $employee) }}" class="ziifra-employee-profile-rate-form mt-3 border-t border-ziifra-line/60 pt-3">
-                                @csrf
-                                <div class="grid gap-2 sm:grid-cols-2">
-                                    <input type="number" name="year" required min="2020" max="2100" value="{{ now()->year }}" placeholder="{{ __('payroll.year') }}" class="ziifra-input !py-2 !text-sm" aria-label="{{ __('payroll.year') }}">
-                                    <input type="number" name="month" required min="1" max="12" value="{{ now()->month }}" placeholder="{{ __('payroll.month') }}" class="ziifra-input !py-2 !text-sm" aria-label="{{ __('payroll.month') }}">
-                                    <input type="number" name="hourly_rate" required min="0" step="0.01" placeholder="{{ __('employees.hourly_rate') }}" class="ziifra-input !py-2 !text-sm sm:col-span-2" aria-label="{{ __('employees.hourly_rate') }}">
-                                </div>
-                                <button type="submit" class="ziifra-btn-primary mt-2 w-full !py-2 !text-sm">{{ __('employees.add_rate') }}</button>
-                            </form>
-                        </div>
-                    </section>
-                @endif
-            </div>
+            @if (! ($viewingOwn ?? false) || $canManage)
+                <div class="ziifra-employee-workspace-panel" data-employee-panel="access" role="tabpanel" hidden>
+                    @include('app.employees._login-access', ['embedded' => true])
+                </div>
+            @endif
         </div>
     </section>
+
+    @if ($canUpdate ?? false)
+        <section class="ziifra-employee-edit-panel" data-employee-edit-panel hidden aria-label="{{ __('employees.edit') }}">
+            <header class="ziifra-employee-panel-head">
+                <div>
+                    <h2 class="ziifra-employee-panel-title">{{ __('employees.edit') }}</h2>
+                    <p class="mt-0.5 text-sm text-ziifra-muted">{{ __('employees.edit_subtitle') }}</p>
+                </div>
+                <button type="button" class="ziifra-btn-app-outline !py-1.5 !text-xs" data-employee-edit-cancel>{{ __('common.cancel') }}</button>
+            </header>
+
+            <form method="POST" action="{{ route('employees.update', $employee) }}" enctype="multipart/form-data" class="mt-5 space-y-6">
+                @csrf
+                @method('PUT')
+                @include('app.employees._form', ['employee' => $employee])
+                <div class="flex flex-col gap-2 border-t border-ziifra-line/70 pt-5 sm:flex-row">
+                    <button type="submit" class="ziifra-btn-primary w-full justify-center sm:w-auto" data-form-submit>
+                        <span data-form-submit-label>{{ __('employees.save_changes') }}</span>
+                        <span data-form-submit-spinner class="hidden h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></span>
+                    </button>
+                    <button type="button" class="ziifra-btn-app-outline w-full justify-center sm:w-auto" data-employee-edit-cancel>
+                        {{ __('common.cancel') }}
+                    </button>
+                </div>
+            </form>
+        </section>
+    @endif
 </div>
 @endsection

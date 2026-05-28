@@ -54,8 +54,12 @@ return [
         'materials' => 'Materials',
         'equipment' => 'Equipment',
         'subcontractor' => 'Subcontractor',
+        'expense' => 'Expenses',
         'other' => 'Other',
     ],
+    'field_title' => 'Title',
+    'field_category' => 'Category',
+    'field_file' => 'File',
     'export' => [
         'project' => 'Project',
         'title' => 'Title',

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CompensationType;
 use App\Enums\EmploymentStatus;
 use App\Enums\EmploymentType;
 use App\Models\Concerns\BelongsToOrganization;
@@ -81,6 +82,12 @@ class Employee extends Model
         'start_date',
         'gross_salary',
         'monthly_allowances',
+        'compensation_type',
+        'fixed_hourly_rate',
+        'fixed_hourly_currency',
+        'fixed_monthly_salary',
+        'fixed_salary_currency',
+        'trust_override_percent',
         'terminated_at',
     ];
 
@@ -89,6 +96,10 @@ class Employee extends Model
         return [
             'employment_type' => EmploymentType::class,
             'employment_status' => EmploymentStatus::class,
+            'compensation_type' => CompensationType::class,
+            'fixed_hourly_rate' => 'decimal:2',
+            'fixed_monthly_salary' => 'decimal:2',
+            'trust_override_percent' => 'decimal:2',
             'start_date' => 'date',
             'gross_salary' => 'decimal:2',
             'monthly_allowances' => 'decimal:2',

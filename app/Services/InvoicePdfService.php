@@ -16,6 +16,8 @@ class InvoicePdfService
         $pdf = Pdf::loadView('app.invoices.pdf', [
             'organization' => $organization,
             'invoice' => $invoice,
+            'invoiceSettings' => $organization->resolvedInvoiceSettings(),
+            'logo' => $organization->payslipLogoDataUri(),
         ])->setPaper('a4');
 
         return $pdf->download('invoice-'.$invoice->invoice_number.'.pdf');

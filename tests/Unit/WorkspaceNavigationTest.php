@@ -38,8 +38,6 @@ class WorkspaceNavigationTest extends TestCase
         $this->assertSame([
             __('navigation.primary'),
             __('navigation.people'),
-            __('navigation.pay_and_finance'),
-            __('navigation.work'),
             __('navigation.insights'),
             __('navigation.collaborate'),
             __('navigation.admin'),
@@ -49,11 +47,13 @@ class WorkspaceNavigationTest extends TestCase
 
         $this->assertContains(__('navigation.dashboard'), $itemLabels);
         $this->assertContains(__('navigation.invoices'), $itemLabels);
-        $this->assertContains(__('navigation.expenses'), $itemLabels);
         $this->assertContains(__('navigation.projects'), $itemLabels);
-        $this->assertContains(__('navigation.time_and_attendance'), $itemLabels);
+        $this->assertContains(__('navigation.payroll_and_time'), $itemLabels);
         $this->assertContains(__('navigation.reports'), $itemLabels);
         $this->assertContains(__('navigation.chat'), $itemLabels);
+        $this->assertNotContains(__('navigation.expenses'), $itemLabels);
+        $this->assertNotContains(__('navigation.time_and_attendance'), $itemLabels);
+        $this->assertNotContains(__('navigation.project_documents'), $itemLabels);
 
         $comingSoon = collect($groups)
             ->flatMap(fn (array $g) => $g['items'])
@@ -61,12 +61,6 @@ class WorkspaceNavigationTest extends TestCase
             ->pluck('label')
             ->all();
 
-        $this->assertNotContains(__('navigation.invoices'), $comingSoon);
-        $this->assertNotContains(__('navigation.expenses'), $comingSoon);
-        $this->assertNotContains(__('navigation.projects'), $comingSoon);
-        $this->assertNotContains(__('navigation.time_and_attendance'), $comingSoon);
-        $this->assertNotContains(__('navigation.reports'), $comingSoon);
-        $this->assertNotContains(__('navigation.chat'), $comingSoon);
         $this->assertSame([], $comingSoon);
     }
 
@@ -130,20 +124,15 @@ class WorkspaceNavigationTest extends TestCase
         $this->assertSame([
             __('navigation.primary'),
             __('navigation.people'),
-            __('navigation.pay_and_finance'),
-            __('navigation.work'),
             __('navigation.collaborate'),
         ], $labels);
 
         $itemLabels = collect($groups)->flatMap(fn (array $g) => array_column($g['items'], 'label'))->all();
 
         $this->assertContains(__('navigation.leave'), $itemLabels);
-        $this->assertContains(__('navigation.expenses'), $itemLabels);
-        $this->assertContains(__('navigation.time_and_attendance'), $itemLabels);
         $this->assertContains(__('navigation.chat'), $itemLabels);
-        $chatItem = collect($groups)->flatMap(fn (array $g) => $g['items'])->firstWhere('label', __('navigation.chat'));
-        $this->assertTrue($chatItem['enabled']);
-        $this->assertFalse($chatItem['coming_soon']);
+        $this->assertNotContains(__('navigation.expenses'), $itemLabels);
+        $this->assertNotContains(__('navigation.time_and_attendance'), $itemLabels);
         $this->assertNotContains(__('navigation.employees'), $itemLabels);
         $this->assertNotContains(__('navigation.reports'), $itemLabels);
         $this->assertNotContains(__('navigation.payroll'), $itemLabels);
@@ -159,6 +148,8 @@ class WorkspaceNavigationTest extends TestCase
             'Acme SHPK',
         );
 
+        $this->useOrganizationPlan($result['organization'], SubscriptionPlan::Pro);
+
         $nav = app(WorkspaceNavigation::class);
         $flat = $nav->flat($result['organization'], $result['user']);
 
@@ -171,8 +162,9 @@ class WorkspaceNavigationTest extends TestCase
         $flatLabels = array_column($flat, 'label');
 
         $this->assertContains(__('navigation.hr_documents'), $flatLabels);
-        $this->assertContains(__('navigation.project_documents'), $flatLabels);
+        $this->assertContains(__('navigation.payroll_and_time'), $flatLabels);
         $this->assertContains(__('navigation.chat'), $flatLabels);
+        $this->assertNotContains(__('navigation.project_documents'), $flatLabels);
     }
 
     public function test_primary_mobile_navigation_limits_tab_bar_items(): void

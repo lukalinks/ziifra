@@ -2,7 +2,7 @@
     use App\Enums\ProjectTaskStatus;
 @endphp
 
-<div class="grid gap-6 p-4 sm:p-5 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)] lg:items-start">
+<div class="grid gap-4 lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)] lg:items-start">
     <section>
         @if ($canManage)
             <details class="ziifra-project-task-add mb-4">

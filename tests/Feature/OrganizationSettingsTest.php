@@ -107,7 +107,7 @@ class OrganizationSettingsTest extends TestCase
             ->put($this->workspaceRoute('settings.company.update', $companyB['organization']), [
                 'name' => 'Hacked B',
                 'country_code' => 'XK',
-                'timezone' => 'Europe/Belgrade',
+                'timezone' => 'Europe/Zurich',
                 'currency' => 'EUR',
                 'locale' => 'en',
             ])
@@ -190,19 +190,15 @@ class OrganizationSettingsTest extends TestCase
                 $this->companySettingsPayload($organization),
                 [
                     'slug' => 'company-a-renamed',
-                    'signatory_name' => 'Arben Krasniqi',
-                    'signatory_title' => 'Director',
                     'work_week_days' => ['mon', 'tue', 'wed', 'thu', 'fri'],
                     'observe_kosovo_holidays' => true,
                     'hr_can_invite' => false,
-                    'bank_iban' => 'XK05150123456789012345',
                 ],
             ))
             ->assertRedirect($this->workspaceRoute('settings.company.edit', $organization->fresh()));
 
         $organization->refresh();
         $this->assertSame('company-a-renamed', $organization->slug);
-        $this->assertSame('Arben Krasniqi', $organization->signatory_name);
         $this->assertFalse($organization->hr_can_invite);
     }
 

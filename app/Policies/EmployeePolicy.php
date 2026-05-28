@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Employee;
 use App\Models\User;
+use App\Services\EmployeeProfileService;
 use App\Support\CurrentOrganization;
 
 class EmployeePolicy
@@ -21,8 +22,19 @@ class EmployeePolicy
 
     public function view(User $user, Employee $employee): bool
     {
-        return $this->belongsToCurrentOrganization($user, $employee)
-            && ($user->roleIn(CurrentOrganization::check())?->canViewEmployees() ?? false);
+        if (! $this->belongsToCurrentOrganization($user, $employee)) {
+            return false;
+        }
+
+        $organization = CurrentOrganization::check();
+
+        if ($user->roleIn($organization)?->canViewEmployees() ?? false) {
+            return true;
+        }
+
+        $linked = app(EmployeeProfileService::class)->employeeFor($user, $organization);
+
+        return $linked !== null && $linked->is($employee);
     }
 
     public function create(User $user): bool

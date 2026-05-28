@@ -20,9 +20,24 @@
             class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">
             <h2 class="text-lg font-semibold text-ziifra-ink">Company</h2>
             <p class="mt-2 text-sm text-ziifra-muted">Legal details, address, regional defaults, logo, and brand colors.</p>
-            @if (! $organization->isProfileComplete())
-                <p class="mt-3 text-xs font-medium text-amber-700">Profile incomplete</p>
-            @endif
+        </a>
+
+        <a href="{{ route('settings.payroll.edit') }}"
+            class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">
+            <h2 class="text-lg font-semibold text-ziifra-ink">{{ __('settings_payroll.title') }}</h2>
+            <p class="mt-2 text-sm text-ziifra-muted">{{ __('settings_payroll.card') }}</p>
+        </a>
+
+        <a href="{{ route('settings.invoices.edit') }}"
+            class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">
+            <h2 class="text-lg font-semibold text-ziifra-ink">{{ __('settings.invoices.title') }}</h2>
+            <p class="mt-2 text-sm text-ziifra-muted">{{ __('settings.invoices.card') }}</p>
+        </a>
+
+        <a href="{{ route('settings.chat.edit') }}"
+            class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">
+            <h2 class="text-lg font-semibold text-ziifra-ink">{{ __('settings.chat.title') }}</h2>
+            <p class="mt-2 text-sm text-ziifra-muted">{{ __('settings.chat.card') }}</p>
         </a>
 
         @if ($canManageContractTemplates ?? false)

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\CompensationType;
 use App\Models\Employee;
 use App\Models\EmployeeHourlyRate;
 use Carbon\Carbon;
@@ -19,6 +20,10 @@ class EmployeeRateService
 
     public function hourlyRateFor(Employee $employee, Carbon $date): float
     {
+        if ($employee->compensation_type === CompensationType::Hourly && $employee->fixed_hourly_rate !== null) {
+            return (float) $employee->fixed_hourly_rate;
+        }
+
         $rate = $this->rateFor($employee, $date);
 
         if ($rate !== null) {
@@ -27,17 +32,20 @@ class EmployeeRateService
 
         $fallback = EmployeeHourlyRate::query()
             ->where('employee_id', $employee->id)
-            ->where(function ($query) use ($date): void {
-                $query->where('year', '<', $date->year)
-                    ->orWhere(function ($q) use ($date): void {
-                        $q->where('year', $date->year)->where('month', '<=', $date->month);
-                    });
-            })
             ->orderByDesc('year')
             ->orderByDesc('month')
             ->first();
 
         return $fallback !== null ? (float) $fallback->hourly_rate : 0.0;
+    }
+
+    public function hourlyCurrencyFor(Employee $employee): string
+    {
+        if ($employee->fixed_hourly_currency) {
+            return $employee->fixed_hourly_currency;
+        }
+
+        return $employee->organization?->currency ?? 'EUR';
     }
 
     /**

@@ -18,10 +18,12 @@ return [
     'custom_deleted' => 'Navigation link removed.',
 
     'dashboard' => 'Dashboard',
+    'my_profile' => 'My profile',
     'employees' => 'Employees',
     'leave' => 'Leave',
     'documents' => 'Documents',
     'payroll' => 'Payroll',
+    'payroll_and_time' => 'Payroll & Time',
     'invoices' => 'Invoices',
     'expenses' => 'Expenses',
     'projects' => 'Projects',

@@ -15,6 +15,7 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrganizationSelectController;
 use App\Http\Controllers\OrganizationContractTemplateController;
+use App\Http\Controllers\OrganizationBrandController;
 use App\Http\Controllers\OrganizationSettingsController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\PageController;
@@ -36,7 +37,12 @@ use App\Http\Controllers\EmployeeFieldDefinitionController;
 use App\Http\Controllers\LeaveCalendarController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LeaveTypeController;
+use App\Http\Controllers\ChatSettingsController;
+use App\Models\Organization;
+use App\Http\Controllers\InvoiceSettingsController;
 use App\Http\Controllers\PayrollRunController;
+use App\Http\Controllers\PayrollSettingsController;
+use App\Http\Controllers\PayrollTimeController;
 use App\Http\Controllers\PayslipController;
 use App\Http\Controllers\PositionController;
 use App\Http\Controllers\TeamInvitationController;
@@ -59,6 +65,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', LandingController::class)->name('home');
 Route::get('/privacy', [PageController::class, 'privacy'])->name('privacy');
 Route::get('/terms', [PageController::class, 'terms'])->name('terms');
+
+Route::get('/o/{organization}/brand/logo', [OrganizationBrandController::class, 'logo'])
+    ->name('org.brand.logo');
 
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisterController::class, 'create'])->name('register');
@@ -148,6 +157,8 @@ Route::middleware('auth')->group(function () {
                 ->name('employees.custom-fields.download');
             Route::get('/employees/export', [EmployeeImportController::class, 'export'])
                 ->name('employees.export');
+            Route::get('/employees/export/pdf', [EmployeeController::class, 'exportPdf'])
+                ->name('employees.export.pdf');
             Route::get('/employees/import/template', [EmployeeImportController::class, 'template'])
                 ->name('employees.import.template');
             Route::get('/employees/import', [EmployeeImportController::class, 'create'])
@@ -206,6 +217,21 @@ Route::middleware('auth')->group(function () {
                 Route::post('/expenses/{expenseClaim}/cancel', [ExpenseClaimController::class, 'cancel'])->name('expenses.cancel');
             });
 
+            Route::middleware('plan.feature:payroll')->prefix('payroll-time')->name('payroll-time.')->group(function () {
+                Route::get('/', [PayrollTimeController::class, 'index'])->name('index');
+                Route::post('/hours', [PayrollTimeController::class, 'upsert'])->name('hours.upsert');
+                Route::post('/employees/{employee}/rate', [PayrollTimeController::class, 'updateRate'])->name('rate.update');
+                Route::get('/export/pdf', [PayrollTimeController::class, 'exportPdf'])->name('export.pdf');
+                Route::get('/export/excel', [PayrollTimeController::class, 'exportExcel'])->name('export.excel');
+                Route::get('/employees/{employee}/export/pdf', [PayrollTimeController::class, 'exportEmployeePdf'])->name('employee.export.pdf');
+                Route::get('/employees/{employee}/export/excel', [PayrollTimeController::class, 'exportEmployeeExcel'])->name('employee.export.excel');
+            });
+
+            Route::get('/payroll', fn (Organization $organization) => redirect()->route('payroll-time.index', $organization))
+                ->middleware('plan.feature:payroll');
+            Route::get('/time', fn (Organization $organization) => redirect()->route('payroll-time.index', $organization))
+                ->middleware('plan.feature:time_tracking');
+
             Route::middleware('plan.feature:payroll')->prefix('payroll')->name('payroll.')->group(function () {
                 Route::get('/', [PayrollRunController::class, 'index'])->name('index');
                 Route::get('/create', [PayrollRunController::class, 'create'])->name('create');
@@ -250,6 +276,12 @@ Route::middleware('auth')->group(function () {
                 Route::post('/projects/{project}/tasks', [ProjectController::class, 'storeTask'])->name('projects.tasks.store');
                 Route::put('/projects/{project}/tasks/{task}', [ProjectController::class, 'updateTask'])->name('projects.tasks.update');
                 Route::delete('/projects/{project}/tasks/{task}', [ProjectController::class, 'destroyTask'])->name('projects.tasks.destroy');
+                Route::post('/projects/{project}/documents', [ProjectDocumentController::class, 'store'])->name('projects.documents.store');
+                Route::get('/projects/{project}/documents/{projectDocument}/download', [ProjectDocumentController::class, 'download'])->name('projects.documents.download');
+                Route::delete('/projects/{project}/documents/{projectDocument}', [ProjectDocumentController::class, 'destroy'])->name('projects.documents.destroy');
+                Route::get('/projects/{project}/hours/chart', [ProjectController::class, 'hoursChart'])->name('projects.hours.chart');
+                Route::post('/projects/{project}/members', [ProjectController::class, 'storeMember'])->name('projects.members.store');
+                Route::delete('/projects/{project}/members/{employee}', [ProjectController::class, 'destroyMember'])->name('projects.members.destroy');
             });
 
             Route::middleware('plan.feature:time_tracking')->group(function () {
@@ -296,6 +328,15 @@ Route::middleware('auth')->group(function () {
             Route::get('/settings/company', [OrganizationSettingsController::class, 'edit'])->name('settings.company.edit');
             Route::put('/settings/company', [OrganizationSettingsController::class, 'update'])->name('settings.company.update');
             Route::get('/settings/company/logo', [OrganizationSettingsController::class, 'logo'])->name('settings.company.logo');
+
+            Route::get('/settings/payroll', [PayrollSettingsController::class, 'edit'])->name('settings.payroll.edit');
+            Route::put('/settings/payroll', [PayrollSettingsController::class, 'update'])->name('settings.payroll.update');
+
+            Route::get('/settings/invoices', [InvoiceSettingsController::class, 'edit'])->name('settings.invoices.edit');
+            Route::put('/settings/invoices', [InvoiceSettingsController::class, 'update'])->name('settings.invoices.update');
+
+            Route::get('/settings/chat', [ChatSettingsController::class, 'edit'])->name('settings.chat.edit');
+            Route::put('/settings/chat', [ChatSettingsController::class, 'update'])->name('settings.chat.update');
 
             Route::get('/settings/departments', [DepartmentController::class, 'index'])->name('settings.departments.index');
             Route::post('/settings/departments', [DepartmentController::class, 'store'])->name('settings.departments.store');

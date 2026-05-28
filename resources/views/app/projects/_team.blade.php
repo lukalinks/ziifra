@@ -1,4 +1,27 @@
-<div class="p-4 sm:p-5">
+@php
+    $memberIds = $project->members->pluck('id');
+    $assignable = ($employees ?? collect())->reject(fn ($e) => $memberIds->contains($e->id));
+@endphp
+<div class="p-3 sm:p-4">
+    @if ($canManage)
+        <form method="POST" action="{{ route('projects.members.store', $project) }}" class="mb-5 flex flex-wrap items-end gap-2">
+            @csrf
+            <label class="min-w-[14rem] flex-1">
+                <span class="mb-1 block text-xs font-medium text-ziifra-muted">{{ __('projects.add_member') }}</span>
+                <select name="employee_id" class="ziifra-input !text-sm" required @disabled($assignable->isEmpty())>
+                    <option value="">{{ __('projects.select_member') }}</option>
+                    @foreach ($assignable as $employee)
+                        <option value="{{ $employee->id }}">{{ $employee->fullName() }}</option>
+                    @endforeach
+                </select>
+            </label>
+            <button type="submit" class="ziifra-btn-app !text-sm" @disabled($assignable->isEmpty())>{{ __('projects.add_member_action') }}</button>
+        </form>
+        @if ($assignable->isEmpty() && $project->members->isNotEmpty())
+            <p class="mb-4 text-xs text-ziifra-muted">{{ __('projects.all_members_added') }}</p>
+        @endif
+    @endif
+
     @if ($project->members->isEmpty())
         <div class="ziifra-dashboard-empty py-10">
             <span class="ziifra-dashboard-empty-icon text-sky-500/70">
@@ -6,9 +29,6 @@
             </span>
             <p class="mt-3 font-medium text-ziifra-ink">{{ __('daily_hours.no_employees') }}</p>
             <p class="mt-1 text-sm text-ziifra-muted">{{ __('daily_hours.no_employees_hint') }}</p>
-            @if ($canManage)
-                <a href="{{ route('projects.edit', $project) }}" class="ziifra-btn-primary mt-4 !text-sm" data-page-nav>{{ __('projects.edit') }}</a>
-            @endif
         </div>
     @else
         <div class="ziifra-employees-compact-grid">
@@ -24,7 +44,12 @@
                     <div class="ziifra-employee-compact-card-actions">
                         <a href="{{ route('employees.show', $member) }}" class="ziifra-employee-compact-card-link" data-page-nav>{{ __('employees.view') }}</a>
                         @if ($canManage)
-                            <a href="{{ route('employees.edit', $member) }}" class="ziifra-employee-compact-card-link" data-page-nav>{{ __('employees.edit') }}</a>
+                            <form method="POST" action="{{ route('projects.members.destroy', [$project, $member]) }}"
+                                onsubmit="return confirm('{{ __('projects.remove_member_confirm') }}');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="ziifra-employee-compact-card-link !text-red-600">{{ __('projects.remove_member') }}</button>
+                            </form>
                         @endif
                     </div>
                 </article>

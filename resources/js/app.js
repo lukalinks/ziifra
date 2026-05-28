@@ -3,6 +3,7 @@ import { initPageLoader } from './page-loader.js';
 import { initExpenseReceiptScan } from './expense-receipt-scan.js';
 import { initEmployeesQuickFilter, initProjectHoursFilter } from './employees-quick-filter.js';
 import { initEmployeeProfileTabs } from './employee-profile-tabs.js';
+import { initEmployeeProfileEdit } from './employee-profile-edit.js';
 import { initPayrollCreateForm } from './payroll-create-form.js';
 import './searchable-select.js';
 
@@ -23,6 +24,7 @@ initExpenseReceiptScan();
 initEmployeesQuickFilter();
 initProjectHoursFilter();
 initEmployeeProfileTabs();
+initEmployeeProfileEdit();
 initPayrollCreateForm();
 
 document.querySelectorAll('[data-password-toggle]').forEach((button) => {

@@ -81,6 +81,6 @@ class DailyHoursController extends Controller
 
         $month = Carbon::parse($request->string('month')->toString() ?: now()->format('Y-m'))->startOfMonth();
 
-        return $export->exportCsv($project, $month);
+        return $export->exportXlsx($project, $month);
     }
 }

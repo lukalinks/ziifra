@@ -14,6 +14,7 @@ return [
     'leave' => 'Pushimet',
     'documents' => 'Dokumentet',
     'payroll' => 'Pagat',
+    'payroll_and_time' => 'Pagat & Koha',
     'invoices' => 'Faturat',
     'expenses' => 'Shpenzimet',
     'projects' => 'Projektet',

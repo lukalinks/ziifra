@@ -82,19 +82,9 @@
             </div>
 
         </div>
-
-        @if ($canManageOrganization && ! $organization->isProfileComplete())
-            <div class="relative z-[1] mt-6 ziifra-dashboard-banner">
-                <div class="min-w-0">
-                    <p class="font-medium text-amber-950">{{ __('dashboard.complete_profile') }}</p>
-                    <p class="mt-0.5 text-sm text-amber-900/90">{{ __('dashboard.complete_profile_hint') }}</p>
-                </div>
-                <a href="{{ route('settings.index') }}" class="ziifra-dashboard-banner-btn ziifra-btn-app shrink-0 !bg-amber-900 !text-amber-50 hover:!bg-amber-950">
-                    {{ __('dashboard.setup_company') }}
-                </a>
-            </div>
-        @endif
     </section>
+
+    @include('partials.complete-profile-nudge', ['settingsUrl' => route('settings.company.edit')])
 
     {{-- Stats --}}
     @if ($showStats)

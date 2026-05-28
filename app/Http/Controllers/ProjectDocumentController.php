@@ -111,10 +111,16 @@ class ProjectDocumentController extends Controller
 
     public function store(
         StoreProjectDocumentRequest $request,
+        Organization $organization,
         ProjectDocumentService $documents,
     ): RedirectResponse {
+        $routeProject = $request->route('project');
         /** @var Project $project */
-        $project = Project::query()->findOrFail($request->integer('project_id'));
+        $project = $routeProject instanceof Project
+            ? $routeProject
+            : Project::query()
+                ->where('organization_id', $organization->id)
+                ->findOrFail($request->validated('project_id'));
 
         $documents->store(
             $project,
@@ -123,9 +129,11 @@ class ProjectDocumentController extends Controller
             $request->user(),
         );
 
-        return redirect()
-            ->route('project-documents.index', ['project' => $project->id])
-            ->with('status', __('project_documents.uploaded'));
+        $redirect = $request->boolean('from_project')
+            ? redirect()->route('projects.show', ['project' => $project, 'tab' => 'documents'])
+            : redirect()->route('project-documents.index', ['project' => $project->id]);
+
+        return $redirect->with('status', __('project_documents.uploaded'));
     }
 
     public function download(
@@ -144,15 +152,22 @@ class ProjectDocumentController extends Controller
     public function destroy(
         Organization $organization,
         ProjectDocument $projectDocument,
+        Request $request,
         ProjectDocumentService $documents,
     ): RedirectResponse {
         $this->authorize('delete', $projectDocument);
 
-        $projectId = $projectDocument->project_id;
+        $project = $projectDocument->project;
         $documents->delete($projectDocument);
 
+        if ($request->boolean('from_project') && $project) {
+            return redirect()
+                ->route('projects.show', ['project' => $project, 'tab' => 'documents'])
+                ->with('status', __('project_documents.deleted'));
+        }
+
         return redirect()
-            ->route('project-documents.index', ['project' => $projectId])
+            ->route('project-documents.index', ['project' => $project?->id])
             ->with('status', __('project_documents.deleted'));
     }
 

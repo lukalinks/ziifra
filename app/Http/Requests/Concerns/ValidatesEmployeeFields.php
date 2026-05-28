@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Concerns;
 
 use App\Enums\AllowanceTaxTreatment;
+use App\Enums\CompensationType;
 use App\Enums\EmploymentStatus;
 use App\Enums\EmploymentType;
 use App\Models\Department;
@@ -21,8 +22,8 @@ trait ValidatesEmployeeFields
         $organizationId = CurrentOrganization::check()->id;
 
         return [
-            'first_name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
+            'first_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
             'employee_code' => [
                 'nullable',
                 'string',
@@ -53,11 +54,16 @@ trait ValidatesEmployeeFields
                 Rule::exists('employees', 'id')->where('organization_id', $organizationId),
                 Rule::notIn($employee ? [$employee->id] : []),
             ],
-            'employment_type' => ['required', Rule::enum(EmploymentType::class)],
-            'employment_status' => ['required', Rule::enum(EmploymentStatus::class)],
+            'employment_type' => ['nullable', Rule::enum(EmploymentType::class)],
+            'employment_status' => ['nullable', Rule::enum(EmploymentStatus::class)],
             'start_date' => ['nullable', 'date'],
             'gross_salary' => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
             'monthly_allowances' => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
+            'compensation_type' => ['nullable', Rule::enum(CompensationType::class)],
+            'fixed_hourly_rate' => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
+            'fixed_hourly_currency' => ['nullable', 'string', 'size:3'],
+            'fixed_monthly_salary' => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
+            'fixed_salary_currency' => ['nullable', 'string', 'size:3'],
             'allowance_templates' => ['sometimes', 'nullable', 'array'],
             'allowance_templates.*.label' => ['nullable', 'string', 'max:255'],
             'allowance_templates.*.amount' => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
@@ -76,5 +82,4 @@ trait ValidatesEmployeeFields
             ],
         ];
     }
-
 }

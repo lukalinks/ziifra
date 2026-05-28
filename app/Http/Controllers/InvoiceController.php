@@ -54,8 +54,11 @@ class InvoiceController extends Controller
     {
         $this->authorize('create', Invoice::class);
 
+        $organization = CurrentOrganization::check();
+
         return view('app.invoices.create', [
-            'organization' => CurrentOrganization::check(),
+            'organization' => $organization,
+            'invoiceSettings' => $organization->resolvedInvoiceSettings(),
             'projects' => Project::query()->orderBy('name')->get(),
             'prefillProjectId' => request()->integer('project') ?: null,
             'prefillPeriodStart' => request('period_start'),
@@ -131,6 +134,7 @@ class InvoiceController extends Controller
 
         return view('app.invoices.edit', [
             'organization' => CurrentOrganization::check(),
+            'invoiceSettings' => CurrentOrganization::check()->resolvedInvoiceSettings(),
             'invoice' => $invoice,
         ]);
     }

@@ -36,7 +36,7 @@ class RegisterOrganizationService
             $organization = Organization::query()->create([
                 'name' => $companyName,
                 'country_code' => 'XK',
-                'timezone' => config('app.timezone', 'Europe/Belgrade'),
+                'timezone' => config('app.timezone', 'Europe/Zurich'),
                 'currency' => 'EUR',
                 'locale' => app(LocaleConfigurationService::class)->defaultCode(),
                 'work_week_days' => array_map(

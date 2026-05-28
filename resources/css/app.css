@@ -9,20 +9,20 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 
-    --color-ziifra-ink: #0f172a;
-    --color-ziifra-ink-soft: #475569;
-    --color-ziifra-cream: #f6f5f2;
-    --color-ziifra-paper: #ffffff;
-    --color-ziifra-surface: #f8fafc;
-    --color-ziifra-surface-hover: #f1f5f9;
+    --color-ziifra-ink: #0d1526;
+    --color-ziifra-ink-soft: #3a4658;
+    --color-ziifra-cream: #e9e7df;
+    --color-ziifra-paper: #f4f3ee;
+    --color-ziifra-surface: #eef1f5;
+    --color-ziifra-surface-hover: #e6eaf0;
     --color-ziifra-night: #0a0f1a;
     --color-ziifra-night-soft: #141c2e;
     --color-ziifra-accent: #0d9488;
-    --color-ziifra-accent-deep: #0f766e;
+    --color-ziifra-accent-deep: #0b6258;
     --color-ziifra-accent-glow: #14b8a6;
     --color-ziifra-copper: #d97706;
-    --color-ziifra-muted: #64748b;
-    --color-ziifra-line: #e2e8f0;
+    --color-ziifra-muted: #3c4858;
+    --color-ziifra-line: #d8dee7;
     --color-ziifra-on-accent: #ffffff;
 }
 
@@ -105,7 +105,7 @@
     }
 
     .ziifra-landing-hero {
-        @apply relative isolate overflow-hidden text-white;
+        @apply relative isolate overflow-x-clip overflow-y-visible text-white;
         background:
             radial-gradient(ellipse 80% 55% at 15% -5%, rgba(20, 184, 166, 0.22), transparent 58%),
             radial-gradient(ellipse 55% 45% at 95% 15%, rgba(217, 119, 6, 0.1), transparent 52%),
@@ -262,6 +262,30 @@
 
     .ziifra-feature-card:hover::before {
         @apply scale-y-100;
+    }
+
+    .ziifra-capability-grid {
+        @apply grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6;
+    }
+
+    .ziifra-capability-card {
+        @apply flex h-full flex-col rounded-2xl border border-ziifra-line/80 bg-ziifra-paper/95 p-5 shadow-sm transition duration-300 hover:-translate-y-0.5 hover:border-ziifra-accent/25 hover:shadow-[0_20px_50px_-28px_rgba(20,184,166,0.3)] sm:p-6;
+    }
+
+    .ziifra-capability-card-featured {
+        @apply border-ziifra-accent/25 bg-gradient-to-br from-ziifra-paper via-ziifra-paper to-ziifra-accent/[0.06] sm:col-span-2 lg:col-span-1;
+    }
+
+    .ziifra-capability-card-icon {
+        @apply mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-ziifra-cream text-ziifra-accent-deep;
+    }
+
+    .ziifra-capability-card-title {
+        @apply text-lg font-semibold tracking-tight text-ziifra-ink;
+    }
+
+    .ziifra-capability-card-desc {
+        @apply mt-2 text-sm leading-relaxed text-ziifra-muted;
     }
 
     .ziifra-features-section {
@@ -497,7 +521,7 @@
     }
 
     .ziifra-landing-mockup-stage {
-        @apply relative mx-auto w-full max-w-[min(100%,20rem)] px-1 sm:max-w-[36rem] sm:px-0 lg:max-w-none;
+        @apply relative mx-auto w-full max-w-[min(100%,20rem)] px-1 sm:max-w-[min(100%,32rem)] sm:px-0 lg:mx-0 lg:max-w-full lg:px-0;
     }
 
     .ziifra-landing-mockup {
@@ -520,8 +544,8 @@
 
     .ziifra-landing-mockup-phone {
         @apply absolute z-10 w-[6.25rem] sm:w-[7.5rem];
-        bottom: -0.5rem;
-        right: 0;
+        bottom: 0.25rem;
+        right: 0.25rem;
     }
 
     .ziifra-landing-mockup-mobile-stats {
@@ -529,16 +553,12 @@
     }
 
     .ziifra-landing-hero-visual {
-        @apply overflow-hidden min-[640px]:overflow-visible;
+        @apply w-full min-w-0 overflow-hidden;
     }
 
     @media (max-width: 639px) {
         .ziifra-landing-section {
             @apply py-14;
-        }
-
-        .ziifra-landing-hero {
-            @apply overflow-x-clip;
         }
 
         .ziifra-landing-hero .ziifra-landing-glow {
@@ -731,51 +751,37 @@
     @media (min-width: 640px) and (max-width: 1023px) {
         .ziifra-landing-mockup-stage {
             padding-bottom: 1.25rem;
-            padding-right: 1.25rem;
-        }
-
-        .ziifra-landing-mockup-phone {
-            bottom: 0;
-            right: 0;
+            padding-inline: 0.5rem;
         }
     }
 
     @media (min-width: 1024px) {
         .ziifra-landing-mockup-stage {
-            max-width: none;
-            transform: scale(1.06);
-            transform-origin: top center;
+            max-width: 100%;
             padding-bottom: 1.5rem;
+            padding-right: 0.5rem;
         }
 
         .ziifra-landing-mockup-phone {
-            width: 9.25rem;
+            width: clamp(6.5rem, 28%, 9rem);
             bottom: 0.5rem;
-            right: -1.5rem;
+            right: 0;
             animation: ziifra-float 7s ease-in-out infinite;
             animation-delay: -1.5s;
         }
     }
 
     @media (min-width: 1280px) {
-        .ziifra-landing-mockup-stage {
-            transform: scale(1.1);
-        }
-
         .ziifra-landing-mockup-phone {
-            width: 10rem;
-            bottom: 1rem;
-            right: -2rem;
+            width: clamp(7rem, 30%, 9.5rem);
+            bottom: 0.75rem;
+            right: 0.25rem;
         }
     }
 
     @media (max-width: 1023px) {
         .ziifra-landing-mockup {
             animation: none;
-        }
-
-        .ziifra-landing-hero {
-            @apply overflow-x-hidden;
         }
     }
 
@@ -852,6 +858,26 @@
         background-image:
             radial-gradient(ellipse 90% 60% at 50% -30%, rgba(20, 184, 166, 0.09), transparent 55%),
             radial-gradient(ellipse 50% 40% at 100% 0%, rgba(94, 234, 212, 0.04), transparent 45%);
+    }
+
+    body.ziifra-app header {
+        @apply text-ziifra-ink;
+    }
+
+    body.ziifra-app header h1,
+    body.ziifra-app header h2,
+    body.ziifra-app header p,
+    body.ziifra-app header .text-ziifra-ink {
+        color: var(--color-ziifra-ink);
+    }
+
+    /* Keep intentionally muted/accent header text legible, never white-on-white. */
+    body.ziifra-app header .text-ziifra-muted {
+        color: var(--color-ziifra-muted);
+    }
+
+    body.ziifra-app header .text-ziifra-accent-deep {
+        color: var(--color-ziifra-accent-deep);
     }
 
     [data-theme='dark'] body.ziifra-app aside {
@@ -1068,6 +1094,171 @@
 
     .ziifra-employee-shortcut-hint {
         @apply text-xs text-ziifra-muted;
+    }
+
+    .ziifra-portal-home {
+        @apply space-y-4 sm:space-y-5;
+    }
+
+    .ziifra-portal-top {
+        @apply flex flex-col gap-3 rounded-2xl border border-ziifra-line/70 bg-ziifra-paper/95 p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5;
+    }
+
+    .ziifra-portal-top-main {
+        @apply flex min-w-0 items-start gap-3;
+    }
+
+    .ziifra-portal-top-avatar {
+        @apply flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-ziifra-accent to-ziifra-accent-deep text-base font-bold text-white shadow-sm;
+    }
+
+    .ziifra-portal-top-date {
+        @apply font-mono text-[0.65rem] uppercase tracking-wider text-ziifra-muted;
+    }
+
+    .ziifra-portal-top-title {
+        @apply mt-0.5 text-lg font-semibold tracking-tight text-ziifra-ink sm:text-xl;
+    }
+
+    .ziifra-portal-top-meta {
+        @apply mt-0.5 truncate text-sm text-ziifra-muted;
+    }
+
+    .ziifra-portal-top-actions {
+        @apply flex shrink-0 flex-wrap gap-2 sm:justify-end;
+    }
+
+    .ziifra-portal-alert {
+        @apply rounded-xl border border-amber-200/90 bg-amber-50/90 px-4 py-3 text-sm leading-relaxed text-amber-950;
+    }
+
+    .ziifra-portal-status {
+        @apply rounded-xl px-3 py-2 text-sm font-medium;
+    }
+
+    .ziifra-portal-status-leave {
+        @apply border border-emerald-200/80 bg-emerald-50/90 text-emerald-900;
+    }
+
+    .ziifra-portal-kpis {
+        @apply grid grid-cols-3 gap-2 sm:gap-3;
+    }
+
+    .ziifra-portal-kpi {
+        @apply rounded-xl border border-ziifra-line/70 bg-ziifra-paper/90 px-3 py-2.5;
+    }
+
+    .ziifra-portal-kpi-warn {
+        @apply border-amber-200/80 bg-amber-50/50;
+    }
+
+    .ziifra-portal-kpi-label {
+        @apply block text-[0.65rem] font-semibold uppercase tracking-wider text-ziifra-muted;
+    }
+
+    .ziifra-portal-kpi-value {
+        @apply mt-1 block text-lg font-semibold tabular-nums text-ziifra-ink;
+    }
+
+    .ziifra-portal-kpi-hint {
+        @apply mt-0.5 block truncate text-[0.65rem] text-ziifra-muted;
+    }
+
+    .ziifra-portal-section-title {
+        @apply mb-2 text-sm font-semibold text-ziifra-ink;
+    }
+
+    .ziifra-portal-section-subtitle {
+        @apply text-xs text-ziifra-muted;
+    }
+
+    .ziifra-portal-shortcuts-section {
+        @apply space-y-2;
+    }
+
+    .ziifra-portal-shortcuts {
+        @apply grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4;
+    }
+
+    .ziifra-portal-shortcut {
+        @apply flex items-start gap-2.5 rounded-xl border border-ziifra-line/70 bg-ziifra-paper/90 p-3 no-underline transition hover:border-ziifra-accent/30 hover:shadow-sm;
+    }
+
+    .ziifra-portal-shortcut-icon {
+        @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ziifra-accent/10 text-ziifra-accent-deep;
+    }
+
+    .ziifra-portal-shortcut-label {
+        @apply block text-sm font-semibold text-ziifra-ink;
+    }
+
+    .ziifra-portal-shortcut-hint {
+        @apply mt-0.5 block text-[0.65rem] leading-snug text-ziifra-muted;
+    }
+
+    .ziifra-portal-leave-panel {
+        @apply rounded-2xl border border-ziifra-line/70 bg-ziifra-paper/95 shadow-sm;
+    }
+
+    .ziifra-portal-leave-panel-head {
+        @apply flex items-start justify-between gap-3 border-b border-ziifra-line/60 px-4 py-3;
+    }
+
+    .ziifra-portal-link {
+        @apply shrink-0 text-xs font-semibold text-ziifra-accent-deep hover:underline;
+    }
+
+    .ziifra-portal-balance-strip {
+        @apply border-b border-ziifra-line/60 px-4 py-3;
+    }
+
+    .ziifra-portal-balance-bar {
+        @apply h-1.5 overflow-hidden rounded-full bg-ziifra-cream;
+    }
+
+    .ziifra-portal-balance-fill {
+        @apply block h-full rounded-full bg-ziifra-accent transition-all;
+        width: var(--used, 0%);
+    }
+
+    .ziifra-portal-balance-copy {
+        @apply mt-2 text-sm text-ziifra-ink;
+    }
+
+    .ziifra-portal-empty {
+        @apply px-4 py-8 text-center text-sm text-ziifra-muted;
+    }
+
+    .ziifra-portal-request-list {
+        @apply divide-y divide-ziifra-line/50 p-2;
+    }
+
+    .ziifra-portal-request-row {
+        @apply flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg px-2 py-2.5 no-underline transition hover:bg-ziifra-cream/60;
+    }
+
+    .ziifra-portal-request-type {
+        @apply min-w-[5rem] text-sm font-medium text-ziifra-ink;
+    }
+
+    .ziifra-portal-request-dates {
+        @apply min-w-0 flex-1 text-xs text-ziifra-muted;
+    }
+
+    .ziifra-portal-request-status {
+        @apply shrink-0 rounded-full px-2 py-0.5 text-xs font-medium;
+    }
+
+    .ziifra-portal-request-status-pending {
+        @apply bg-amber-100 text-amber-900;
+    }
+
+    .ziifra-portal-request-status-approved {
+        @apply bg-emerald-50 text-emerald-800;
+    }
+
+    .ziifra-portal-request-status-rejected {
+        @apply bg-red-50 text-red-800;
     }
 
     .ziifra-leave-card {
@@ -1679,6 +1870,70 @@
 
     .ziifra-team-card {
         @apply rounded-2xl border border-ziifra-line/80 bg-ziifra-paper p-4 shadow-sm;
+    }
+
+    .ziifra-chat-layout {
+        @apply flex min-h-[calc(100dvh-12rem)] flex-col gap-4 lg:flex-row lg:gap-0 lg:overflow-hidden lg:rounded-2xl lg:border lg:border-ziifra-line/80 lg:bg-ziifra-paper;
+    }
+
+    .ziifra-chat-sidebar {
+        @apply shrink-0 rounded-2xl border border-ziifra-line/80 bg-ziifra-paper p-3 lg:w-56 lg:rounded-none lg:border-0 lg:border-r lg:border-ziifra-line/70 lg:bg-ziifra-cream/30;
+    }
+
+    .ziifra-chat-sidebar-label {
+        @apply px-2 text-[0.65rem] font-semibold uppercase tracking-wide text-ziifra-muted;
+    }
+
+    .ziifra-chat-channel-list {
+        @apply mt-1 space-y-0.5;
+    }
+
+    .ziifra-chat-channel {
+        @apply flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-ziifra-ink no-underline transition hover:bg-ziifra-paper;
+    }
+
+    .ziifra-chat-channel--active {
+        @apply bg-ziifra-accent/12 text-ziifra-accent-deep;
+    }
+
+    .ziifra-chat-channel-icon {
+        @apply inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-ziifra-accent/10 text-ziifra-accent-deep;
+    }
+
+    .ziifra-chat-channel-avatar {
+        @apply inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ziifra-accent/15 text-xs font-semibold text-ziifra-accent-deep;
+    }
+
+    .ziifra-chat-main {
+        @apply flex min-h-0 min-w-0 flex-1 flex-col;
+    }
+
+    .ziifra-chat-main-head {
+        @apply shrink-0 border-b border-ziifra-line/70 px-4 py-3;
+    }
+
+    .ziifra-chat-messages {
+        @apply min-h-0 flex-1 space-y-3 overflow-y-auto p-3 lg:p-4;
+    }
+
+    .ziifra-chat-bubble {
+        @apply rounded-xl px-3 py-2;
+    }
+
+    .ziifra-chat-bubble--mine {
+        @apply ml-0 bg-ziifra-accent/10 sm:ml-12;
+    }
+
+    .ziifra-chat-bubble--theirs {
+        @apply mr-0 bg-ziifra-cream/60 sm:mr-12;
+    }
+
+    .ziifra-chat-compose {
+        @apply shrink-0 border-t border-ziifra-line/70 p-3 lg:p-4;
+    }
+
+    .ziifra-chat-compose--readonly {
+        @apply border-t border-ziifra-line/70;
     }
 
     .ziifra-chat-mobile {
@@ -2450,14 +2705,52 @@
         @apply inline-flex items-center rounded-full border border-ziifra-line/80 bg-ziifra-cream/80 px-3 py-1 text-xs font-medium text-ziifra-muted;
     }
 
-    .ziifra-admin-dashboard-banner,
-    .ziifra-dashboard-banner {
-        @apply flex flex-col gap-3 rounded-2xl border border-amber-200/90 bg-amber-50/90 px-4 py-4 sm:flex-row sm:items-center sm:justify-between;
+    .ziifra-profile-nudge {
+        @apply flex flex-col gap-2 rounded-lg border border-ziifra-line/80 bg-ziifra-paper/90 px-3 py-2.5 text-sm shadow-sm sm:flex-row sm:items-center sm:gap-3;
     }
 
-    .ziifra-admin-dashboard-banner-btn,
-    .ziifra-dashboard-banner-btn {
-        @apply w-full justify-center sm:w-auto;
+    .ziifra-profile-nudge-icon {
+        @apply hidden h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ziifra-accent/10 text-ziifra-accent-deep sm:inline-flex;
+    }
+
+    .ziifra-profile-nudge-text {
+        @apply leading-snug;
+    }
+
+    .ziifra-profile-nudge-btn {
+        @apply inline-flex shrink-0 items-center justify-center rounded-full border border-ziifra-line/80 bg-ziifra-surface px-3.5 py-1.5 text-xs font-semibold text-ziifra-ink no-underline transition hover:border-ziifra-accent/40 hover:bg-ziifra-cream hover:text-ziifra-accent-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/30;
+    }
+
+    .ziifra-trial-nudge {
+        @apply mb-3 flex flex-col gap-2 rounded-lg border border-ziifra-accent/25 bg-ziifra-accent/[0.06] px-3 py-2 text-xs sm:flex-row sm:items-center sm:gap-3 sm:text-sm;
+    }
+
+    .ziifra-trial-nudge--urgent {
+        @apply border-amber-300/70 bg-amber-50/80;
+    }
+
+    .ziifra-trial-nudge-icon {
+        @apply hidden h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-ziifra-accent/12 text-ziifra-accent-deep sm:inline-flex;
+    }
+
+    .ziifra-trial-nudge--urgent .ziifra-trial-nudge-icon {
+        @apply bg-amber-200/60 text-amber-800;
+    }
+
+    .ziifra-trial-nudge-text {
+        @apply font-medium leading-snug text-ziifra-ink;
+    }
+
+    .ziifra-trial-nudge--urgent .ziifra-trial-nudge-text {
+        @apply text-amber-950;
+    }
+
+    .ziifra-trial-nudge-btn {
+        @apply inline-flex shrink-0 items-center justify-center rounded-full bg-ziifra-accent px-3 py-1 text-xs font-semibold text-ziifra-on-accent no-underline shadow-sm transition hover:bg-ziifra-accent-glow focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/40;
+    }
+
+    .ziifra-trial-nudge--urgent .ziifra-trial-nudge-btn {
+        @apply bg-amber-800 text-amber-50 hover:bg-amber-900;
     }
 
     .ziifra-admin-dashboard-alerts {
@@ -2807,7 +3100,63 @@
     }
 
     .ziifra-project-detail {
-        @apply w-full;
+        @apply w-full space-y-3;
+    }
+
+    .ziifra-project-detail-back {
+        @apply inline-flex items-center gap-1 text-xs font-medium text-ziifra-accent-deep no-underline transition hover:underline;
+    }
+
+    .ziifra-project-detail-top {
+        @apply flex flex-col gap-2 rounded-xl border border-ziifra-line/80 bg-ziifra-paper px-3 py-2.5 shadow-sm sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .ziifra-project-detail-top-main {
+        @apply flex min-w-0 items-start gap-2.5;
+    }
+
+    .ziifra-project-detail-top .ziifra-project-detail-icon {
+        @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ziifra-accent/10 text-ziifra-accent-deep;
+    }
+
+    .ziifra-project-detail-meta {
+        @apply text-xs font-medium text-ziifra-muted;
+    }
+
+    .ziifra-project-detail-subline {
+        @apply mt-0.5 truncate text-xs text-ziifra-muted;
+    }
+
+    .ziifra-project-detail-top-actions {
+        @apply flex shrink-0 flex-wrap gap-1.5;
+    }
+
+    .ziifra-project-detail-action {
+        @apply inline-flex items-center rounded-lg border border-ziifra-line/80 bg-ziifra-surface px-2.5 py-1 text-xs font-medium text-ziifra-ink no-underline transition hover:border-ziifra-accent/35 hover:bg-ziifra-cream;
+    }
+
+    .ziifra-project-detail-action--primary {
+        @apply border-ziifra-accent/40 bg-ziifra-accent text-ziifra-on-accent hover:bg-ziifra-accent-glow;
+    }
+
+    .ziifra-project-detail-kpis {
+        @apply flex flex-wrap gap-2;
+    }
+
+    .ziifra-project-detail-kpi {
+        @apply inline-flex items-center gap-1.5 rounded-lg border border-ziifra-line/70 bg-ziifra-paper px-2.5 py-1.5 text-xs;
+    }
+
+    .ziifra-project-detail-kpi--warn {
+        @apply border-amber-200/80 bg-amber-50/80;
+    }
+
+    .ziifra-project-detail-kpi-value {
+        @apply font-semibold tabular-nums text-ziifra-ink;
+    }
+
+    .ziifra-project-detail-kpi-label {
+        @apply text-ziifra-muted;
     }
 
     .ziifra-project-detail-hero {
@@ -2888,7 +3237,7 @@
     }
 
     .ziifra-project-detail-workspace {
-        @apply overflow-hidden rounded-2xl border border-ziifra-line/80 bg-ziifra-paper shadow-sm;
+        @apply overflow-hidden rounded-xl border border-ziifra-line/80 bg-ziifra-paper shadow-sm;
     }
 
     .ziifra-project-detail-tabs {
@@ -2902,11 +3251,11 @@
     }
 
     .ziifra-project-detail-workspace .ziifra-project-detail-tabs {
-        @apply rounded-none border-0 border-b border-ziifra-line/70 bg-ziifra-cream/25 p-2 sm:px-4;
+        @apply rounded-none border-0 border-b border-ziifra-line/70 bg-ziifra-cream/25 px-2 py-1;
     }
 
     .ziifra-project-detail-tab {
-        @apply inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium text-ziifra-muted no-underline transition hover:bg-ziifra-paper/80 hover:text-ziifra-ink;
+        @apply inline-flex shrink-0 items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-ziifra-muted no-underline transition hover:bg-ziifra-paper/80 hover:text-ziifra-ink sm:text-sm;
     }
 
     .ziifra-project-detail-tab-badge {
@@ -2921,12 +3270,32 @@
         @apply min-w-0 bg-ziifra-paper;
     }
 
+    .ziifra-project-detail-content:not(.ziifra-project-detail-content--hours) {
+        @apply p-3 sm:p-4;
+    }
+
     .ziifra-project-detail-workspace--hours {
         @apply overflow-hidden rounded-2xl border border-[#1e2230] shadow-[0_24px_48px_-32px_rgba(0,0,0,0.65)];
     }
 
     .ziifra-project-detail-content--hours {
         @apply bg-[#12141d] p-0;
+    }
+
+    .ziifra-project-detail-workspace--hours .ziifra-project-detail-tabs {
+        @apply border-b border-white/8 bg-[#0f1118];
+    }
+
+    .ziifra-project-detail-workspace--hours .ziifra-project-detail-tab {
+        @apply text-[#8b91a3] hover:bg-white/5 hover:text-[#e8eaef];
+    }
+
+    .ziifra-project-detail-workspace--hours .ziifra-project-detail-tab-active {
+        @apply bg-white/10 text-white;
+    }
+
+    .ziifra-project-detail-workspace--hours .ziifra-project-detail-tab-badge {
+        @apply bg-white/10 text-[#e8eaef];
     }
 
     .ziifra-project-hours-panel {
@@ -3023,7 +3392,7 @@
     }
 
     .ziifra-time-attendance-toolbar {
-        @apply flex flex-col gap-4 border-b border-white/8 px-4 py-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-6;
+        @apply flex flex-col gap-2 border-b border-white/8 px-3 py-2.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:px-4;
     }
 
     .ziifra-time-attendance-search {
@@ -3197,6 +3566,18 @@
 
     .ziifra-time-attendance-cell--error {
         @apply bg-red-900/40 ring-1 ring-red-400/50;
+    }
+
+    .ziifra-pt-cell--saving {
+        @apply border-ziifra-accent/60 bg-ziifra-cream/60;
+    }
+
+    .ziifra-pt-cell--saved {
+        @apply border-emerald-400/70 bg-emerald-50;
+    }
+
+    .ziifra-pt-cell--error {
+        @apply border-red-400/70 bg-red-50;
     }
 
     .ziifra-time-attendance-status {
@@ -3549,6 +3930,157 @@
         @apply inline-flex rounded-full border border-ziifra-line/80 bg-ziifra-cream/80 px-2.5 py-0.5 text-xs font-medium text-ziifra-muted;
     }
 
+    .ziifra-settings-hero {
+        @apply relative overflow-hidden rounded-2xl border border-ziifra-line/80 bg-gradient-to-br from-ziifra-paper to-ziifra-cream/60 p-6 sm:p-8;
+    }
+
+    .ziifra-settings-hero-badge {
+        @apply inline-flex h-12 w-12 items-center justify-center rounded-xl bg-ziifra-accent/12 text-ziifra-accent-deep;
+    }
+
+    .ziifra-settings-progress-track {
+        @apply mt-2 h-2 w-full overflow-hidden rounded-full bg-ziifra-line/70;
+    }
+
+    .ziifra-settings-progress-fill {
+        @apply h-full rounded-full bg-ziifra-accent transition-all;
+    }
+
+    .ziifra-settings-layout {
+        @apply mt-6 grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-start;
+    }
+
+    .ziifra-settings-nav {
+        @apply hidden gap-1 lg:sticky lg:top-24 lg:flex lg:flex-col;
+    }
+
+    .ziifra-settings-nav-link {
+        @apply flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-ziifra-muted no-underline transition hover:bg-ziifra-cream hover:text-ziifra-ink;
+    }
+
+    .ziifra-settings-nav-link svg {
+        @apply h-4 w-4 shrink-0;
+    }
+
+    .ziifra-settings-card {
+        @apply scroll-mt-24 rounded-2xl border border-ziifra-line/80 bg-ziifra-paper p-5 shadow-sm sm:p-6;
+    }
+
+    .ziifra-settings-card + .ziifra-settings-card {
+        @apply mt-5;
+    }
+
+    .ziifra-settings-card-head {
+        @apply flex items-start gap-3 border-b border-ziifra-line/60 pb-4;
+    }
+
+    .ziifra-settings-card-icon {
+        @apply inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ziifra-accent/10 text-ziifra-accent-deep;
+    }
+
+    .ziifra-settings-card-icon svg {
+        @apply h-5 w-5;
+    }
+
+    .ziifra-settings-savebar {
+        @apply sticky bottom-4 z-10 mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-ziifra-line/80 bg-ziifra-paper/95 px-5 py-3.5 shadow-lg backdrop-blur;
+    }
+
+    .ziifra-hours-chart-card {
+        @apply mx-3 mt-2 rounded-lg border border-white/8 bg-[#161922] px-3 py-2 sm:mx-4 sm:mb-0;
+    }
+
+    .ziifra-hours-chart-head {
+        @apply flex flex-wrap items-center justify-between gap-2;
+    }
+
+    .ziifra-hours-chart-head-main {
+        @apply flex flex-wrap items-baseline gap-x-2 gap-y-0;
+    }
+
+    .ziifra-hours-chart-title {
+        @apply text-xs font-semibold text-[#e8eaef];
+    }
+
+    .ziifra-hours-chart-total {
+        @apply text-sm font-semibold tabular-nums text-[#e8eaef];
+    }
+
+    .ziifra-hours-chart-period {
+        @apply text-[0.65rem] text-[#8b91a3];
+    }
+
+    .ziifra-hours-chart-filters {
+        @apply flex gap-1.5;
+    }
+
+    .ziifra-hours-chart-select {
+        @apply rounded border border-white/10 bg-[#1a1d28] px-2 py-1 text-xs text-[#e8eaef] focus:border-sky-500/50 focus:outline-none;
+    }
+
+    .ziifra-hours-chart-chip {
+        @apply inline-flex rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[0.65rem] font-medium text-[#cdd1db];
+    }
+
+    .ziifra-hours-chart-empty {
+        @apply py-4 text-center;
+    }
+
+    .ziifra-hours-chart {
+        @apply mt-2 flex items-end gap-0.5 overflow-x-auto rounded border border-white/8 bg-black/20 px-2 pb-1 pt-3;
+        min-height: 4.5rem;
+    }
+
+    .ziifra-hours-chart-col {
+        @apply flex min-w-[1.25rem] flex-1 flex-col items-center justify-end gap-0.5;
+        height: 3.5rem;
+    }
+
+    .ziifra-hours-chart-breakdown {
+        @apply mt-2 flex flex-col gap-2 border-t border-white/8 pt-2 sm:flex-row sm:items-start sm:gap-4;
+    }
+
+    .ziifra-hours-chart-breakdown-block {
+        @apply min-w-0 sm:flex-1;
+    }
+
+    .ziifra-hours-chart-breakdown-block--dates {
+        @apply sm:flex-[1.4];
+    }
+
+    .ziifra-hours-chart-breakdown-label {
+        @apply block text-[0.6rem] font-semibold uppercase tracking-wide text-[#8b91a3];
+    }
+
+    .ziifra-hours-chart-breakdown-chips {
+        @apply mt-1 flex flex-wrap gap-1;
+    }
+
+    .ziifra-hours-chart-date-list {
+        @apply mt-1 max-h-24 space-y-0.5 overflow-y-auto pr-1;
+    }
+
+    .ziifra-hours-chart-date-row {
+        @apply flex items-center justify-between gap-3 text-[0.65rem] leading-tight;
+    }
+
+    .ziifra-hours-chart-value {
+        @apply text-[0.6rem] font-medium tabular-nums text-[#8b91a3];
+    }
+
+    .ziifra-hours-chart-bar {
+        @apply w-full max-w-[1.5rem] rounded-t bg-sky-500/60 transition-all;
+        min-height: 2px;
+    }
+
+    .ziifra-hours-chart-col:hover .ziifra-hours-chart-bar {
+        @apply bg-sky-400;
+    }
+
+    .ziifra-hours-chart-label {
+        @apply text-[0.6rem] tabular-nums text-[#8b91a3];
+    }
+
     .ziifra-employee-profile-contact {
         @apply inline-flex items-center gap-2 rounded-full border border-ziifra-line/80 bg-ziifra-paper/90 px-3 py-1.5 text-xs font-medium text-ziifra-ink no-underline transition hover:border-ziifra-accent/30 hover:text-ziifra-accent-deep;
     }
@@ -3761,6 +4293,18 @@
 
     .ziifra-employee-workspace {
         @apply overflow-hidden rounded-xl border border-ziifra-line/80 bg-ziifra-paper shadow-sm;
+    }
+
+    .ziifra-employee-edit-panel {
+        @apply rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-5 shadow-sm sm:p-6;
+    }
+
+    .ziifra-employee-edit-panel > .ziifra-employee-panel-head {
+        @apply flex items-start justify-between gap-3;
+    }
+
+    [data-employee-profile].is-editing .ziifra-employee-shell-hero {
+        @apply opacity-95;
     }
 
     .ziifra-employee-workspace-tabs {

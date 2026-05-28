@@ -1,6 +1,7 @@
 @extends('layouts.guest')
 
 @section('title', 'Accept invitation')
+@section('meta_description', __('social.invitation_description', ['org' => $invitation->organization->name]))
 
 @section('content')
 @if ($invalid)

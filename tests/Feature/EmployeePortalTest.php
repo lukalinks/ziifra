@@ -68,7 +68,8 @@ class EmployeePortalTest extends TestCase
             ->assertSee(__('employee_dashboard.request_leave'), false)
             ->assertSee('ziifra-portal-employee', false)
             ->assertSee('ziifra-dashboard-employee', false)
-            ->assertSee('ziifra-employee-hero', false)
+            ->assertSee('ziifra-portal-top', false)
+            ->assertSee('ziifra-portal-kpis', false)
             ->assertSee('ziifra-mobile-tabbar', false)
             ->assertSee('id="ziifra-mobile-nav"', false)
             ->assertSee('data-mobile-nav-open', false)
@@ -276,6 +277,45 @@ class EmployeePortalTest extends TestCase
             'email' => 'jane@acme.test',
             'user_id' => $employeeUser->id,
         ]);
+    }
+
+    public function test_employee_can_view_own_profile(): void
+    {
+        $setup = $this->linkedEmployeeSetup();
+
+        $this->actingAs($setup['user'])
+            ->withSession(['current_organization_id' => $setup['organization']->id])
+            ->get($this->workspaceRoute('employees.show', $setup['organization'], ['employee' => $setup['employee']]))
+            ->assertOk()
+            ->assertSee($setup['employee']->fullName(), false)
+            ->assertSee(__('navigation.dashboard'), false)
+            ->assertDontSee(__('employees.back_to_list'), false);
+    }
+
+    public function test_employee_cannot_view_other_employee_profile(): void
+    {
+        $setup = $this->linkedEmployeeSetup();
+
+        $other = Employee::factory()->forOrganization($setup['organization'])->create();
+
+        $this->actingAs($setup['user'])
+            ->withSession(['current_organization_id' => $setup['organization']->id])
+            ->get($this->workspaceRoute('employees.show', $setup['organization'], ['employee' => $other]))
+            ->assertForbidden();
+    }
+
+    public function test_employee_navigation_includes_self_service_modules_on_starter_plan(): void
+    {
+        $setup = $this->linkedEmployeeSetup();
+
+        $this->actingAs($setup['user'])
+            ->withSession(['current_organization_id' => $setup['organization']->id])
+            ->get($this->workspaceRoute('dashboard', $setup['organization']))
+            ->assertOk()
+            ->assertSee(__('navigation.my_profile'), false)
+            ->assertSee(__('employee_dashboard.shortcut_time'), false)
+            ->assertSee(__('employee_dashboard.shortcut_expenses'), false)
+            ->assertSee(__('employee_dashboard.view_profile'), false);
     }
 
     public function test_employee_leave_create_page_is_translated_in_german(): void

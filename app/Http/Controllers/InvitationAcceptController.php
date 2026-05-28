@@ -18,11 +18,15 @@ class InvitationAcceptController extends Controller
 
         $existingUser = auth()->check();
 
+        $organization = $invitation->organization;
+        view()->share('socialOrganization', $organization);
+
         return view('auth.accept-invitation', [
             'invitation' => $invitation,
             'needsAccount' => ! \App\Models\User::query()->where('email', $invitation->email)->exists(),
             'existingUser' => $existingUser,
             'invalid' => ! $invitation->isPending(),
+            'socialOrganization' => $organization,
         ]);
     }
 

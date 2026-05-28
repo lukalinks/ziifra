@@ -22,6 +22,7 @@ return [
     'leave' => 'Odsustvo',
     'documents' => 'Dokumenti',
     'payroll' => 'Plata',
+    'payroll_and_time' => 'Plata i vreme',
     'invoices' => 'Fakture',
     'expenses' => 'Troškovi',
     'projects' => 'Projekti',

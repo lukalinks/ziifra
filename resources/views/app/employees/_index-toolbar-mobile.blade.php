@@ -28,7 +28,8 @@
         :clear-href="route('employees.index')"
         :active-filter-count="$activeFilterCount"
         :has-filters="$hasFilters"
-        data-employees-quick-filter>
+        data-employees-quick-filter
+        data-employees-live-search>
         <x-slot:beforeSearch>
             <div>
                 <label for="project_id-mobile" class="ziifra-label-field">{{ __('employees.search_project') }}</label>

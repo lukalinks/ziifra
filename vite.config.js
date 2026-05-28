@@ -6,7 +6,12 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js', 'resources/js/project-hours-grid.js'],
+            input: [
+                'resources/css/app.css',
+                'resources/js/app.js',
+                'resources/js/project-hours-grid.js',
+                'resources/js/payroll-time-grid.js',
+            ],
             refresh: true,
             fonts: [
                 bunny('Instrument Sans', {

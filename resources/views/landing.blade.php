@@ -10,7 +10,7 @@
     <div class="ziifra-grid-pattern pointer-events-none absolute inset-0 opacity-60" aria-hidden="true"></div>
 
     <div class="relative mx-auto flex w-full max-w-7xl flex-col justify-center px-4 pb-12 pt-6 sm:px-6 sm:pb-20 sm:pt-10 lg:min-h-[calc(100vh-4.5rem)] lg:px-8 lg:pb-28 lg:pt-16">
-        <div class="grid items-center gap-6 sm:gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-14 xl:gap-16">
+        <div class="grid items-center gap-6 sm:gap-10 lg:grid-cols-2 lg:gap-10 xl:gap-12">
             <div class="ziifra-hero-copy">
                 <h1 class="ziifra-hero-eyebrow">{{ __('landing.hero.eyebrow') }}</h1>
                 <p class="ziifra-hero-tagline mt-3 text-lg font-semibold leading-snug sm:mt-4 sm:text-2xl lg:text-[1.65rem]">
@@ -26,8 +26,8 @@
                 </div>
             </div>
 
-            <div class="ziifra-landing-hero-visual relative min-w-0 lg:pl-0 xl:pl-2">
-                <div class="absolute -right-4 -top-6 hidden h-32 w-32 rounded-full bg-ziifra-accent/25 blur-3xl min-[640px]:block sm:-right-8 sm:-top-8 sm:h-40 sm:w-40 lg:h-52 lg:w-52" aria-hidden="true"></div>
+            <div class="ziifra-landing-hero-visual relative min-w-0">
+                <div class="pointer-events-none absolute -top-6 right-0 hidden h-32 w-32 max-w-[50%] rounded-full bg-ziifra-accent/25 blur-3xl min-[640px]:block sm:-top-8 sm:h-40 sm:w-40 lg:h-48 lg:w-48" aria-hidden="true"></div>
                 <div class="ziifra-landing-mockup-stage">
                 <div class="ziifra-landing-mockup ziifra-landing-mockup-desktop relative" role="img" aria-label="{{ __('landing.hero.mockup_aria') }}">
                     <div class="ziifra-card relative overflow-hidden !rounded-2xl !border-white/20 !bg-ziifra-paper/95 p-0.5 shadow-2xl shadow-black/20 ring-2 ring-ziifra-accent/25 sm:!rounded-3xl sm:p-1">
@@ -64,9 +64,9 @@
                                             ])>{{ $label }}</li>
                                         @endforeach
                                     </ul>
-                                    <p class="mt-3 px-2 font-mono text-[0.5rem] uppercase tracking-widest text-ziifra-muted">Work</p>
+                                    <p class="mt-3 px-2 font-mono text-[0.5rem] uppercase tracking-widest text-ziifra-muted">Operations</p>
                                     <ul class="mt-1.5 space-y-0.5 text-[0.65rem] font-medium text-ziifra-muted lg:text-[0.7rem]">
-                                        @foreach(['Projects', 'Time', 'Expenses'] as $label)
+                                        @foreach(['Projects', 'Finance', 'Reports'] as $label)
                                             <li class="rounded-md px-2 py-1.5">{{ $label }}</li>
                                         @endforeach
                                     </ul>
@@ -134,7 +134,7 @@
                                     </div>
 
                                     <div class="ziifra-landing-mockup-chips hidden flex-wrap gap-1 min-[480px]:flex sm:gap-1.5">
-                                        @foreach(['Payslips sent', 'Tax export ready', '3 on leave'] as $chip)
+                                        @foreach(['Payslips sent', 'May run locked', '3 on leave'] as $chip)
                                             <span class="ziifra-module-chip">{{ $chip }}</span>
                                         @endforeach
                                     </div>
@@ -201,65 +201,39 @@
     </div>
 </section>
 
-{{-- Features --}}
+{{-- Capabilities --}}
+@php
+    $featuresCopy = trans('landing.features');
+    if (! is_array($featuresCopy)) {
+        $featuresCopy = trans('landing.features', [], 'en');
+    }
+    $capabilities = $featuresCopy['items'] ?? trans('landing.features.items', [], 'en');
+@endphp
 <section id="features" class="ziifra-landing-section ziifra-features-section relative -mt-4 overflow-hidden pt-20 sm:-mt-10 sm:pt-32 lg:-mt-14 lg:pt-40">
     <div class="pointer-events-none absolute inset-0 ziifra-grid-pattern opacity-[0.35]" aria-hidden="true"></div>
 
     <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="ziifra-landing-section-head">
-            <p class="ziifra-label justify-center">{{ __('landing.features.label') }}</p>
-            <h2 class="ziifra-display mt-3 text-2xl font-semibold text-ziifra-ink sm:mt-4 sm:text-4xl">{{ __('landing.features.title') }}</h2>
-            <p class="mt-3 text-base leading-relaxed text-ziifra-muted sm:mt-4 sm:text-lg">{{ __('landing.features.subtitle') }}</p>
+            <p class="ziifra-label justify-center">{{ $featuresCopy['label'] ?? __('landing.features.label') }}</p>
+            <h2 class="ziifra-display mt-3 text-2xl font-semibold text-ziifra-ink sm:mt-4 sm:text-4xl">{{ $featuresCopy['title'] ?? __('landing.features.title') }}</h2>
+            <p class="mt-3 mx-auto max-w-2xl text-base leading-relaxed text-ziifra-muted sm:mt-4 sm:text-lg">{{ $featuresCopy['subtitle'] ?? __('landing.features.subtitle') }}</p>
         </div>
 
-        <div class="mt-10 grid gap-5 sm:mt-14 sm:gap-6 lg:mt-16 lg:grid-cols-3 lg:gap-8">
-            @php
-                $featureIcons = [
-                    ['M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z', 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'],
-                    ['M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z', 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'],
-                    ['M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z'],
-                ];
-                $featureTones = ['accent', 'copper', 'ink'];
-            @endphp
-            @foreach(__('landing.features.groups') as $groupIndex => $group)
-                @php
-                    $group['tone'] = $featureTones[$groupIndex] ?? 'ink';
-                    $icons = $featureIcons[$groupIndex] ?? [];
-                @endphp
-                <div @class([
-                    'ziifra-feature-group',
-                    'ziifra-feature-group-accent' => $group['tone'] === 'accent',
-                    'ziifra-feature-group-copper' => $group['tone'] === 'copper',
-                    'ziifra-feature-group-ink' => $group['tone'] === 'ink',
-                ])>
-                    <div class="ziifra-feature-group-head">
-                        <p class="font-mono text-[0.65rem] font-medium uppercase tracking-[0.22em]">{{ $group['label'] }}</p>
-                    </div>
-                    <ul class="mt-5 space-y-3">
-                        @foreach($group['items'] as $itemIndex => $item)
-                            @php
-                                $title = $item['title'];
-                                $desc = $item['desc'];
-                                $icon = $icons[$itemIndex] ?? '';
-                            @endphp
-                            <li>
-                                <article class="ziifra-feature-item group">
-                                    <div class="ziifra-feature-item-icon">
-                                        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="{{ $icon }}" />
-                                        </svg>
-                                    </div>
-                                    <div class="min-w-0 flex-1">
-                                        <h3 class="text-base font-semibold text-ziifra-ink">{{ $title }}</h3>
-                                        <p class="mt-1 text-sm leading-relaxed text-ziifra-muted">{{ $desc }}</p>
-                                    </div>
-                                </article>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
+        <ul class="ziifra-capability-grid mt-10 sm:mt-14 lg:mt-16">
+            @foreach($capabilities as $index => $item)
+                <li>
+                    <article @class(['ziifra-capability-card', 'ziifra-capability-card-featured' => $index === 0])>
+                        <div class="ziifra-capability-card-icon" aria-hidden="true">
+                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] ?? '' }}" />
+                            </svg>
+                        </div>
+                        <h3 class="ziifra-capability-card-title">{{ $item['title'] }}</h3>
+                        <p class="ziifra-capability-card-desc">{{ $item['desc'] }}</p>
+                    </article>
+                </li>
             @endforeach
-        </div>
+        </ul>
     </div>
 </section>
 
@@ -273,7 +247,7 @@
                 <h3 class="mt-4 text-2xl font-semibold">{{ __('landing.compliance.title') }}</h3>
                 <p class="mt-3 text-sm leading-relaxed text-white/55">{{ __('landing.compliance.subtitle') }}</p>
                 <div class="mt-10 grid grid-cols-1 gap-3 border-t border-white/10 pt-8 sm:grid-cols-3">
-                    @foreach(['XK' => __('landing.compliance.country'), 'EUR' => __('landing.compliance.currency'), 'EN·SQ·DE' => __('landing.compliance.languages')] as $code => $name)
+                    @foreach(['XK' => __('landing.compliance.country'), 'EUR' => __('landing.compliance.currency'), '6' => __('landing.compliance.languages')] as $code => $name)
                         <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
                             <p class="font-mono text-lg font-bold text-ziifra-accent-glow">{{ $code }}</p>
                             <p class="mt-1 text-[0.65rem] uppercase tracking-wider text-white/45">{{ $name }}</p>

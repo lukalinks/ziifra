@@ -14,6 +14,7 @@ return [
     'leave' => 'Urlaub',
     'documents' => 'Dokumente',
     'payroll' => 'Gehaltsabrechnung',
+    'payroll_and_time' => 'Gehalt & Zeit',
     'invoices' => 'Rechnungen',
     'expenses' => 'Spesen',
     'projects' => 'Projekte',

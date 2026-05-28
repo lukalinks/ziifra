@@ -31,15 +31,15 @@
                 <dd class="font-medium">{{ $invoice->due_date->format('M j, Y') }}</dd>
             </div>
             <div>
-                <dt class="text-ziifra-muted">{{ __('invoices.amount') }}</dt>
+                <dt class="text-ziifra-muted">{{ __('invoices.subtotal') }}</dt>
                 <dd class="font-medium">{{ $invoice->currency }} {{ number_format((float) $invoice->amount, 2) }}</dd>
             </div>
             <div>
-                <dt class="text-ziifra-muted">{{ __('invoices.tax') }}</dt>
-                <dd class="font-medium">{{ $invoice->tax_percent }}% ({{ $invoice->currency }} {{ $invoice->taxAmount() }})</dd>
+                <dt class="text-ziifra-muted">{{ __('invoices.tax') }} ({{ rtrim(rtrim(number_format((float) $invoice->tax_percent, 2), '0'), '.') }}%)</dt>
+                <dd class="font-medium">{{ $invoice->currency }} {{ $invoice->taxAmount() }}</dd>
             </div>
-            <div class="sm:col-span-2">
-                <dt class="text-ziifra-muted">{{ __('invoices.total') }}</dt>
+            <div class="sm:col-span-2 border-t border-ziifra-line/60 pt-3">
+                <dt class="text-ziifra-muted">{{ __('invoices.total_to_pay') }}</dt>
                 <dd class="text-lg font-semibold text-ziifra-ink">{{ $invoice->formattedTotal() }}</dd>
             </div>
             @if ($invoice->client_email)
@@ -56,6 +56,16 @@
             @endif
         </dl>
     </div>
+
+    @php $is = $organization->resolvedInvoiceSettings(); @endphp
+    @if (($is['bank_name'] ?? null) || ($is['bank_iban'] ?? null) || ($is['footer_text'] ?? null))
+        <div class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 text-sm">
+            <h3 class="text-sm font-semibold text-ziifra-ink">{{ __('invoices.payment_details') }}</h3>
+            @if ($is['bank_name'] ?? null)<p class="mt-2 text-ziifra-muted">{{ __('settings.company.bank_name') }}: <span class="text-ziifra-ink">{{ $is['bank_name'] }}</span></p>@endif
+            @if ($is['bank_iban'] ?? null)<p class="text-ziifra-muted">IBAN: <span class="font-mono text-ziifra-ink">{{ $is['bank_iban'] }}</span></p>@endif
+            @if ($is['footer_text'] ?? null)<p class="mt-3 whitespace-pre-line text-ziifra-muted">{{ $is['footer_text'] }}</p>@endif
+        </div>
+    @endif
 
     <div class="flex flex-wrap gap-2">
         @can('update', $invoice)

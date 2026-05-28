@@ -28,6 +28,7 @@
     $mobileLabel = static function (string $route, string $label): string {
         return match ($route) {
             'dashboard' => __('navigation.dashboard'),
+            'employees.show' => __('navigation.my_profile'),
             'leave.index' => __('navigation.leave'),
             'leave.calendar' => __('navigation.leave'),
             'expenses.index' => __('navigation.expenses'),
@@ -48,7 +49,7 @@
             @foreach ($groups as $group)
                 <div>
                     <p @class([
-                        'mb-2 px-3 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-ziifra-muted/75',
+                        'mb-2 px-3 font-mono text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-ziifra-muted',
                         'px-2' => $showIcons,
                     ])>
                         {{ $group['label'] }}

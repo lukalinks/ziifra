@@ -39,6 +39,17 @@ class WorkspaceNavigation
             $this->link(__('navigation.dashboard'), 'dashboard', request()->routeIs('dashboard')),
         ];
 
+        if ($role === OrganizationRole::Employee && $linkedEmployee !== null) {
+            $primaryItems[] = $this->link(
+                __('navigation.my_profile'),
+                'employees.show',
+                request()->routeIs('employees.show')
+                    && (int) request()->route('employee')?->getKey() === $linkedEmployee->id,
+                __('employee_dashboard.shortcut_profile'),
+                route('employees.show', [$organization, $linkedEmployee]),
+            );
+        }
+
         if ($role->canViewEmployees()) {
             $primaryItems[] = $this->link(
                 __('navigation.employees'),
@@ -57,11 +68,6 @@ class WorkspaceNavigation
 
         if ($role->canViewEmployees() && $this->billing->hasFeature($organization, PlanFeature::Documents)) {
             $primaryItems[] = $this->link(
-                __('navigation.project_documents'),
-                'project-documents.index',
-                request()->routeIs('project-documents.*'),
-            );
-            $primaryItems[] = $this->link(
                 __('navigation.hr_documents'),
                 'documents.index',
                 request()->routeIs('documents.*'),
@@ -70,9 +76,9 @@ class WorkspaceNavigation
 
         if ($role->canManageEmployees() && $this->billing->hasFeature($organization, PlanFeature::Payroll)) {
             $primaryItems[] = $this->link(
-                __('navigation.payroll'),
-                'payroll.index',
-                request()->routeIs('payroll.*'),
+                __('navigation.payroll_and_time'),
+                'payroll-time.index',
+                request()->routeIs('payroll-time.*'),
             );
         }
 
@@ -106,40 +112,31 @@ class WorkspaceNavigation
                 __('navigation.leave'),
                 'leave.index',
                 request()->routeIs('leave.*'),
+                __('employee_dashboard.shortcut_leave'),
             );
+        }
+
+        if ($role->canRequestOwnLeave() && $linkedEmployee !== null) {
+            if ($this->billing->hasFeature($organization, PlanFeature::TimeTracking)) {
+                $peopleItems[] = $this->link(
+                    __('navigation.time_and_attendance'),
+                    'time.index',
+                    request()->routeIs('time.*'),
+                    __('employee_dashboard.shortcut_time'),
+                );
+            }
+
+            if ($this->billing->hasFeature($organization, PlanFeature::Expenses)) {
+                $peopleItems[] = $this->link(
+                    __('navigation.expenses'),
+                    'expenses.index',
+                    request()->routeIs('expenses.*'),
+                    __('employee_dashboard.shortcut_expenses'),
+                );
+            }
         }
 
         $this->pushGroup($groups, __('navigation.people'), $peopleItems);
-
-        $payItems = [];
-
-        if ($this->billing->hasFeature($organization, PlanFeature::Expenses)
-            && ($role->canManageFinance()
-            || $role->usesTeamDashboard()
-            || ($role->canRequestOwnLeave() && $linkedEmployee !== null))) {
-            $payItems[] = $this->link(
-                __('navigation.expenses'),
-                'expenses.index',
-                request()->routeIs('expenses.*'),
-            );
-        }
-
-        $this->pushGroup($groups, __('navigation.pay_and_finance'), $payItems);
-
-        $workItems = [];
-
-        if ($this->billing->hasFeature($organization, PlanFeature::TimeTracking)
-            && ($role->canViewEmployees()
-            || $role->usesTeamDashboard()
-            || ($role->canRequestOwnLeave() && $linkedEmployee !== null))) {
-            $workItems[] = $this->link(
-                __('navigation.time_and_attendance'),
-                'time.index',
-                request()->routeIs('time.*'),
-            );
-        }
-
-        $this->pushGroup($groups, __('navigation.work'), $workItems);
 
         $insightItems = [];
 
@@ -154,9 +151,16 @@ class WorkspaceNavigation
 
         $this->pushGroup($groups, __('navigation.insights'), $insightItems);
 
-        if ($this->billing->hasFeature($organization, PlanFeature::Chat)) {
+        $chatSettings = $organization->resolvedChatSettings();
+        if ($this->billing->hasFeature($organization, PlanFeature::Chat)
+            && ($chatSettings['enabled'] ?? true)) {
             $this->pushGroup($groups, __('navigation.collaborate'), [
-                $this->link(__('navigation.chat'), 'chat.index', request()->routeIs('chat.*')),
+                $this->link(
+                    __('navigation.chat'),
+                    'chat.index',
+                    request()->routeIs('chat.*'),
+                    __('employee_dashboard.shortcut_chat'),
+                ),
             ]);
         }
 
@@ -214,10 +218,10 @@ class WorkspaceNavigation
 
         $priorityRoutes = [
             'dashboard',
+            'employees.show',
             'employees.index',
             'projects.index',
-            'project-documents.index',
-            'payroll.index',
+            'payroll-time.index',
             'leave.index',
             'time.index',
             'expenses.index',
@@ -282,12 +286,18 @@ class WorkspaceNavigation
     /**
      * @return array<string, mixed>
      */
-    protected function link(string $label, string $route, bool $active): array
-    {
+    protected function link(
+        string $label,
+        string $route,
+        bool $active,
+        ?string $hint = null,
+        ?string $href = null,
+    ): array {
         return [
             'label' => $label,
             'route' => $route,
-            'href' => null,
+            'href' => $href,
+            'hint' => $hint,
             'active' => $active,
             'enabled' => true,
             'coming_soon' => false,

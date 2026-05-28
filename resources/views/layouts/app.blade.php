@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="color-scheme" content="light dark">
     <meta name="theme-color" content="#f6f5f2">
-    <title>@yield('title', __('common.default_header')) — {{ config('app.name') }}</title>
+    <title>@yield('title', __('common.default_header')) — {{ \App\Support\CurrentOrganization::get()?->name ?? config('app.name') }}</title>
+    @include('partials.social-meta')
     @include('partials.theme-init')
     <script>
         (function () {
@@ -46,7 +47,7 @@
             <div class="flex h-16 shrink-0 items-center border-b border-ziifra-line/80 px-5">
                 <x-ziifra-logo href="{{ $billingOrg ? \App\Support\Workspace::route('dashboard', $billingOrg) : route('workspace.dashboard') }}" variant="auto" data-page-nav />
             </div>
-            <x-workspace-nav variant="sidebar" :show-trial-upgrade="$showTrialUpgrade" />
+            <x-workspace-nav variant="sidebar" show-icons :show-trial-upgrade="$showTrialUpgrade && request()->routeIs('dashboard')" />
             <div class="shrink-0 border-t border-ziifra-line/80 bg-ziifra-paper/70 p-4 text-xs text-ziifra-muted">
                 @if($org = \App\Support\CurrentOrganization::get())
                     <div class="rounded-2xl border border-ziifra-line/70 bg-ziifra-surface/70 p-3">
@@ -136,7 +137,9 @@
                         </form>
                     </div>
                 @endif
-                @include('partials.trial-upgrade-banner')
+                @if (request()->routeIs('dashboard'))
+                    @include('partials.trial-upgrade-banner', ['compact' => true])
+                @endif
                 @include('partials.flash')
                 @yield('content')
             </main>

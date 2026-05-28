@@ -1,5 +1,8 @@
 @php
     $invoice = $invoice ?? null;
+    $invoiceSettings = $invoiceSettings ?? $organization->resolvedInvoiceSettings();
+    $vatManual = (bool) ($invoiceSettings['vat_manual'] ?? false);
+    $defaultTax = $invoice?->tax_percent ?? ($invoiceSettings['vat_percent'] ?? 0);
 @endphp
 
 <div class="grid gap-4 sm:grid-cols-2">
@@ -25,7 +28,17 @@
     </div>
     <div>
         <label for="tax_percent" class="ziifra-label-field">{{ __('invoices.tax_percent') }}</label>
-        <input type="number" step="0.01" min="0" max="100" id="tax_percent" name="tax_percent" value="{{ old('tax_percent', $invoice?->tax_percent ?? 0) }}" class="ziifra-input">
+        <input type="number" step="0.01" min="0" max="100" id="tax_percent" name="tax_percent"
+            value="{{ old('tax_percent', $defaultTax) }}"
+            @unless ($vatManual) readonly @endunless
+            class="ziifra-input @unless ($vatManual) bg-ziifra-cream/40 @endunless">
+        <p class="mt-1 text-xs text-ziifra-muted">
+            @if ($vatManual)
+                {{ __('invoices.tax_manual_hint') }}
+            @else
+                {{ __('invoices.tax_locked_hint', ['percent' => rtrim(rtrim(number_format((float) $defaultTax, 2), '0'), '.')]) }}
+            @endif
+        </p>
         @error('tax_percent')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>

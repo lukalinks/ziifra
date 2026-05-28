@@ -206,6 +206,27 @@ class DashboardService
             ->get();
     }
 
+    public function myNextApprovedLeave(User $user, Organization $organization): ?LeaveRequest
+    {
+        return $this->scopedLeaveQuery($user, $organization)
+            ->with(['leaveType'])
+            ->where('status', LeaveRequestStatus::Approved)
+            ->whereDate('end_date', '>=', Carbon::today())
+            ->orderBy('start_date')
+            ->first();
+    }
+
+    public function amOnApprovedLeaveToday(User $user, Organization $organization): bool
+    {
+        $today = Carbon::today();
+
+        return $this->scopedLeaveQuery($user, $organization)
+            ->where('status', LeaveRequestStatus::Approved)
+            ->whereDate('start_date', '<=', $today)
+            ->whereDate('end_date', '>=', $today)
+            ->exists();
+    }
+
     public function newHiresThisMonth(Organization $organization): int
     {
         return Employee::query()

@@ -220,20 +220,31 @@ class DashboardController extends Controller
         LeaveBalanceService $leaveBalances,
         EmployeeProfileService $profiles,
     ): array {
-        $hasProfile = $profiles->employeeFor($user, $organization) !== null;
-        $employee = $hasProfile ? $profiles->employeeFor($user, $organization) : null;
+        $employee = $profiles->employeeFor($user, $organization);
+        $hasProfile = $employee !== null;
+
+        if ($employee !== null) {
+            $employee->loadMissing(['position', 'department']);
+        }
 
         return [
             'organization' => $organization,
             'user' => $user,
             'greeting' => $this->greeting(),
             'hasEmployeeProfile' => $hasProfile,
+            'linkedEmployee' => $employee,
             'myLeaveBalance' => $hasProfile
                 ? $dashboard->myLeaveBalance($user, $organization, $leaveBalances)
                 : null,
             'myLeaveRequests' => $hasProfile
                 ? $dashboard->myLeaveRequests($user, $organization)
                 : collect(),
+            'myNextLeave' => $hasProfile
+                ? $dashboard->myNextApprovedLeave($user, $organization)
+                : null,
+            'onLeaveToday' => $hasProfile
+                ? $dashboard->amOnApprovedLeaveToday($user, $organization)
+                : false,
             'pendingLeaveCount' => $employee
                 ? LeaveRequest::query()
                     ->where('employee_id', $employee->id)

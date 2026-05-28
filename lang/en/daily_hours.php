@@ -15,6 +15,7 @@ return [
     'no_employees_hint' => 'Assign team members to this project to log hours.',
     'export' => 'Export hours',
     'export_excel' => 'Export Excel',
+    'export_generated' => 'Generated',
     'save_changes' => 'Save changes',
     'save_all' => 'Save all',
     'generate_invoice' => 'Generate invoice',

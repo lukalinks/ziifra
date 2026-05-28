@@ -8,6 +8,7 @@ enum ProjectDocumentCategory: string
     case Materials = 'materials';
     case Equipment = 'equipment';
     case Subcontractor = 'subcontractor';
+    case Expense = 'expense';
     case Other = 'other';
 
     public function label(): string
@@ -17,6 +18,7 @@ enum ProjectDocumentCategory: string
             self::Materials => __('project_documents.categories.materials'),
             self::Equipment => __('project_documents.categories.equipment'),
             self::Subcontractor => __('project_documents.categories.subcontractor'),
+            self::Expense => __('project_documents.categories.expense'),
             self::Other => __('project_documents.categories.other'),
         };
     }
