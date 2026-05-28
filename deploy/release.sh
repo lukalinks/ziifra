@@ -53,4 +53,4 @@ supervisorctl restart ziifra-worker:* 2>/dev/null || true
 
 echo ""
 echo "==> Release complete"
-curl -sS "http://127.0.0.1/up" && echo "" || true
+curl -sfk "https://127.0.0.1/up" -H "Host: ziifra.com" >/dev/null && echo "Health OK: https://ziifra.com/up" || true

@@ -58,7 +58,31 @@ RUN_MIGRATIONS=1 bash deploy/pull-deploy.sh
 curl -sS http://127.0.0.1/up
 ```
 
-**Automatic deploy:** GitHub Actions runs `deploy/pull-deploy.sh` after CI passes on `main`. Add repository secrets: `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY` (optional `SSH_PORT`).
+**Automatic deploy (GitHub Actions):** On every push to `main`, CI runs tests; when CI succeeds, the **Deploy** workflow SSHs to the VPS and runs `deploy/pull-deploy.sh`.
+
+One-time setup (from your PC, in the project folder):
+
+```powershell
+gh auth login
+.\deploy\setup-github-secrets.ps1
+```
+
+This stores these repository secrets:
+
+| Secret | Value |
+|--------|--------|
+| `SSH_HOST` | `187.124.163.32` |
+| `SSH_USER` | `root` |
+| `SSH_PORT` | `22` |
+| `SSH_PRIVATE_KEY` | Contents of `%USERPROFILE%\.ssh\github_deploy` |
+
+The `github-deploy` public key must be in `/root/.ssh/authorized_keys` on the VPS (already configured). The VPS clones via `git@github.com:lukalinks/ziifra.git` using its own deploy key.
+
+Manual deploy without pushing:
+
+```powershell
+gh workflow run Deploy
+```
 
 ---
 

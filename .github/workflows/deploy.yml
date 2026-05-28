@@ -7,6 +7,10 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  actions: read
+  contents: read
+
 concurrency:
   group: deploy-production
   cancel-in-progress: false
@@ -31,6 +35,5 @@ jobs:
             set -euo pipefail
             cd /var/www/ziifra
             RUN_MIGRATIONS=1 bash deploy/pull-deploy.sh
-            curl -sf http://127.0.0.1/up
-            echo ""
-            echo "Deploy OK"
+            curl -sfk https://127.0.0.1/up -H 'Host: ziifra.com' >/dev/null
+            echo "Deploy OK — https://ziifra.com/up"
