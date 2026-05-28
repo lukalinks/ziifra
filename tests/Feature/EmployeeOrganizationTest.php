@@ -244,8 +244,8 @@ class EmployeeOrganizationTest extends TestCase
 
         $this->assertContains(__('navigation.leave'), $itemLabels);
         $this->assertContains(__('navigation.chat'), $itemLabels);
-        $this->assertNotContains(__('navigation.expenses'), $itemLabels);
-        $this->assertNotContains(__('navigation.time_and_attendance'), $itemLabels);
+        $this->assertContains(__('navigation.expenses'), $itemLabels);
+        $this->assertContains(__('navigation.time_and_attendance'), $itemLabels);
         $this->assertNotContains(__('navigation.employees'), $itemLabels);
         $this->assertNotContains(__('navigation.reports'), $itemLabels);
     }
