@@ -13,8 +13,18 @@ class LandingPageTest extends TestCase
         $response->assertOk();
         $response->assertSee('ZIIFRA', false);
         $response->assertSee('Start free trial', false);
-        $response->assertSee('Start free trial', false);
         $response->assertSee('lang="en"', false);
+    }
+
+    public function test_landing_page_displays_croatian_when_locale_is_hr(): void
+    {
+        $response = $this->withSession(['locale' => 'hr'])->get(route('home'));
+
+        $response->assertOk();
+        $response->assertSee('Započni besplatnu probu', false);
+        $response->assertSee('Značajke', false);
+        $response->assertSee('Plaće', false);
+        $response->assertSee('lang="hr"', false);
     }
 
     public function test_landing_page_displays_albanian_when_locale_is_sq(): void
