@@ -40,6 +40,12 @@
             <p class="mt-2 text-sm text-ziifra-muted">{{ __('settings.chat.card') }}</p>
         </a>
 
+        <a href="{{ route('settings.mail.edit') }}"
+            class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">
+            <h2 class="text-lg font-semibold text-ziifra-ink">{{ __('settings.mail.title') }}</h2>
+            <p class="mt-2 text-sm text-ziifra-muted">{{ __('settings.mail.card') }}</p>
+        </a>
+
         @if ($canManageContractTemplates ?? false)
             <a href="{{ route('settings.contract-templates.index') }}"
                 class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">

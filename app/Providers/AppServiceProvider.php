@@ -50,6 +50,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Gate;
 use App\Services\NotificationFeedService;
 use Illuminate\Support\Facades\Http;
+use App\Services\OrganizationMailService;
+use Illuminate\Queue\Events\JobProcessing;
+use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use App\Support\HttpSslOptions;
@@ -77,6 +80,10 @@ class AppServiceProvider extends ServiceProvider
         });
 
         Http::globalOptions(app(HttpSslOptions::class)->toArray());
+
+        Queue::before(function (JobProcessing $event): void {
+            app(OrganizationMailService::class)->registerFromQueuedJob($event);
+        });
 
         foreach (OAuthProvider::cases() as $provider) {
             $key = "services.{$provider->value}.redirect";

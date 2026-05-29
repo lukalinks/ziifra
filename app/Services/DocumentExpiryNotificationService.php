@@ -5,10 +5,13 @@ namespace App\Services;
 use App\Mail\DocumentExpiringMail;
 use App\Models\EmployeeDocument;
 use App\Models\Organization;
-use Illuminate\Support\Facades\Mail;
 
 class DocumentExpiryNotificationService
 {
+    public function __construct(
+        protected OrganizationMailService $mail,
+    ) {}
+
     public function sendReminders(): int
     {
         $sent = 0;
@@ -34,7 +37,7 @@ class DocumentExpiryNotificationService
                     }
 
                     foreach ($recipients as $email) {
-                        Mail::to($email)->queue(new DocumentExpiringMail($document));
+                        $this->mail->queue($organization, $email, new DocumentExpiringMail($document));
                     }
 
                     $document->update(['expiry_reminder_sent_at' => now()]);

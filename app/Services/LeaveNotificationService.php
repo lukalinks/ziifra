@@ -8,7 +8,6 @@ use App\Mail\LeaveRequestSubmittedMail;
 use App\Models\LeaveRequest;
 use App\Models\User;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Mail;
 
 class LeaveNotificationService
 {
@@ -16,6 +15,7 @@ class LeaveNotificationService
         protected EmployeeProfileService $profiles,
         protected LeaveAuthorizationService $leaveAuth,
         protected InAppNotificationService $inApp,
+        protected OrganizationMailService $mail,
     ) {}
 
     public function notifySubmitted(LeaveRequest $request): void
@@ -25,7 +25,7 @@ class LeaveNotificationService
         $recipients = $this->approverEmails($request);
 
         foreach ($recipients as $email) {
-            Mail::to($email)->queue(new LeaveRequestSubmittedMail($request));
+            $this->mail->queue($request->organization, $email, new LeaveRequestSubmittedMail($request));
         }
 
         $this->inApp->leaveSubmitted($request);
@@ -41,7 +41,7 @@ class LeaveNotificationService
             return;
         }
 
-        Mail::to($email)->queue(new LeaveRequestReviewedMail($request, $reviewer));
+        $this->mail->queue($request->organization, $email, new LeaveRequestReviewedMail($request, $reviewer));
 
         $this->inApp->leaveReviewed($request, $reviewer);
     }

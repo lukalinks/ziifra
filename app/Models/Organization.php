@@ -72,6 +72,7 @@ class Organization extends Model
         'payroll_settings',
         'invoice_settings',
         'chat_settings',
+        'mail_settings',
     ];
 
     protected function casts(): array
@@ -93,6 +94,7 @@ class Organization extends Model
             'payroll_settings' => 'array',
             'invoice_settings' => 'array',
             'chat_settings' => 'array',
+            'mail_settings' => 'array',
             'plan' => SubscriptionPlan::class,
         ];
     }
@@ -404,6 +406,51 @@ class Organization extends Model
         ];
 
         return array_merge($defaults, $this->chat_settings ?? []);
+    }
+
+    /**
+     * SMTP and sender identity for outbound email (invites, payslips, leave, etc.).
+     *
+     * @return array{
+     *     enabled: bool,
+     *     host: string,
+     *     port: int,
+     *     encryption: string,
+     *     username: string,
+     *     password: ?string,
+     *     from_address: string,
+     *     from_name: string
+     * }
+     */
+    public function resolvedMailSettings(): array
+    {
+        $defaults = [
+            'enabled' => false,
+            'host' => '',
+            'port' => 587,
+            'encryption' => 'tls',
+            'username' => '',
+            'password' => null,
+            'from_address' => $this->hr_email ?: $this->email ?: '',
+            'from_name' => $this->name ?: '',
+        ];
+
+        $stored = $this->mail_settings;
+        if (! is_array($stored)) {
+            return $defaults;
+        }
+
+        $merged = array_merge($defaults, array_intersect_key($stored, $defaults));
+
+        $encryption = strtolower((string) ($merged['encryption'] ?? 'tls'));
+        if (! in_array($encryption, ['tls', 'ssl', ''], true)) {
+            $encryption = 'tls';
+        }
+        $merged['encryption'] = $encryption;
+        $merged['port'] = (int) ($merged['port'] ?? 587);
+        $merged['enabled'] = (bool) ($merged['enabled'] ?? false);
+
+        return $merged;
     }
 
     /**

@@ -6,11 +6,13 @@ use App\Mail\PayslipMail;
 use App\Models\PayrollItem;
 use App\Models\PayrollRun;
 use App\Models\User;
-use Illuminate\Support\Facades\Mail;
 use Throwable;
 
 class PayslipEmailService
 {
+    public function __construct(
+        protected OrganizationMailService $mail,
+    ) {}
     /**
      * @return array{sent: int, skipped: int, failed: int, failed_names: list<string>}
      */
@@ -53,7 +55,8 @@ class PayslipEmailService
         }
 
         try {
-            Mail::to($email)->sendNow(new PayslipMail($item, $sentBy));
+            $item->loadMissing('organization');
+            $this->mail->sendNow($item->organization, $email, new PayslipMail($item, $sentBy));
 
             return 'sent';
         } catch (Throwable $exception) {

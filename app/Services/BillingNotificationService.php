@@ -9,12 +9,12 @@ use App\Mail\TrialExpiredMail;
 use App\Models\Organization;
 use App\Support\Workspace;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Mail;
 
 class BillingNotificationService
 {
     public function __construct(
         protected OrganizationBillingService $billing,
+        protected OrganizationMailService $mail,
     ) {}
 
     public function sendTrialReminders(): int
@@ -80,7 +80,7 @@ class BillingNotificationService
         }
 
         foreach ($this->billingManagerEmails($organization) as $email) {
-            Mail::to($email)->queue(new EmployeeLimitApproachingMail($organization, $count, $limit));
+            $this->mail->queue($organization, $email, new EmployeeLimitApproachingMail($organization, $count, $limit));
         }
 
         $this->markReminderSent($organization, 'limit_near');
@@ -93,7 +93,7 @@ class BillingNotificationService
         }
 
         foreach ($this->billingManagerEmails($organization) as $email) {
-            Mail::to($email)->queue(new SubscriptionPaymentFailedMail($organization));
+            $this->mail->queue($organization, $email, new SubscriptionPaymentFailedMail($organization));
         }
 
         $this->markReminderSent($organization, 'payment_failed');
@@ -117,9 +117,9 @@ class BillingNotificationService
 
         foreach ($this->billingManagerEmails($organization) as $email) {
             if ($daysRemaining === 0) {
-                Mail::to($email)->queue(new TrialExpiredMail($organization, $billingUrl));
+                $this->mail->queue($organization, $email, new TrialExpiredMail($organization, $billingUrl));
             } else {
-                Mail::to($email)->queue(new TrialEndingSoonMail($organization, $daysRemaining, $billingUrl));
+                $this->mail->queue($organization, $email, new TrialEndingSoonMail($organization, $daysRemaining, $billingUrl));
             }
         }
     }

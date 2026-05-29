@@ -38,6 +38,7 @@ use App\Http\Controllers\LeaveCalendarController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\LeaveTypeController;
 use App\Http\Controllers\ChatSettingsController;
+use App\Http\Controllers\MailSettingsController;
 use App\Models\Organization;
 use App\Http\Controllers\InvoiceSettingsController;
 use App\Http\Controllers\PayrollRunController;
@@ -348,6 +349,10 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/settings/chat', [ChatSettingsController::class, 'edit'])->name('settings.chat.edit');
             Route::put('/settings/chat', [ChatSettingsController::class, 'update'])->name('settings.chat.update');
+
+            Route::get('/settings/mail', [MailSettingsController::class, 'edit'])->name('settings.mail.edit');
+            Route::put('/settings/mail', [MailSettingsController::class, 'update'])->name('settings.mail.update');
+            Route::post('/settings/mail/test', [MailSettingsController::class, 'sendTest'])->name('settings.mail.test');
 
             Route::get('/settings/departments', [DepartmentController::class, 'index'])->name('settings.departments.index');
             Route::post('/settings/departments', [DepartmentController::class, 'store'])->name('settings.departments.store');

@@ -9,11 +9,14 @@ use App\Models\Organization;
 use App\Models\User;
 use App\Services\WorkspaceNavItemService;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
 
 class InvitationService
 {
+    public function __construct(
+        protected OrganizationMailService $mail,
+    ) {}
+
     public function send(
         Organization $organization,
         User $inviter,
@@ -54,7 +57,7 @@ class InvitationService
 
         // Deliver synchronously: Mail::queue()/Mail::send() both defer ShouldQueue mailables,
         // which requires a worker when QUEUE_CONNECTION is database/redis.
-        Mail::to($email)->sendNow(new TeamInvitationMail($invitation));
+        $this->mail->sendNow($organization, $email, new TeamInvitationMail($invitation));
 
         return $invitation;
     }

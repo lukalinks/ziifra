@@ -13,7 +13,6 @@ use App\Services\LeaveRequestService;
 use App\Services\OrganizationContractTemplateService;
 use App\Services\BillingConfigurationService;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 
 class RegisterOrganizationService
 {
@@ -67,7 +66,11 @@ class RegisterOrganizationService
             ];
         });
 
-        Mail::to($result['user']->email)->queue(new WelcomeMail($result['user'], $result['organization']));
+        app(OrganizationMailService::class)->queue(
+            $result['organization'],
+            $result['user']->email,
+            new WelcomeMail($result['user'], $result['organization']),
+        );
 
         return $result;
     }
