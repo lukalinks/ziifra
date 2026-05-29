@@ -12,9 +12,20 @@ class LandingPageTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('ZIIFRA', false);
-        $response->assertSee('Kosovo', false);
+        $response->assertSee('Start free trial', false);
         $response->assertSee('Start free trial', false);
         $response->assertSee('lang="en"', false);
+    }
+
+    public function test_landing_page_displays_albanian_when_locale_is_sq(): void
+    {
+        $response = $this->withSession(['locale' => 'sq'])->get(route('home'));
+
+        $response->assertOk();
+        $response->assertSee('Provë falas', false);
+        $response->assertSee('Veçoritë', false);
+        $response->assertSee('Pagat', false);
+        $response->assertSee('lang="sq"', false);
     }
 
     public function test_privacy_and_terms_pages_are_available(): void

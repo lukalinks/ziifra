@@ -211,6 +211,77 @@ return array (
     'get_started' => 'Fillo',
     'most_popular' => 'Më i popullarizuari',
     'start_trial' => 'Provë falas',
+    'plans' => 
+    array (
+      'starter' => 'Starter',
+      'pro' => 'Pro',
+    ),
+  ),
+  'mockup' => 
+  array (
+    'company' => 'Demo Corp',
+    'sections' => 
+    array (
+      'people' => 'Njerëzit',
+      'operations' => 'Operacionet',
+    ),
+    'nav_primary' => 
+    array (
+      0 => array ('label' => 'Paneli', 'active' => false),
+      1 => array ('label' => 'Punonjësit', 'active' => false),
+      2 => array ('label' => 'Pushimet', 'active' => false),
+      3 => array ('label' => 'Pagat', 'active' => true),
+    ),
+    'nav_secondary' => 
+    array (
+      0 => 'Projektet',
+      1 => 'Financat',
+      2 => 'Raportet',
+    ),
+    'payroll_title' => 'Pagat',
+    'payroll_run' => 'Cikli maj 2026',
+    'payroll_company' => 'Demo Corporation SHPK',
+    'status_locked' => 'I kyçur',
+    'stats' => 
+    array (
+      'employees' => 'Punonjësit',
+      'net_pay' => 'Paga neto',
+      'on_leave' => 'Në pushim',
+    ),
+    'table' => 
+    array (
+      'employee' => 'Punonjësi',
+      'department' => 'Departamenti',
+      'gross' => 'Bruto',
+      'net' => 'Neto',
+    ),
+    'rows' => 
+    array (
+      0 => array ('initials' => 'AK', 'name' => 'Arben Krasniqi', 'department' => 'Inxhinieri', 'gross' => '€1,850', 'net' => '€1,420'),
+      1 => array ('initials' => 'EG', 'name' => 'Era Gashi', 'department' => 'Operacione', 'gross' => '€1,620', 'net' => '€1,245'),
+      2 => array ('initials' => 'DB', 'name' => 'Driton Berisha', 'department' => 'Financa', 'gross' => '€1,780', 'net' => '€1,365'),
+    ),
+    'chips' => 
+    array (
+      0 => 'Fletëpagesat u dërguan',
+      1 => 'Cikli maj i kyçur',
+      2 => '3 në pushim',
+    ),
+    'phone' => 
+    array (
+      'today' => 'Sot',
+      'greeting' => 'Mirëmëngjes, Era',
+      'leave_label' => 'Pushim vjetor',
+      'leave_days' => '18 ditë',
+      'leave_pending' => '3 në pritje të aprovimit',
+      'btn_request_leave' => 'Kërko pushim',
+      'btn_calendar' => 'Kalendari i ekipit',
+      'activities' => 
+      array (
+        0 => array ('label' => 'Pushim', 'detail' => 'Aprovuar · 3 ditë'),
+        1 => array ('label' => 'Koha', 'detail' => 'Hyrje 08:42'),
+      ),
+    ),
   ),
   'faq' => 
   array (

@@ -1,8 +1,12 @@
 @extends('layouts.marketing')
 
 @section('title', __('landing.title'))
+@section('meta_description', __('landing.meta_description'))
 
 @section('content')
+@php
+    $mockup = __('landing.mockup');
+@endphp
 {{-- Hero --}}
 <section class="ziifra-landing-hero ziifra-diagonal-cut">
     <div class="ziifra-landing-glow -left-24 top-20 h-72 w-72 bg-ziifra-accent/25" aria-hidden="true"></div>
@@ -46,27 +50,22 @@
                             {{-- Sidebar --}}
                             <div class="hidden w-[7.5rem] shrink-0 border-r border-ziifra-line/60 bg-ziifra-cream/80 sm:block lg:w-36">
                                 <div class="border-b border-ziifra-line/60 px-3 py-2.5">
-                                    <p class="truncate text-[0.65rem] font-semibold text-ziifra-ink">Demo Corp</p>
+                                    <p class="truncate text-[0.65rem] font-semibold text-ziifra-ink">{{ $mockup['company'] }}</p>
                                 </div>
                                 <nav class="p-2.5" aria-hidden="true">
-                                    <p class="px-2 font-mono text-[0.5rem] uppercase tracking-widest text-ziifra-muted">People</p>
+                                    <p class="px-2 font-mono text-[0.5rem] uppercase tracking-widest text-ziifra-muted">{{ $mockup['sections']['people'] }}</p>
                                     <ul class="mt-1.5 space-y-0.5 text-[0.65rem] font-medium lg:text-[0.7rem]">
-                                        @foreach([
-                                            ['Dashboard', false],
-                                            ['Employees', false],
-                                            ['Leave', false],
-                                            ['Payroll', true],
-                                        ] as [$label, $active])
+                                        @foreach($mockup['nav_primary'] as $navItem)
                                             <li @class([
                                                 'rounded-md px-2 py-1.5',
-                                                'bg-ziifra-accent/15 text-ziifra-accent-deep' => $active,
-                                                'text-ziifra-muted' => ! $active,
-                                            ])>{{ $label }}</li>
+                                                'bg-ziifra-accent/15 text-ziifra-accent-deep' => $navItem['active'],
+                                                'text-ziifra-muted' => ! $navItem['active'],
+                                            ])>{{ $navItem['label'] }}</li>
                                         @endforeach
                                     </ul>
-                                    <p class="mt-3 px-2 font-mono text-[0.5rem] uppercase tracking-widest text-ziifra-muted">Operations</p>
+                                    <p class="mt-3 px-2 font-mono text-[0.5rem] uppercase tracking-widest text-ziifra-muted">{{ $mockup['sections']['operations'] }}</p>
                                     <ul class="mt-1.5 space-y-0.5 text-[0.65rem] font-medium text-ziifra-muted lg:text-[0.7rem]">
-                                        @foreach(['Projects', 'Finance', 'Reports'] as $label)
+                                        @foreach($mockup['nav_secondary'] as $label)
                                             <li class="rounded-md px-2 py-1.5">{{ $label }}</li>
                                         @endforeach
                                     </ul>
@@ -76,30 +75,30 @@
                             {{-- Main content --}}
                             <div class="min-w-0 flex-1">
                                 <div class="flex items-center justify-between border-b border-ziifra-line/60 bg-ziifra-paper px-3 py-2 sm:px-4">
-                                    <p class="text-[0.7rem] font-medium text-ziifra-muted sm:text-xs">Payroll</p>
+                                    <p class="text-[0.7rem] font-medium text-ziifra-muted sm:text-xs">{{ $mockup['payroll_title'] }}</p>
                                     <span class="hidden text-[0.65rem] text-ziifra-muted sm:inline">Arben K.</span>
                                 </div>
 
                                 <div class="space-y-3 p-3 sm:p-4">
                                     <div class="flex flex-wrap items-center justify-between gap-2">
                                         <div>
-                                            <p class="font-mono text-[0.55rem] uppercase tracking-widest text-ziifra-muted sm:text-[0.6rem]">May 2026 run</p>
-                                            <p class="mt-0.5 text-sm font-semibold text-ziifra-ink sm:text-base">Demo Corporation SHPK</p>
+                                            <p class="font-mono text-[0.55rem] uppercase tracking-widest text-ziifra-muted sm:text-[0.6rem]">{{ $mockup['payroll_run'] }}</p>
+                                            <p class="mt-0.5 text-sm font-semibold text-ziifra-ink sm:text-base">{{ $mockup['payroll_company'] }}</p>
                                         </div>
-                                        <span class="rounded-full bg-emerald-500/15 px-2.5 py-1 text-[0.6rem] font-semibold text-emerald-300 sm:text-[0.65rem]">Locked</span>
+                                        <span class="rounded-full bg-emerald-500/15 px-2.5 py-1 text-[0.6rem] font-semibold text-emerald-300 sm:text-[0.65rem]">{{ $mockup['status_locked'] }}</span>
                                     </div>
 
                                     <div class="grid grid-cols-3 gap-1.5 sm:gap-2">
                                         <div class="ziifra-landing-mockup-stat rounded-lg border border-ziifra-line/80 bg-ziifra-cream p-2 sm:p-2.5">
-                                            <p class="text-[0.5rem] text-ziifra-muted sm:text-[0.6rem]">Employees</p>
+                                            <p class="text-[0.5rem] text-ziifra-muted sm:text-[0.6rem]">{{ $mockup['stats']['employees'] }}</p>
                                             <p class="ziifra-landing-mockup-stat-value mt-0.5 text-base font-semibold tabular-nums text-ziifra-ink sm:text-lg">24</p>
                                         </div>
                                         <div class="ziifra-landing-mockup-stat rounded-lg border border-ziifra-accent/20 bg-gradient-to-br from-ziifra-accent/12 to-transparent p-2 sm:p-2.5">
-                                            <p class="text-[0.5rem] text-ziifra-muted sm:text-[0.6rem]">Net pay</p>
+                                            <p class="text-[0.5rem] text-ziifra-muted sm:text-[0.6rem]">{{ $mockup['stats']['net_pay'] }}</p>
                                             <p class="ziifra-landing-mockup-stat-value mt-0.5 text-base font-semibold tabular-nums text-ziifra-accent-deep sm:text-lg">€18.4k</p>
                                         </div>
                                         <div class="ziifra-landing-mockup-stat rounded-lg border border-ziifra-line/80 bg-ziifra-cream p-2 sm:p-2.5">
-                                            <p class="text-[0.5rem] text-ziifra-muted sm:text-[0.6rem]">On leave</p>
+                                            <p class="text-[0.5rem] text-ziifra-muted sm:text-[0.6rem]">{{ $mockup['stats']['on_leave'] }}</p>
                                             <p class="ziifra-landing-mockup-stat-value mt-0.5 text-base font-semibold tabular-nums text-ziifra-ink sm:text-lg">3</p>
                                         </div>
                                     </div>
@@ -108,25 +107,21 @@
                                     <div class="ziifra-landing-mockup-table-wrap hidden min-[480px]:block">
                                     <div class="ziifra-landing-mockup-table min-w-[14rem] overflow-hidden rounded-xl border border-ziifra-line/80 sm:min-w-0">
                                         <div class="grid grid-cols-[1fr_auto] gap-2 border-b border-ziifra-line/60 bg-ziifra-cream px-2.5 py-1.5 font-mono text-[0.55rem] uppercase tracking-wider text-ziifra-muted sm:grid-cols-4 sm:px-3 sm:py-2 sm:text-[0.6rem]">
-                                            <span>Employee</span>
-                                            <span class="hidden sm:block">Department</span>
-                                            <span class="hidden sm:block">Gross</span>
-                                            <span class="text-right">Net</span>
+                                            <span>{{ $mockup['table']['employee'] }}</span>
+                                            <span class="hidden sm:block">{{ $mockup['table']['department'] }}</span>
+                                            <span class="hidden sm:block">{{ $mockup['table']['gross'] }}</span>
+                                            <span class="text-right">{{ $mockup['table']['net'] }}</span>
                                         </div>
                                         <ul class="divide-y divide-ziifra-line/50">
-                                            @foreach([
-                                                ['AK', 'Arben Krasniqi', 'Engineering', '€1,850', '€1,420'],
-                                                ['EG', 'Era Gashi', 'Operations', '€1,620', '€1,245'],
-                                                ['DB', 'Driton Berisha', 'Finance', '€1,780', '€1,365'],
-                                            ] as [$initials, $name, $dept, $gross, $net])
+                                            @foreach($mockup['rows'] as $row)
                                                 <li class="grid grid-cols-[1fr_auto] items-center gap-2 px-2.5 py-2 text-[0.65rem] sm:grid-cols-4 sm:px-3 sm:text-xs">
                                                     <span class="flex min-w-0 items-center gap-2">
-                                                        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ziifra-accent/15 text-[0.55rem] font-bold text-ziifra-accent-deep">{{ $initials }}</span>
-                                                        <span class="truncate font-medium text-ziifra-ink">{{ $name }}</span>
+                                                        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ziifra-accent/15 text-[0.55rem] font-bold text-ziifra-accent-deep">{{ $row['initials'] }}</span>
+                                                        <span class="truncate font-medium text-ziifra-ink">{{ $row['name'] }}</span>
                                                     </span>
-                                                    <span class="hidden truncate text-ziifra-muted sm:block">{{ $dept }}</span>
-                                                    <span class="hidden tabular-nums text-ziifra-muted sm:block">{{ $gross }}</span>
-                                                    <span class="text-right font-medium tabular-nums text-ziifra-ink">{{ $net }}</span>
+                                                    <span class="hidden truncate text-ziifra-muted sm:block">{{ $row['department'] }}</span>
+                                                    <span class="hidden tabular-nums text-ziifra-muted sm:block">{{ $row['gross'] }}</span>
+                                                    <span class="text-right font-medium tabular-nums text-ziifra-ink">{{ $row['net'] }}</span>
                                                 </li>
                                             @endforeach
                                         </ul>
@@ -134,7 +129,7 @@
                                     </div>
 
                                     <div class="ziifra-landing-mockup-chips hidden flex-wrap gap-1 min-[480px]:flex sm:gap-1.5">
-                                        @foreach(['Payslips sent', 'May run locked', '3 on leave'] as $chip)
+                                        @foreach($mockup['chips'] as $chip)
                                             <span class="ziifra-module-chip">{{ $chip }}</span>
                                         @endforeach
                                     </div>
@@ -155,25 +150,22 @@
                             </span>
                         </div>
                         <div class="bg-ziifra-cream px-3.5 pb-4 pt-2.5 sm:px-3 sm:pb-3 sm:pt-2">
-                            <p class="font-mono text-[0.5rem] uppercase tracking-widest text-ziifra-muted min-[640px]:text-[0.45rem]">Today</p>
-                            <p class="mt-1 text-sm font-semibold text-ziifra-ink min-[640px]:text-[0.7rem]">Good morning, Era</p>
+                            <p class="font-mono text-[0.5rem] uppercase tracking-widest text-ziifra-muted min-[640px]:text-[0.45rem]">{{ $mockup['phone']['today'] }}</p>
+                            <p class="mt-1 text-sm font-semibold text-ziifra-ink min-[640px]:text-[0.7rem]">{{ $mockup['phone']['greeting'] }}</p>
                             <div class="mt-3 rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-3 min-[640px]:mt-2.5 min-[640px]:p-2.5">
-                                <p class="text-[0.5rem] text-ziifra-muted min-[640px]:text-[0.45rem]">Annual leave</p>
-                                <p class="mt-0.5 text-base font-semibold tabular-nums text-ziifra-accent-deep min-[640px]:text-sm">18 days</p>
-                                <p class="mt-1 text-[0.5rem] text-ziifra-muted min-[640px]:text-[0.45rem]">3 pending approval</p>
+                                <p class="text-[0.5rem] text-ziifra-muted min-[640px]:text-[0.45rem]">{{ $mockup['phone']['leave_label'] }}</p>
+                                <p class="mt-0.5 text-base font-semibold tabular-nums text-ziifra-accent-deep min-[640px]:text-sm">{{ $mockup['phone']['leave_days'] }}</p>
+                                <p class="mt-1 text-[0.5rem] text-ziifra-muted min-[640px]:text-[0.45rem]">{{ $mockup['phone']['leave_pending'] }}</p>
                             </div>
                             <div class="mt-3 space-y-2 min-[640px]:mt-2 min-[640px]:space-y-1.5">
-                                <div class="rounded-lg bg-ziifra-accent px-2.5 py-2 text-center text-xs font-semibold text-ziifra-ink min-[640px]:py-1.5 min-[640px]:text-[0.55rem]">Request leave</div>
-                                <div class="rounded-lg border border-ziifra-line/80 bg-ziifra-paper px-2.5 py-2 text-center text-xs font-medium text-ziifra-muted min-[640px]:py-1.5 min-[640px]:text-[0.55rem]">Team calendar</div>
+                                <div class="rounded-lg bg-ziifra-accent px-2.5 py-2 text-center text-xs font-semibold text-ziifra-ink min-[640px]:py-1.5 min-[640px]:text-[0.55rem]">{{ $mockup['phone']['btn_request_leave'] }}</div>
+                                <div class="rounded-lg border border-ziifra-line/80 bg-ziifra-paper px-2.5 py-2 text-center text-xs font-medium text-ziifra-muted min-[640px]:py-1.5 min-[640px]:text-[0.55rem]">{{ $mockup['phone']['btn_calendar'] }}</div>
                             </div>
                             <ul class="mt-3 space-y-1.5 min-[640px]:mt-2.5 min-[640px]:space-y-1">
-                                @foreach([
-                                    ['Leave', 'Approved · 3 days'],
-                                    ['Time', 'Clocked in 08:42'],
-                                ] as [$label, $detail])
+                                @foreach($mockup['phone']['activities'] as $activity)
                                     <li class="flex items-center justify-between rounded-lg border border-ziifra-line/60 bg-ziifra-paper px-2.5 py-2 min-[640px]:px-2 min-[640px]:py-1.5">
-                                        <span class="text-xs font-medium text-ziifra-ink min-[640px]:text-[0.5rem]">{{ $label }}</span>
-                                        <span class="text-[0.625rem] text-ziifra-muted min-[640px]:text-[0.45rem]">{{ $detail }}</span>
+                                        <span class="text-xs font-medium text-ziifra-ink min-[640px]:text-[0.5rem]">{{ $activity['label'] }}</span>
+                                        <span class="text-[0.625rem] text-ziifra-muted min-[640px]:text-[0.45rem]">{{ $activity['detail'] }}</span>
                                     </li>
                                 @endforeach
                             </ul>
@@ -184,15 +176,15 @@
                 <div class="ziifra-landing-mockup-mobile-stats" aria-hidden="true">
                     <div class="ziifra-landing-mockup-mobile-stat">
                         <p class="ziifra-landing-mockup-mobile-stat-value">24</p>
-                        <p class="ziifra-landing-mockup-mobile-stat-label">Employees</p>
+                        <p class="ziifra-landing-mockup-mobile-stat-label">{{ $mockup['stats']['employees'] }}</p>
                     </div>
                     <div class="ziifra-landing-mockup-mobile-stat ziifra-landing-mockup-mobile-stat--accent">
                         <p class="ziifra-landing-mockup-mobile-stat-value">€18.4k</p>
-                        <p class="ziifra-landing-mockup-mobile-stat-label">Net pay</p>
+                        <p class="ziifra-landing-mockup-mobile-stat-label">{{ $mockup['stats']['net_pay'] }}</p>
                     </div>
                     <div class="ziifra-landing-mockup-mobile-stat">
                         <p class="ziifra-landing-mockup-mobile-stat-value">3</p>
-                        <p class="ziifra-landing-mockup-mobile-stat-label">On leave</p>
+                        <p class="ziifra-landing-mockup-mobile-stat-label">{{ $mockup['stats']['on_leave'] }}</p>
                     </div>
                 </div>
                 </div>
@@ -202,25 +194,18 @@
 </section>
 
 {{-- Capabilities --}}
-@php
-    $featuresCopy = trans('landing.features');
-    if (! is_array($featuresCopy)) {
-        $featuresCopy = trans('landing.features', [], 'en');
-    }
-    $capabilities = $featuresCopy['items'] ?? trans('landing.features.items', [], 'en');
-@endphp
 <section id="features" class="ziifra-landing-section ziifra-features-section relative -mt-4 overflow-hidden pt-20 sm:-mt-10 sm:pt-32 lg:-mt-14 lg:pt-40">
     <div class="pointer-events-none absolute inset-0 ziifra-grid-pattern opacity-[0.35]" aria-hidden="true"></div>
 
     <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="ziifra-landing-section-head">
-            <p class="ziifra-label justify-center">{{ $featuresCopy['label'] ?? __('landing.features.label') }}</p>
-            <h2 class="ziifra-display mt-3 text-2xl font-semibold text-ziifra-ink sm:mt-4 sm:text-4xl">{{ $featuresCopy['title'] ?? __('landing.features.title') }}</h2>
-            <p class="mt-3 mx-auto max-w-2xl text-base leading-relaxed text-ziifra-muted sm:mt-4 sm:text-lg">{{ $featuresCopy['subtitle'] ?? __('landing.features.subtitle') }}</p>
+            <p class="ziifra-label justify-center">{{ __('landing.features.label') }}</p>
+            <h2 class="ziifra-display mt-3 text-2xl font-semibold text-ziifra-ink sm:mt-4 sm:text-4xl">{{ __('landing.features.title') }}</h2>
+            <p class="mt-3 mx-auto max-w-2xl text-base leading-relaxed text-ziifra-muted sm:mt-4 sm:text-lg">{{ __('landing.features.subtitle') }}</p>
         </div>
 
         <ul class="ziifra-capability-grid mt-10 sm:mt-14 lg:mt-16">
-            @foreach($capabilities as $index => $item)
+            @foreach(__('landing.features.items') as $index => $item)
                 <li>
                     <article @class(['ziifra-capability-card', 'ziifra-capability-card-featured' => $index === 0])>
                         <div class="ziifra-capability-card-icon" aria-hidden="true">
@@ -331,7 +316,7 @@
                 $pro = $pricingPlans['pro'];
             @endphp
             <div class="ziifra-card ziifra-pricing-card flex flex-col p-6 sm:p-8 lg:p-10">
-                <p class="font-mono text-xs uppercase tracking-widest text-ziifra-muted">{{ $starter['name'] }}</p>
+                <p class="font-mono text-xs uppercase tracking-widest text-ziifra-muted">{{ __('landing.pricing.plans.starter') }}</p>
                 <p class="mt-4 flex items-baseline gap-1">
                     @if ($starter['monthly_price'])
                         <span class="text-4xl font-semibold tabular-nums text-ziifra-ink sm:text-5xl">€{{ $starter['monthly_price'] }}</span>
@@ -360,7 +345,7 @@
 
             <div class="ziifra-pricing-pro flex flex-col p-6 sm:p-8 lg:p-10">
                 <span class="self-start rounded-full bg-ziifra-accent/20 px-3 py-1 font-mono text-[0.65rem] uppercase tracking-wider text-ziifra-accent-glow">{{ __('landing.pricing.most_popular') }}</span>
-                <p class="mt-6 font-mono text-xs uppercase tracking-widest text-white/50">{{ $pro['name'] }}</p>
+                <p class="mt-6 font-mono text-xs uppercase tracking-widest text-white/50">{{ __('landing.pricing.plans.pro') }}</p>
                 <p class="mt-4 flex items-baseline gap-1">
                     @if ($pro['monthly_price'])
                         <span class="text-4xl font-semibold tabular-nums sm:text-5xl">€{{ $pro['monthly_price'] }}</span>

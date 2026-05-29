@@ -121,6 +121,10 @@ return [
         'get_started' => 'Get started',
         'most_popular' => 'Most popular',
         'start_trial' => 'Start free trial',
+        'plans' => [
+            'starter' => 'Starter',
+            'pro' => 'Pro',
+        ],
     ],
 
     'faq' => [
@@ -141,5 +145,54 @@ return [
         'subtitle' => ':days-day free trial. Set up your company, invite HR, and go live today.',
         'primary' => 'Get started with ZIIFRA',
         'login' => 'Log in',
+    ],
+
+    'mockup' => [
+        'company' => 'Demo Corp',
+        'sections' => [
+            'people' => 'People',
+            'operations' => 'Operations',
+        ],
+        'nav_primary' => [
+            ['label' => 'Dashboard', 'active' => false],
+            ['label' => 'Employees', 'active' => false],
+            ['label' => 'Leave', 'active' => false],
+            ['label' => 'Payroll', 'active' => true],
+        ],
+        'nav_secondary' => ['Projects', 'Finance', 'Reports'],
+        'payroll_title' => 'Payroll',
+        'payroll_run' => 'May 2026 run',
+        'payroll_company' => 'Demo Corporation SHPK',
+        'status_locked' => 'Locked',
+        'stats' => [
+            'employees' => 'Employees',
+            'net_pay' => 'Net pay',
+            'on_leave' => 'On leave',
+        ],
+        'table' => [
+            'employee' => 'Employee',
+            'department' => 'Department',
+            'gross' => 'Gross',
+            'net' => 'Net',
+        ],
+        'rows' => [
+            ['initials' => 'AK', 'name' => 'Arben Krasniqi', 'department' => 'Engineering', 'gross' => '€1,850', 'net' => '€1,420'],
+            ['initials' => 'EG', 'name' => 'Era Gashi', 'department' => 'Operations', 'gross' => '€1,620', 'net' => '€1,245'],
+            ['initials' => 'DB', 'name' => 'Driton Berisha', 'department' => 'Finance', 'gross' => '€1,780', 'net' => '€1,365'],
+        ],
+        'chips' => ['Payslips sent', 'May run locked', '3 on leave'],
+        'phone' => [
+            'today' => 'Today',
+            'greeting' => 'Good morning, Era',
+            'leave_label' => 'Annual leave',
+            'leave_days' => '18 days',
+            'leave_pending' => '3 pending approval',
+            'btn_request_leave' => 'Request leave',
+            'btn_calendar' => 'Team calendar',
+            'activities' => [
+                ['label' => 'Leave', 'detail' => 'Approved · 3 days'],
+                ['label' => 'Time', 'detail' => 'Clocked in 08:42'],
+            ],
+        ],
     ],
 ];

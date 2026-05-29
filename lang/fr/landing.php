@@ -121,6 +121,59 @@ return [
         'get_started' => 'Commencer',
         'most_popular' => 'Le plus populaire',
         'start_trial' => 'Essai gratuit',
+        'plans' => [
+            'starter' => 'Starter',
+            'pro' => 'Pro',
+        ],
+    ],
+
+    'mockup' => [
+        'company' => 'Demo Corp',
+        'sections' => [
+            'people' => 'Personnes',
+            'operations' => 'Opérations',
+        ],
+        'nav_primary' => [
+            ['label' => 'Tableau de bord', 'active' => false],
+            ['label' => 'Employés', 'active' => false],
+            ['label' => 'Congés', 'active' => false],
+            ['label' => 'Paie', 'active' => true],
+        ],
+        'nav_secondary' => ['Projets', 'Finance', 'Rapports'],
+        'payroll_title' => 'Paie',
+        'payroll_run' => 'Cycle mai 2026',
+        'payroll_company' => 'Demo Corporation SHPK',
+        'status_locked' => 'Verrouillé',
+        'stats' => [
+            'employees' => 'Employés',
+            'net_pay' => 'Net à payer',
+            'on_leave' => 'En congé',
+        ],
+        'table' => [
+            'employee' => 'Employé',
+            'department' => 'Département',
+            'gross' => 'Brut',
+            'net' => 'Net',
+        ],
+        'rows' => [
+            ['initials' => 'AK', 'name' => 'Arben Krasniqi', 'department' => 'Ingénierie', 'gross' => '€1,850', 'net' => '€1,420'],
+            ['initials' => 'EG', 'name' => 'Era Gashi', 'department' => 'Opérations', 'gross' => '€1,620', 'net' => '€1,245'],
+            ['initials' => 'DB', 'name' => 'Driton Berisha', 'department' => 'Finance', 'gross' => '€1,780', 'net' => '€1,365'],
+        ],
+        'chips' => ['Bulletins envoyés', 'Cycle mai verrouillé', '3 en congé'],
+        'phone' => [
+            'today' => 'Aujourd\'hui',
+            'greeting' => 'Bonjour, Era',
+            'leave_label' => 'Congé annuel',
+            'leave_days' => '18 jours',
+            'leave_pending' => '3 en attente d\'approbation',
+            'btn_request_leave' => 'Demander un congé',
+            'btn_calendar' => 'Calendrier d\'équipe',
+            'activities' => [
+                ['label' => 'Congé', 'detail' => 'Approuvé · 3 jours'],
+                ['label' => 'Temps', 'detail' => 'Pointé à 08:42'],
+            ],
+        ],
     ],
 
     'faq' => [
