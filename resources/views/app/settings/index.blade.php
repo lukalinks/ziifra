@@ -42,7 +42,12 @@
 
         <a href="{{ route('settings.mail.edit') }}"
             class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">
-            <h2 class="text-lg font-semibold text-ziifra-ink">{{ __('settings.mail.title') }}</h2>
+            <div class="flex items-start justify-between gap-2">
+                <h2 class="text-lg font-semibold text-ziifra-ink">{{ __('settings.mail.title') }}</h2>
+                @if (($mailStatus ?? 'platform') === 'active')
+                    <span class="shrink-0 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide text-emerald-800 dark:text-emerald-200">{{ __('settings.mail.badge_active') }}</span>
+                @endif
+            </div>
             <p class="mt-2 text-sm text-ziifra-muted">{{ __('settings.mail.card') }}</p>
         </a>
 

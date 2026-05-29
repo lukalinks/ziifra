@@ -433,6 +433,8 @@ class Organization extends Model
             'password' => null,
             'from_address' => $this->hr_email ?: $this->email ?: '',
             'from_name' => $this->name ?: '',
+            'last_tested_at' => null,
+            'last_test_ok' => null,
         ];
 
         $stored = $this->mail_settings;
@@ -449,7 +451,6 @@ class Organization extends Model
         $merged['encryption'] = $encryption;
         $merged['port'] = (int) ($merged['port'] ?? 587);
         $merged['enabled'] = (bool) ($merged['enabled'] ?? false);
-
         return $merged;
     }
 

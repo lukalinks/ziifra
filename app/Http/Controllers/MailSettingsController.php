@@ -20,7 +20,7 @@ class MailSettingsController extends Controller
         return view('app.settings.mail', [
             'organization' => $organization,
             'mailSettings' => $mail->settingsForForm($organization),
-            'usesPlatformMail' => ! $mail->usesCustomSmtp($organization),
+            'mailStatus' => $mail->status($organization),
         ]);
     }
 

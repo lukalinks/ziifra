@@ -5,6 +5,7 @@ import { initEmployeesQuickFilter, initProjectHoursFilter } from './employees-qu
 import { initEmployeeProfileTabs } from './employee-profile-tabs.js';
 import { initEmployeeProfileEdit } from './employee-profile-edit.js';
 import { initPayrollCreateForm } from './payroll-create-form.js';
+import { initMailSettings } from './mail-settings.js';
 import './searchable-select.js';
 
 import { initConfirmDialog } from './confirm-dialog.js';
@@ -26,6 +27,7 @@ initProjectHoursFilter();
 initEmployeeProfileTabs();
 initEmployeeProfileEdit();
 initPayrollCreateForm();
+initMailSettings();
 
 document.querySelectorAll('[data-password-toggle]').forEach((button) => {
     const inputId = button.getAttribute('data-password-toggle');

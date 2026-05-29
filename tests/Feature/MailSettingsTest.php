@@ -77,6 +77,54 @@ class MailSettingsTest extends TestCase
         $this->assertSame('smtp.test.local', config('mail.mailers.'.$mailerName.'.host'));
     }
 
+    public function test_incomplete_smtp_falls_back_to_platform_mailer(): void
+    {
+        $data = $this->createCompanyA();
+        $organization = $data['organization'];
+
+        $organization->update([
+            'mail_settings' => [
+                'enabled' => true,
+                'host' => 'smtp.example.com',
+                'port' => 587,
+                'encryption' => 'tls',
+                'username' => 'user@example.com',
+                'password' => null,
+                'from_address' => 'noreply@example.com',
+                'from_name' => 'Example',
+            ],
+        ]);
+
+        $mail = app(OrganizationMailService::class);
+
+        $this->assertSame(OrganizationMailService::STATUS_INCOMPLETE, $mail->status($organization->fresh()));
+        $this->assertSame(config('mail.default', 'smtp'), $mail->registerMailer($organization->fresh()));
+    }
+
+    public function test_status_is_active_when_fully_configured(): void
+    {
+        $data = $this->createCompanyA();
+        $organization = $data['organization'];
+
+        $organization->update([
+            'mail_settings' => [
+                'enabled' => true,
+                'host' => 'smtp.example.com',
+                'port' => 587,
+                'encryption' => 'tls',
+                'username' => '',
+                'password' => null,
+                'from_address' => 'hr@example.com',
+                'from_name' => 'Example',
+            ],
+        ]);
+
+        $this->assertSame(
+            OrganizationMailService::STATUS_ACTIVE,
+            app(OrganizationMailService::class)->status($organization->fresh()),
+        );
+    }
+
     public function test_hr_user_cannot_access_mail_settings(): void
     {
         $data = $this->createCompanyA();

@@ -16,6 +16,49 @@ class OrganizationMailService
 {
     public const MAILER_PREFIX = 'org_mail_';
 
+    public const STATUS_PLATFORM = 'platform';
+
+    public const STATUS_ACTIVE = 'active';
+
+    public const STATUS_INCOMPLETE = 'incomplete';
+
+    /**
+     * @return array<string, array{host: string, port: int, encryption: string}>
+     */
+    public function providerPresets(): array
+    {
+        return [
+            'hostinger' => [
+                'host' => 'smtp.hostinger.com',
+                'port' => 587,
+                'encryption' => 'tls',
+            ],
+            'google' => [
+                'host' => 'smtp.gmail.com',
+                'port' => 587,
+                'encryption' => 'tls',
+            ],
+            'microsoft' => [
+                'host' => 'smtp.office365.com',
+                'port' => 587,
+                'encryption' => 'tls',
+            ],
+        ];
+    }
+
+    public function status(Organization $organization): string
+    {
+        $settings = $organization->resolvedMailSettings();
+
+        if (! $settings['enabled']) {
+            return self::STATUS_PLATFORM;
+        }
+
+        return $this->usesCustomSmtp($organization)
+            ? self::STATUS_ACTIVE
+            : self::STATUS_INCOMPLETE;
+    }
+
     /**
      * @return array{
      *     enabled: bool,
@@ -26,7 +69,9 @@ class OrganizationMailService
      *     password: ?string,
      *     from_address: string,
      *     from_name: string,
-     *     has_password: bool
+     *     has_password: bool,
+     *     last_tested_at: ?string,
+     *     last_test_ok: ?bool
      * }
      */
     public function settingsForForm(Organization $organization): array
@@ -37,12 +82,14 @@ class OrganizationMailService
             'enabled' => $resolved['enabled'],
             'host' => $resolved['host'],
             'port' => $resolved['port'],
-            'encryption' => $resolved['encryption'],
+            'encryption' => $resolved['encryption'] !== '' ? $resolved['encryption'] : 'tls',
             'username' => $resolved['username'],
             'password' => null,
             'from_address' => $resolved['from_address'],
             'from_name' => $resolved['from_name'],
             'has_password' => filled($resolved['password']),
+            'last_tested_at' => $resolved['last_tested_at'],
+            'last_test_ok' => $resolved['last_test_ok'],
         ];
     }
 
@@ -73,25 +120,43 @@ class OrganizationMailService
             $encryption = '';
         }
 
-        return [
+        $port = (int) ($input['port'] ?? $this->defaultPortForEncryption($encryption));
+
+        $stored = is_array($organization->mail_settings) ? $organization->mail_settings : [];
+
+        $normalized = [
             'enabled' => $enabled,
             'host' => trim((string) ($input['host'] ?? '')),
-            'port' => (int) ($input['port'] ?? 587),
+            'port' => $port > 0 ? $port : $this->defaultPortForEncryption($encryption),
             'encryption' => $encryption,
             'username' => trim((string) ($input['username'] ?? '')),
             'password' => $password,
             'from_address' => strtolower(trim((string) ($input['from_address'] ?? ''))),
             'from_name' => trim((string) ($input['from_name'] ?? '')),
+            'last_tested_at' => $stored['last_tested_at'] ?? null,
+            'last_test_ok' => $stored['last_test_ok'] ?? null,
         ];
+
+        if (! $enabled) {
+            $normalized['last_test_ok'] = null;
+        }
+
+        return $normalized;
     }
 
     public function usesCustomSmtp(Organization $organization): bool
     {
         $settings = $organization->resolvedMailSettings();
 
-        return $settings['enabled']
-            && $settings['host'] !== ''
-            && $settings['from_address'] !== '';
+        if (! $settings['enabled'] || $settings['host'] === '' || $settings['from_address'] === '') {
+            return false;
+        }
+
+        if ($settings['username'] !== '' && ! filled($settings['password'])) {
+            return false;
+        }
+
+        return true;
     }
 
     public function mailerName(Organization $organization): string
@@ -129,7 +194,7 @@ class OrganizationMailService
                 'encryption' => $settings['encryption'] !== '' ? $settings['encryption'] : null,
                 'username' => $settings['username'] !== '' ? $settings['username'] : null,
                 'password' => $this->decryptPassword($settings['password']),
-                'timeout' => null,
+                'timeout' => 30,
                 'local_domain' => parse_url((string) config('app.url', 'http://localhost'), PHP_URL_HOST),
             ]),
         ]);
@@ -192,18 +257,31 @@ class OrganizationMailService
         }
 
         $settings = $organization->resolvedMailSettings();
+        $replyTo = $organization->notificationReplyTo();
 
-        Mail::mailer($mailer)->raw(
-            __('settings.mail.test_body', ['name' => $organization->name]),
-            function ($message) use ($to, $settings, $organization): void {
-                $message->to($to)
-                    ->subject(__('settings.mail.test_subject', ['name' => $organization->name]))
-                    ->from(
-                        $settings['from_address'],
-                        $settings['from_name'] !== '' ? $settings['from_name'] : $organization->name,
-                    );
-            },
-        );
+        try {
+            Mail::mailer($mailer)->raw(
+                __('settings.mail.test_body', ['name' => $organization->name]),
+                function ($message) use ($to, $settings, $organization, $replyTo): void {
+                    $message->to($to)
+                        ->subject(__('settings.mail.test_subject', ['name' => $organization->name]))
+                        ->from(
+                            $settings['from_address'],
+                            $settings['from_name'] !== '' ? $settings['from_name'] : $organization->name,
+                        );
+
+                    if ($replyTo) {
+                        $message->replyTo($replyTo);
+                    }
+                },
+            );
+
+            $this->recordTestResult($organization, true);
+        } catch (TransportExceptionInterface $exception) {
+            $this->recordTestResult($organization, false);
+
+            throw $exception;
+        }
     }
 
     public function registerFromQueuedJob(JobProcessing $event): void
@@ -230,6 +308,24 @@ class OrganizationMailService
         if ($organizationId > 0) {
             $this->registerMailerForOrganizationId($organizationId);
         }
+    }
+
+    protected function recordTestResult(Organization $organization, bool $success): void
+    {
+        $stored = is_array($organization->mail_settings) ? $organization->mail_settings : [];
+        $stored['last_tested_at'] = now()->toIso8601String();
+        $stored['last_test_ok'] = $success;
+
+        $organization->update(['mail_settings' => $stored]);
+    }
+
+    protected function defaultPortForEncryption(string $encryption): int
+    {
+        return match ($encryption) {
+            'ssl' => 465,
+            'tls' => 587,
+            default => 25,
+        };
     }
 
     protected function decryptPassword(?string $encrypted): ?string

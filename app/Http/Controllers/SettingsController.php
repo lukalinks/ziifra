@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Enums\PlanFeature;
 use App\Services\OrganizationBillingService;
+use App\Services\OrganizationMailService;
 use App\Support\CurrentOrganization;
 use Illuminate\View\View;
 
 class SettingsController extends Controller
 {
-    public function index(OrganizationBillingService $billing): View
+    public function index(OrganizationBillingService $billing, OrganizationMailService $mail): View
     {
         $organization = CurrentOrganization::check();
         $role = auth()->user()->roleIn($organization);
@@ -20,6 +21,7 @@ class SettingsController extends Controller
 
         return view('app.settings.index', [
             'organization' => $organization,
+            'mailStatus' => $mail->status($organization),
             'canManageOrganization' => $role?->canManageOrganization() ?? false,
             'canManageBilling' => $role?->canManageBilling() ?? false,
             'canManageEmployees' => $role?->canManageEmployees() ?? false,

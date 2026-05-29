@@ -15,6 +15,7 @@ return [
         'positions_card' => 'Intitulés de poste utilisés lors de l\'attribution des rôles.',
         'custom_fields_card' => 'Champs supplémentaires sur les profils employés (texte, dates, fichiers, etc.).',
         'leave_types_card' => 'Congés annuels, maladie et autres catégories avec allocations annuelles.',
+        'mail_card' => 'Serveur SMTP et adresse d\'envoi pour tous les e-mails de l\'espace.',
     ],
 
     'company' => [
