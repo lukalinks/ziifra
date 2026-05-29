@@ -14,12 +14,12 @@
                 </svg>
                 <input type="search" id="search" name="search" value="{{ request('search') }}"
                     placeholder="{{ __('documents.search_placeholder') }}"
-                    class="w-full rounded-lg border border-ziifra-line bg-white py-2 pl-9 pr-3 text-sm">
+                    class="ziifra-documents-field !mt-0 py-2 pl-9 pr-3">
             </div>
 
             <div>
                 <label for="employee_id" class="sr-only">{{ __('documents.employee') }}</label>
-                <select id="employee_id" name="employee_id" class="w-full rounded-lg border border-ziifra-line bg-white px-3 py-2 text-sm sm:min-w-[10rem]">
+                <select id="employee_id" name="employee_id" class="ziifra-documents-field px-3 sm:min-w-[10rem]">
                     <option value="">{{ __('documents.all_employees') }}</option>
                     @foreach ($employees as $employee)
                         <option value="{{ $employee->id }}" @selected(request('employee_id') == $employee->id)>
@@ -31,7 +31,7 @@
 
             <div>
                 <label for="expiry" class="sr-only">{{ __('documents.expiry_filter') }}</label>
-                <select id="expiry" name="expiry" class="w-full rounded-lg border border-ziifra-line bg-white px-3 py-2 text-sm sm:min-w-[9rem]">
+                <select id="expiry" name="expiry" class="ziifra-documents-field px-3 sm:min-w-[9rem]">
                     <option value="">{{ __('documents.all_expiry') }}</option>
                     <option value="expiring" @selected(request('expiry') === 'expiring')>{{ __('documents.filter_expiring') }}</option>
                     <option value="expired" @selected(request('expiry') === 'expired')>{{ __('documents.filter_expired') }}</option>

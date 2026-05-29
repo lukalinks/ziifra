@@ -161,8 +161,13 @@ class WorkspaceNavigationTest extends TestCase
 
         $flatLabels = array_column($flat, 'label');
 
-        $this->assertContains(__('navigation.hr_documents'), $flatLabels);
+        $this->assertContains(__('navigation.documents'), $flatLabels);
         $this->assertContains(__('navigation.payroll_and_time'), $flatLabels);
+        $payrollIndex = array_search(__('navigation.payroll_and_time'), $flatLabels, true);
+        $documentsIndex = array_search(__('navigation.documents'), $flatLabels, true);
+        $this->assertNotFalse($payrollIndex);
+        $this->assertNotFalse($documentsIndex);
+        $this->assertTrue($payrollIndex < $documentsIndex, 'Payroll should appear before Documents in the nav.');
         $this->assertContains(__('navigation.chat'), $flatLabels);
         $this->assertNotContains(__('navigation.project_documents'), $flatLabels);
     }

@@ -15,7 +15,7 @@
         <div>
             <label for="employee_id_upload" class="ziifra-documents-label">{{ __('documents.employee') }}</label>
             <select id="employee_id_upload" name="employee_id" required
-                class="mt-1.5 w-full rounded-lg border border-ziifra-line bg-white px-3 py-2 text-sm">
+                class="ziifra-documents-field mt-1.5 px-3">
                 <option value="" disabled @selected(! old('employee_id'))>{{ __('documents.select_employee') }}</option>
                 @foreach ($employees as $employee)
                     <option value="{{ $employee->id }}" @selected(old('employee_id') == $employee->id)>
@@ -31,7 +31,7 @@
         <div>
             <label for="document_type" class="ziifra-documents-label">{{ __('documents.type') }}</label>
             <select id="document_type" name="type" required
-                class="mt-1.5 w-full rounded-lg border border-ziifra-line bg-white px-3 py-2 text-sm">
+                class="ziifra-documents-field mt-1.5 px-3">
                 @foreach ($types as $docType)
                     <option value="{{ $docType->value }}" @selected(old('type', $selectedType ?? \App\Enums\EmployeeDocumentType::Other->value) === $docType->value)>
                         {{ $docType->label() }}
@@ -46,7 +46,7 @@
         <div>
             <label for="document_title" class="ziifra-documents-label">{{ __('documents.column_title') }}</label>
             <input type="text" id="document_title" name="title" value="{{ old('title') }}" required maxlength="255"
-                class="mt-1.5 w-full rounded-lg border border-ziifra-line bg-white px-3 py-2 text-sm"
+                class="ziifra-documents-field mt-1.5 px-3"
                 placeholder="{{ __('documents.title_placeholder') }}">
             @error('title')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
@@ -65,7 +65,7 @@
         <div>
             <label for="document_expires_at" class="ziifra-documents-label">{{ __('documents.expires_at') }}</label>
             <input type="date" id="document_expires_at" name="expires_at" value="{{ old('expires_at') }}"
-                class="mt-1.5 w-full rounded-lg border border-ziifra-line bg-white px-3 py-2 text-sm">
+                class="ziifra-documents-field mt-1.5 px-3">
             @error('expires_at')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
             @enderror
@@ -74,7 +74,7 @@
         <div>
             <label for="document_notes" class="ziifra-documents-label">{{ __('documents.notes') }}</label>
             <textarea id="document_notes" name="notes" rows="2" maxlength="2000"
-                class="mt-1.5 w-full rounded-lg border border-ziifra-line bg-white px-3 py-2 text-sm">{{ old('notes') }}</textarea>
+                class="ziifra-documents-field mt-1.5 px-3">{{ old('notes') }}</textarea>
             @error('notes')
                 <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
             @enderror

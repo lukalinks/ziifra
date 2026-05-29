@@ -39,13 +39,7 @@ class DailyHoursService
         $employees = $project->members()
             ->orderBy('last_name')
             ->orderBy('first_name')
-            ->when($search, function ($query, string $search): void {
-                $query->where(function ($q) use ($search): void {
-                    $q->where('first_name', 'like', "%{$search}%")
-                        ->orWhere('last_name', 'like', "%{$search}%")
-                        ->orWhere('employee_code', 'like', "%{$search}%");
-                });
-            })
+            ->when($search, fn ($query, string $search) => $query->matchingSearch($search))
             ->get();
 
         $entries = DailyHoursEntry::query()
@@ -164,13 +158,40 @@ class DailyHoursService
 
     public function approveEmployeeMonth(Project $project, Employee $employee, Carbon $month, User $approver): int
     {
+        return $this->approveEmployeeInPeriod(
+            $project->organization_id,
+            $employee,
+            $month,
+            $approver,
+            $project->id,
+        );
+    }
+
+    public function approveAllMonth(Project $project, Carbon $month, User $approver): int
+    {
+        return $this->approveAllInPeriod(
+            $project->organization_id,
+            $month,
+            $approver,
+            $project->id,
+        );
+    }
+
+    public function approveEmployeeInPeriod(
+        int $organizationId,
+        Employee $employee,
+        Carbon $month,
+        User $approver,
+        ?int $projectId = null,
+    ): int {
         $start = $month->copy()->startOfMonth();
         $end = $month->copy()->endOfMonth();
 
         return DailyHoursEntry::query()
-            ->where('project_id', $project->id)
+            ->where('organization_id', $organizationId)
             ->where('employee_id', $employee->id)
             ->whereBetween('work_date', [$start->toDateString(), $end->toDateString()])
+            ->when($projectId, fn ($query) => $query->where('project_id', $projectId))
             ->where('approval_status', DailyHoursApprovalStatus::Pending)
             ->where('hours', '>', 0)
             ->update([
@@ -180,14 +201,19 @@ class DailyHoursService
             ]);
     }
 
-    public function approveAllMonth(Project $project, Carbon $month, User $approver): int
-    {
+    public function approveAllInPeriod(
+        int $organizationId,
+        Carbon $month,
+        User $approver,
+        ?int $projectId = null,
+    ): int {
         $start = $month->copy()->startOfMonth();
         $end = $month->copy()->endOfMonth();
 
         return DailyHoursEntry::query()
-            ->where('project_id', $project->id)
+            ->where('organization_id', $organizationId)
             ->whereBetween('work_date', [$start->toDateString(), $end->toDateString()])
+            ->when($projectId, fn ($query) => $query->where('project_id', $projectId))
             ->where('approval_status', DailyHoursApprovalStatus::Pending)
             ->where('hours', '>', 0)
             ->update([

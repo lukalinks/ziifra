@@ -235,7 +235,7 @@
                         <h3 class="text-sm font-semibold text-ziifra-ink">{{ __('dashboard.quick_actions') }}</h3>
                     </div>
                     <div class="p-3 sm:p-4">
-                        @include('app.dashboard._quick-actions', ['columns' => 2])
+                        @include('app.dashboard._quick-actions', ['columns' => 1])
                     </div>
                 </section>
             @endif

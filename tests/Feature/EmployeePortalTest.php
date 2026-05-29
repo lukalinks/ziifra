@@ -159,7 +159,16 @@ class EmployeePortalTest extends TestCase
         $setup = $this->linkedEmployeeSetup();
         $session = ['current_organization_id' => $setup['organization']->id];
 
-        foreach (['leave.index', 'leave.create', 'expenses.index', 'time.index', 'chat.index'] as $route) {
+        $ownerUser = User::query()->where('email', 'owner@acme.test')->first();
+        $project = \App\Models\Project::query()->create([
+            'organization_id' => $setup['organization']->id,
+            'created_by_user_id' => $ownerUser?->id ?? $setup['user']->id,
+            'name' => 'Field project',
+            'status' => 'active',
+        ]);
+        $project->members()->attach($setup['employee']->id);
+
+        foreach (['leave.index', 'leave.create', 'expenses.index', 'time.index', 'chat.index', 'my-hours.index'] as $route) {
             $this->actingAs($setup['user'])
                 ->withSession($session)
                 ->get($this->workspaceRoute($route, $setup['organization']))
@@ -173,7 +182,7 @@ class EmployeePortalTest extends TestCase
         $this->useOrganizationPlan($setup['organization'], SubscriptionPlan::Pro);
         $session = ['current_organization_id' => $setup['organization']->id];
 
-        foreach (['employees.index', 'settings.index', 'reports.index', 'payroll.index', 'invoices.index'] as $route) {
+        foreach (['employees.index', 'settings.index', 'reports.index', 'payroll.index', 'payroll-time.index', 'invoices.index'] as $route) {
             $this->actingAs($setup['user'])
                 ->withSession($session)
                 ->get($this->workspaceRoute($route, $setup['organization']))

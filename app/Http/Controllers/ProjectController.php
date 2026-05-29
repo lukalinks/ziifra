@@ -15,6 +15,7 @@ use App\Models\ProjectDocument;
 use App\Models\ProjectTask;
 use App\Enums\ProjectDocumentCategory;
 use App\Services\DailyHoursService;
+use App\Services\ProjectActualCostService;
 use App\Services\ProjectService;
 use App\Support\CurrentOrganization;
 use Carbon\Carbon;
@@ -71,11 +72,11 @@ class ProjectController extends Controller
             ->with('status', __('projects.created'));
     }
 
-    public function show(Organization $organization, Project $project, Request $request, DailyHoursService $hours): View
+    public function show(Organization $organization, Project $project, Request $request, DailyHoursService $hours, ProjectActualCostService $actualCosts): View
     {
         $this->authorize('view', $project);
 
-        $project->load(['members', 'tasks.assignee', 'createdBy', 'documents.uploadedBy']);
+        $project->load(['members', 'tasks.assignee', 'createdBy', 'documents.uploadedBy', 'organization']);
 
         $month = Carbon::parse($request->string('month')->toString() ?: now()->format('Y-m'))->startOfMonth();
         $hoursGrid = $hours->gridForProject($project, $month, $request->string('search')->trim()->toString() ?: null);
@@ -98,6 +99,7 @@ class ProjectController extends Controller
             'hoursChart' => $this->hoursChartData($project, $chartYear, $chartMonth),
             'chartYear' => $chartYear,
             'chartMonth' => $chartMonth,
+            'actualCosts' => $actualCosts->forProject($project),
         ]);
     }
 

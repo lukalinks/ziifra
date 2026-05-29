@@ -66,19 +66,19 @@ class WorkspaceNavigation
             );
         }
 
-        if ($role->canViewEmployees() && $this->billing->hasFeature($organization, PlanFeature::Documents)) {
-            $primaryItems[] = $this->link(
-                __('navigation.hr_documents'),
-                'documents.index',
-                request()->routeIs('documents.*'),
-            );
-        }
-
         if ($role->canManageEmployees() && $this->billing->hasFeature($organization, PlanFeature::Payroll)) {
             $primaryItems[] = $this->link(
                 __('navigation.payroll_and_time'),
                 'payroll-time.index',
                 request()->routeIs('payroll-time.*'),
+            );
+        }
+
+        if ($role->canViewEmployees() && $this->billing->hasFeature($organization, PlanFeature::Documents)) {
+            $primaryItems[] = $this->link(
+                __('navigation.documents'),
+                'documents.index',
+                request()->routeIs('documents.*'),
             );
         }
 
@@ -117,6 +117,15 @@ class WorkspaceNavigation
         }
 
         if ($role->canRequestOwnLeave() && $linkedEmployee !== null) {
+            if ($this->billing->hasFeature($organization, PlanFeature::Projects)) {
+                $peopleItems[] = $this->link(
+                    __('navigation.my_hours'),
+                    'my-hours.index',
+                    request()->routeIs('my-hours.*'),
+                    __('employee_dashboard.shortcut_hours'),
+                );
+            }
+
             if ($this->billing->hasFeature($organization, PlanFeature::TimeTracking)) {
                 $peopleItems[] = $this->link(
                     __('navigation.time_and_attendance'),
@@ -222,11 +231,12 @@ class WorkspaceNavigation
             'employees.index',
             'projects.index',
             'payroll-time.index',
+            'documents.index',
             'leave.index',
+            'my-hours.index',
             'time.index',
             'expenses.index',
             'chat.index',
-            'documents.index',
             'invoices.index',
             'reports.index',
             'settings.index',

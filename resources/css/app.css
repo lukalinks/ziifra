@@ -2954,6 +2954,24 @@
         @apply relative min-w-0 flex-1 lg:min-w-[14rem];
     }
 
+    .ziifra-documents-field {
+        @apply w-full rounded-lg border border-ziifra-line/80 bg-ziifra-paper py-2 text-sm text-ziifra-ink shadow-sm transition placeholder:text-ziifra-muted focus:border-ziifra-accent focus:outline-none focus:ring-2 focus:ring-ziifra-accent/25;
+        color-scheme: light;
+    }
+
+    .ziifra-documents-field option {
+        @apply bg-ziifra-paper text-ziifra-ink;
+    }
+
+    [data-theme='dark'] .ziifra-documents-field {
+        @apply border-ziifra-line bg-ziifra-surface text-ziifra-ink;
+        color-scheme: dark;
+    }
+
+    [data-theme='dark'] .ziifra-documents-field option {
+        @apply bg-ziifra-surface text-ziifra-ink;
+    }
+
     .ziifra-documents-side-card {
         @apply overflow-hidden rounded-2xl border border-ziifra-line/80 bg-ziifra-paper shadow-sm;
     }
@@ -3117,6 +3135,10 @@
 
     .ziifra-project-detail-top .ziifra-project-detail-icon {
         @apply flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-ziifra-accent/10 text-ziifra-accent-deep;
+    }
+
+    .ziifra-project-detail-actual-cost {
+        @apply min-w-0 shrink text-ziifra-accent-deep;
     }
 
     .ziifra-project-detail-meta {
@@ -3779,6 +3801,10 @@
         @apply bg-amber-50/80;
     }
 
+    .ziifra-time-attendance-cell--pending {
+        @apply bg-amber-500/15 ring-1 ring-amber-400/50;
+    }
+
     .ziifra-hours-cell--error {
         @apply bg-red-50 ring-1 ring-red-300;
     }
@@ -3788,11 +3814,23 @@
     }
 
     .ziifra-dashboard-action {
-        @apply flex min-h-[3rem] w-full items-center gap-3 rounded-xl border border-ziifra-line/80 bg-ziifra-paper px-4 py-3 text-sm font-medium text-ziifra-ink no-underline shadow-sm transition hover:border-ziifra-accent/35 hover:bg-ziifra-cream/80 hover:text-ziifra-accent-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/30;
+        @apply flex min-h-[3.25rem] w-full items-center gap-3 rounded-xl border border-ziifra-line/80 bg-ziifra-paper px-3 py-2.5 text-sm font-medium text-ziifra-ink no-underline shadow-sm transition hover:border-ziifra-accent/35 hover:bg-ziifra-cream/80 hover:text-ziifra-accent-deep focus:outline-none focus-visible:ring-2 focus-visible:ring-ziifra-accent/30;
+    }
+
+    .ziifra-dashboard-action-label {
+        @apply min-w-0 flex-1 text-left leading-snug [overflow-wrap:anywhere];
+    }
+
+    .ziifra-admin-dashboard-ops-side .ziifra-dashboard-action {
+        @apply gap-2.5 px-3 py-3;
+    }
+
+    .ziifra-admin-dashboard-ops-side .ziifra-dashboard-action-chevron {
+        @apply hidden;
     }
 
     .ziifra-dashboard-action-chevron {
-        @apply h-4 w-4 shrink-0 text-ziifra-muted opacity-100 transition sm:opacity-0 sm:group-hover:opacity-100 sm:group-hover:translate-x-0.5;
+        @apply hidden h-4 w-4 shrink-0 text-ziifra-muted sm:block sm:opacity-0 sm:transition sm:group-hover:translate-x-0.5 sm:group-hover:opacity-100;
     }
 
     .ziifra-dashboard-action-icon {

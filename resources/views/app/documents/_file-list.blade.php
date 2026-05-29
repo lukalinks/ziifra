@@ -34,7 +34,9 @@
         <div class="space-y-3 p-3 md:hidden">
             @foreach ($documents as $document)
                 @php
-                    $initials = collect(explode(' ', trim($document->employee->fullName())))->filter()->take(2)->map(fn ($p) => mb_strtoupper(mb_substr($p, 0, 1)))->implode('');
+                    $initials = $document->employee
+                        ? collect(explode(' ', trim($document->employee->fullName())))->filter()->take(2)->map(fn ($p) => mb_strtoupper(mb_substr($p, 0, 1)))->implode('')
+                        : 'PY';
                     $iconTone = $fileIconTone($document->original_filename);
                 @endphp
                 <article class="ziifra-documents-file-card">
@@ -49,9 +51,13 @@
                             <p class="mt-0.5 truncate text-xs text-ziifra-muted">{{ $document->original_filename }}</p>
                             <div class="mt-3 flex items-center gap-2">
                                 <span class="ziifra-documents-avatar">{{ $initials }}</span>
-                                <a href="{{ route('employees.show', $document->employee) }}" data-page-nav class="truncate text-sm font-medium text-ziifra-accent-deep hover:underline">
-                                    {{ $document->employee->fullName() }}
-                                </a>
+                                @if ($document->employee)
+                                    <a href="{{ route('employees.show', $document->employee) }}" data-page-nav class="truncate text-sm font-medium text-ziifra-accent-deep hover:underline">
+                                        {{ $document->employee->fullName() }}
+                                    </a>
+                                @else
+                                    <span class="text-sm font-medium text-ziifra-muted">{{ __('documents.organization_file') }}</span>
+                                @endif
                             </div>
                             <div class="mt-3 flex flex-wrap items-center gap-2 text-xs">
                                 @if (! $selectedTypeEnum && ! $selectedFolder)
@@ -77,13 +83,13 @@
                         </div>
                     </div>
                     <div class="mt-4 flex items-center gap-3 border-t border-ziifra-line/60 pt-3">
-                        <a href="{{ route('employees.documents.download', [$document->employee, $document]) }}"
+                        <a href="{{ $document->employee ? route('employees.documents.download', [$document->employee, $document]) : route('documents.download', [$organization, $document]) }}"
                             class="text-sm font-medium text-ziifra-accent-deep hover:underline">
                             {{ __('documents.download') }}
                         </a>
                         @if ($canManage)
                             <form method="POST"
-                                action="{{ route('employees.documents.destroy', [$document->employee, $document]) }}"
+                                action="{{ $document->employee ? route('employees.documents.destroy', [$document->employee, $document]) : route('documents.destroy', [$organization, $document]) }}"
                                 data-confirm="{{ __('documents.confirm_delete') }}"
                                 data-confirm-variant="danger"
                                 data-confirm-accept="{{ __('common.delete') }}"
@@ -124,7 +130,9 @@
                 <tbody>
                     @foreach ($documents as $document)
                         @php
-                            $initials = collect(explode(' ', trim($document->employee->fullName())))->filter()->take(2)->map(fn ($p) => mb_strtoupper(mb_substr($p, 0, 1)))->implode('');
+                            $initials = $document->employee
+                                ? collect(explode(' ', trim($document->employee->fullName())))->filter()->take(2)->map(fn ($p) => mb_strtoupper(mb_substr($p, 0, 1)))->implode('')
+                                : 'PY';
                             $iconTone = $fileIconTone($document->original_filename);
                         @endphp
                         <tr>
@@ -145,12 +153,16 @@
                                 <div class="flex items-center gap-2.5">
                                     <span class="ziifra-documents-avatar">{{ $initials }}</span>
                                     <div class="min-w-0">
-                                        <a href="{{ route('employees.show', $document->employee) }}" data-page-nav
-                                            class="font-medium text-ziifra-accent-deep hover:underline">
-                                            {{ $document->employee->fullName() }}
-                                        </a>
-                                        @if ($document->employee->department)
-                                            <p class="truncate text-xs text-ziifra-muted">{{ $document->employee->department->name }}</p>
+                                        @if ($document->employee)
+                                            <a href="{{ route('employees.show', $document->employee) }}" data-page-nav
+                                                class="font-medium text-ziifra-accent-deep hover:underline">
+                                                {{ $document->employee->fullName() }}
+                                            </a>
+                                            @if ($document->employee->department)
+                                                <p class="truncate text-xs text-ziifra-muted">{{ $document->employee->department->name }}</p>
+                                            @endif
+                                        @else
+                                            <span class="font-medium text-ziifra-muted">{{ __('documents.organization_file') }}</span>
                                         @endif
                                     </div>
                                 </div>
@@ -185,13 +197,13 @@
                             </td>
                             <td class="text-right">
                                 <div class="flex items-center justify-end gap-2">
-                                    <a href="{{ route('employees.documents.download', [$document->employee, $document]) }}"
+                                    <a href="{{ $document->employee ? route('employees.documents.download', [$document->employee, $document]) : route('documents.download', [$organization, $document]) }}"
                                         class="ziifra-documents-action">
                                         {{ __('documents.download') }}
                                     </a>
                                     @if ($canManage)
                                         <form method="POST"
-                                            action="{{ route('employees.documents.destroy', [$document->employee, $document]) }}"
+                                            action="{{ $document->employee ? route('employees.documents.destroy', [$document->employee, $document]) : route('documents.destroy', [$organization, $document]) }}"
                                             data-confirm="{{ __('documents.confirm_delete') }}"
                                             data-confirm-variant="danger"
                                             data-confirm-accept="{{ __('common.delete') }}"

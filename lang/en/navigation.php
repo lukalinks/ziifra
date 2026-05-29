@@ -28,6 +28,7 @@ return [
     'expenses' => 'Expenses',
     'projects' => 'Projects',
     'time_and_attendance' => 'Time & attendance',
+    'my_hours' => 'My hours',
     'reports' => 'Reports',
     'chat' => 'Chat',
     'settings' => 'Settings',

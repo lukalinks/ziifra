@@ -32,6 +32,7 @@ class StoreProjectDocumentRequest extends FormRequest
             ],
             'category' => ['required', Rule::enum(ProjectDocumentCategory::class)],
             'title' => ['required', 'string', 'max:255'],
+            'amount' => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
             'file' => [
                 'required',
                 File::types(ProjectDocumentStorage::ALLOWED_MIMES)

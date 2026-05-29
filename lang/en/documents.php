@@ -54,6 +54,7 @@ return [
     'deleted' => 'Document removed.',
     'empty' => 'No documents on file yet.',
     'index_empty' => 'No documents match your filters.',
+    'organization_file' => 'Organization',
     'expires' => 'Expires :date',
     'expired' => 'Expired :date',
     'expiring_soon' => 'Expires soon (:date)',

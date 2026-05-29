@@ -17,6 +17,11 @@
                         @endforeach
                     </select>
                 </div>
+                <div>
+                    <label class="ziifra-label-field">{{ __('project_documents.field_amount') }}</label>
+                    <input type="number" name="amount" min="0" step="0.01" class="ziifra-input mt-1 w-full" placeholder="0.00">
+                    <p class="mt-1 text-xs text-ziifra-muted">{{ __('project_documents.field_amount_hint') }}</p>
+                </div>
                 <div class="sm:col-span-2">
                     <label class="ziifra-label-field">{{ __('project_documents.field_file') }}</label>
                     <input type="file" name="file" required class="mt-1 block w-full text-sm">
@@ -34,7 +39,12 @@
                 <li class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 text-sm">
                     <div>
                         <p class="font-medium text-ziifra-ink">{{ $doc->title }}</p>
-                        <p class="text-xs text-ziifra-muted">{{ $doc->category->label() }} · {{ $doc->uploaded_at?->format('M j, Y') }}</p>
+                        <p class="text-xs text-ziifra-muted">
+                            {{ $doc->category->label() }} · {{ $doc->uploaded_at?->format('M j, Y') }}
+                            @if ($doc->amount !== null)
+                                · {{ number_format((float) $doc->amount, 2, '.', '\'') }} {{ $project->currency ?? 'EUR' }}
+                            @endif
+                        </p>
                     </div>
                     <div class="flex gap-2">
                         <a href="{{ route('projects.documents.download', ['project' => $project, 'projectDocument' => $doc]) }}" class="ziifra-btn-app-outline !py-1.5 !text-xs">{{ __('common.download') }}</a>

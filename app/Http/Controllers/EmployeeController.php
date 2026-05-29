@@ -53,12 +53,7 @@ class EmployeeController extends Controller
             ->orderBy('first_name');
 
         if ($search = $request->string('search')->trim()->toString()) {
-            $query->where(function ($q) use ($search): void {
-                $q->where('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('employee_code', 'like', "%{$search}%");
-            });
+            $query->matchingSearch($search);
         }
 
         if ($projectId = $request->integer('project_id')) {

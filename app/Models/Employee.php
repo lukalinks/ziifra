@@ -7,6 +7,7 @@ use App\Enums\EmploymentStatus;
 use App\Enums\EmploymentType;
 use App\Models\Concerns\BelongsToOrganization;
 use Database\Factories\EmployeeFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -110,6 +111,43 @@ class Employee extends Model
     public function fullName(): string
     {
         return trim($this->first_name.' '.$this->last_name);
+    }
+
+    /**
+     * Case-insensitive search across first name, last name, full name, email, and code.
+     */
+    public function scopeMatchingSearch(Builder $query, string $search): Builder
+    {
+        $search = trim($search);
+
+        if ($search === '') {
+            return $query;
+        }
+
+        $needle = '%'.mb_strtolower($search).'%';
+        $fullNameSql = "LOWER(TRIM(COALESCE(first_name, '') || ' ' || COALESCE(last_name, '')))";
+
+        return $query->where(function (Builder $q) use ($search, $needle, $fullNameSql): void {
+            $q->whereRaw('LOWER(first_name) LIKE ?', [$needle])
+                ->orWhereRaw('LOWER(last_name) LIKE ?', [$needle])
+                ->orWhereRaw('LOWER(email) LIKE ?', [$needle])
+                ->orWhereRaw('LOWER(employee_code) LIKE ?', [$needle])
+                ->orWhereRaw("{$fullNameSql} LIKE ?", [$needle]);
+
+            foreach (preg_split('/\s+/', $search, -1, PREG_SPLIT_NO_EMPTY) as $word) {
+                if (mb_strlen($word) < 2) {
+                    continue;
+                }
+
+                $wordNeedle = '%'.mb_strtolower($word).'%';
+
+                $q->orWhere(function (Builder $inner) use ($wordNeedle, $fullNameSql): void {
+                    $inner->whereRaw('LOWER(first_name) LIKE ?', [$wordNeedle])
+                        ->orWhereRaw('LOWER(last_name) LIKE ?', [$wordNeedle])
+                        ->orWhereRaw("{$fullNameSql} LIKE ?", [$wordNeedle]);
+                });
+            }
+        });
     }
 
     public function initials(): string

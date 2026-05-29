@@ -8,6 +8,8 @@ use App\Models\Employee;
 use App\Models\Organization;
 use App\Models\Project;
 use App\Services\DailyHoursService;
+use App\Services\EmployeeProfileService;
+use App\Services\PayrollTimeArchiveService;
 use App\Services\PayrollTimeExportService;
 use App\Services\PayrollTimeService;
 use App\Support\CurrentOrganization;
@@ -26,7 +28,10 @@ class PayrollTimeController extends Controller
         $organization = CurrentOrganization::check();
         $year = (int) $request->integer('year', now()->year);
         $month = (int) $request->integer('month', now()->month);
-        $projectId = $request->integer('project_id') ?: null;
+
+        $projectId = $request->has('project_id')
+            ? ($request->integer('project_id') ?: null)
+            : Project::query()->orderBy('name')->value('id');
 
         $grid = $payrollTime->grid(
             $organization,
@@ -37,6 +42,9 @@ class PayrollTimeController extends Controller
         );
 
         $projects = Project::query()->orderBy('name')->get(['id', 'name']);
+        $archive = app(PayrollTimeArchiveService::class);
+        $linkedEmployee = app(EmployeeProfileService::class)->employeeFor($request->user(), $organization);
+        $canManage = $request->user()->can('create', Employee::class);
 
         return view('app.payroll-time.index', [
             'organization' => $organization,
@@ -46,9 +54,81 @@ class PayrollTimeController extends Controller
             'years' => $payrollTime->availableYears(),
             'projects' => $projects,
             'search' => $request->string('search')->trim()->toString(),
-            'canManage' => $request->user()->can('create', Employee::class),
+            'canManage' => $canManage,
+            'linkedEmployee' => $linkedEmployee,
+            'canApprove' => $canManage,
             'payrollSettings' => $organization->resolvedPayrollSettings(),
+            'payrollFolder' => $archive->payrollFolder($organization),
         ]);
+    }
+
+    public function approveEmployee(
+        Request $request,
+        Organization $organization,
+        Employee $employee,
+        DailyHoursService $hours,
+    ): RedirectResponse {
+        $this->authorize('create', Employee::class);
+        abort_unless($employee->organization_id === $organization->id, 404);
+
+        $month = Carbon::create(
+            (int) $request->integer('year', now()->year),
+            (int) $request->integer('month', now()->month),
+            1,
+        )->startOfMonth();
+
+        $projectId = $request->filled('project_id') ? $request->integer('project_id') : null;
+
+        $count = $hours->approveEmployeeInPeriod(
+            $organization->id,
+            $employee,
+            $month,
+            $request->user(),
+            $projectId,
+        );
+
+        return redirect()
+            ->route('payroll-time.index', array_filter([
+                'organization' => $organization,
+                'year' => $month->year,
+                'month' => $month->month,
+                'project_id' => $projectId,
+                'search' => $request->string('search')->trim()->toString() ?: null,
+            ]))
+            ->with('status', __('daily_hours.approved_count', ['count' => $count]));
+    }
+
+    public function approveAll(
+        Request $request,
+        Organization $organization,
+        DailyHoursService $hours,
+    ): RedirectResponse {
+        $this->authorize('create', Employee::class);
+
+        $month = Carbon::create(
+            (int) $request->integer('year', now()->year),
+            (int) $request->integer('month', now()->month),
+            1,
+        )->startOfMonth();
+
+        $projectId = $request->filled('project_id') ? $request->integer('project_id') : null;
+
+        $count = $hours->approveAllInPeriod(
+            $organization->id,
+            $month,
+            $request->user(),
+            $projectId,
+        );
+
+        return redirect()
+            ->route('payroll-time.index', array_filter([
+                'organization' => $organization,
+                'year' => $month->year,
+                'month' => $month->month,
+                'project_id' => $projectId,
+                'search' => $request->string('search')->trim()->toString() ?: null,
+            ]))
+            ->with('status', __('daily_hours.approved_count', ['count' => $count]));
     }
 
     public function upsert(
@@ -78,6 +158,9 @@ class PayrollTimeController extends Controller
             'id' => $entry->id,
             'hours' => (float) $entry->hours,
             'approval_status' => $entry->approval_status->value,
+            'message' => $entry->approval_status->value === 'pending'
+                ? __('my_hours.submitted_for_approval')
+                : null,
         ]);
     }
 
@@ -116,16 +199,41 @@ class PayrollTimeController extends Controller
         ]);
     }
 
-    public function exportPdf(Request $request, PayrollTimeExportService $export)
+    public function exportPdf(Request $request, PayrollTimeExportService $export, PayrollTimeArchiveService $archive): RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $this->authorize('viewAny', Employee::class);
 
-        return $export->pdf(
-            CurrentOrganization::check(),
-            (int) $request->integer('year', now()->year),
-            $request->filled('month') ? (int) $request->integer('month') : null,
-            $request->integer('project_id') ?: null,
-        );
+        $organization = CurrentOrganization::check();
+        $year = (int) $request->integer('year', now()->year);
+        $month = $request->filled('month') ? (int) $request->integer('month') : null;
+        $projectId = $request->integer('project_id') ?: null;
+
+        if ($request->boolean('archive') && $month !== null) {
+            $this->authorize('create', Employee::class);
+            $archive->archiveMonth($organization, $year, $month, $projectId, $request->user());
+            $folder = $archive->payrollFolder($organization);
+
+            return redirect()
+                ->route('documents.index', ['organization' => $organization, 'folder' => $folder->id])
+                ->with('status', __('payroll_time.archived_to_documents'));
+        }
+
+        return $export->pdf($organization, $year, $month, $projectId);
+    }
+
+    public function archivePastMonths(Request $request, Organization $organization, PayrollTimeArchiveService $archive): RedirectResponse
+    {
+        $this->authorize('create', Employee::class);
+        abort_unless($organization->id === CurrentOrganization::id(), 404);
+
+        $year = (int) $request->integer('year', now()->year);
+        $projectId = $request->integer('project_id') ?: null;
+        $count = $archive->archivePastMonthsInYear($organization, $year, $request->user(), $projectId);
+        $folder = $archive->payrollFolder($organization);
+
+        return redirect()
+            ->route('documents.index', ['organization' => $organization, 'folder' => $folder->id])
+            ->with('status', __('payroll_time.archived_past_months', ['count' => $count]));
     }
 
     public function exportExcel(Request $request, PayrollTimeExportService $export)

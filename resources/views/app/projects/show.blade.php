@@ -53,11 +53,20 @@
                 </svg>
             </span>
             <div class="min-w-0 flex-1">
-                <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                     <h1 class="text-lg font-semibold tracking-tight text-ziifra-ink">{{ $project->name }}</h1>
+                    <span class="ziifra-project-detail-actual-cost text-lg font-semibold tracking-tight tabular-nums text-ziifra-ink">
+                        @if ($project->budget)
+                            {{ __('projects.actual_spendings', ['amount' => $actualCosts['formatted']]) }}
+                        @else
+                            {{ __('projects.actual_costs', ['amount' => $actualCosts['formatted']]) }}
+                        @endif
+                    </span>
+                </div>
+                <div class="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-1">
                     <span @class(['ziifra-project-detail-status', 'ziifra-project-detail-status-'.$statusTone])>{{ $project->status->label() }}</span>
                     @if ($project->budget)
-                        <span class="ziifra-project-detail-meta">{{ number_format((float) $project->budget, 0) }} {{ $project->currency ?? 'EUR' }}</span>
+                        <span class="ziifra-project-detail-meta">{{ __('projects.budget_label') }}: {{ number_format((float) $project->budget, 0) }} {{ $project->currency ?? 'EUR' }}</span>
                     @endif
                     <span class="ziifra-project-detail-meta">{{ $completion }}% · {{ trans_choice('projects.task_count', $taskCount, ['count' => $taskCount]) }}</span>
                 </div>

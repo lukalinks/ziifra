@@ -15,7 +15,7 @@ class PayrollTimeExportService
 
     public function pdf(Organization $organization, int $year, ?int $month, ?int $projectId)
     {
-        $data = $this->buildExportData($organization, $year, $month, $projectId);
+        $data = $this->exportData($organization, $year, $month, $projectId);
 
         return Pdf::loadView('app.payroll-time.export-pdf', $data)
             ->download($this->filename($organization, $year, $month, 'pdf'));
@@ -23,9 +23,47 @@ class PayrollTimeExportService
 
     public function excel(Organization $organization, int $year, ?int $month, ?int $projectId): StreamedResponse
     {
-        $data = $this->buildExportData($organization, $year, $month, $projectId);
+        $data = $this->exportData($organization, $year, $month, $projectId);
 
         return $this->streamCsv($data['rows'], $data['totals'], $this->filename($organization, $year, $month, 'csv'));
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function exportData(Organization $organization, int $year, ?int $month, ?int $projectId, ?int $employeeId = null): array
+    {
+        return $this->buildExportData($organization, $year, $month, $projectId, $employeeId);
+    }
+
+    /**
+     * @param  list<array<string, mixed>>  $rows
+     * @param  array<string, float>  $totals
+     */
+    public function csvContent(array $rows, array $totals): string
+    {
+        $handle = fopen('php://temp', 'r+');
+        fputcsv($handle, ['Employee', 'Code', 'Hours', 'Rate/h', 'Gross', 'Trust (employee)', 'Trust (employer)', 'Net']);
+
+        foreach ($rows as $row) {
+            fputcsv($handle, [
+                $row['employee']->fullName(),
+                $row['employee']->displayCode(),
+                $row['total_hours'],
+                $row['hourly_rate'],
+                $row['gross'],
+                $row['trust_employee'],
+                $row['trust_employer'],
+                $row['net'],
+            ]);
+        }
+
+        fputcsv($handle, ['TOTAL', '', $totals['hours'], '', $totals['gross'], $totals['trust_employee'], $totals['trust_employer'], $totals['net']]);
+        rewind($handle);
+        $content = stream_get_contents($handle);
+        fclose($handle);
+
+        return $content !== false ? $content : '';
     }
 
     public function employeePdf(Organization $organization, Employee $employee, int $year, ?int $month, ?int $projectId)
@@ -45,28 +83,15 @@ class PayrollTimeExportService
 
     protected function streamCsv(array $rows, array $totals, string $filename): StreamedResponse
     {
-        return response()->streamDownload(function () use ($rows, $totals): void {
-            $out = fopen('php://output', 'w');
-            fputcsv($out, ['Employee', 'Code', 'Hours', 'Rate/h', 'Gross', 'Trust (employee)', 'Trust (employer)', 'Net']);
+        $content = $this->csvContent($rows, $totals);
 
-            foreach ($rows as $row) {
-                fputcsv($out, [
-                    $row['employee']->fullName(),
-                    $row['employee']->displayCode(),
-                    $row['total_hours'],
-                    $row['hourly_rate'],
-                    $row['gross'],
-                    $row['trust_employee'],
-                    $row['trust_employer'],
-                    $row['net'],
-                ]);
-            }
-
-            fputcsv($out, ['TOTAL', '', $totals['hours'], '', $totals['gross'], $totals['trust_employee'], $totals['trust_employer'], $totals['net']]);
-            fclose($out);
-        }, $filename, [
-            'Content-Type' => 'text/csv',
-        ]);
+        return response()->streamDownload(
+            static function () use ($content): void {
+                echo $content;
+            },
+            $filename,
+            ['Content-Type' => 'text/csv'],
+        );
     }
 
     /**

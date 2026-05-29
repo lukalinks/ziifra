@@ -6,14 +6,18 @@ use App\Http\Requests\StoreDocumentFromIndexRequest;
 use App\Models\DocumentFolder;
 use App\Models\Employee;
 use App\Models\EmployeeDocument;
+use App\Models\Organization;
 use App\Models\OrganizationContractTemplate;
 use App\Services\DocumentIndexService;
 use App\Services\EmployeeDocumentService;
 use App\Services\OrganizationContractTemplateService;
 use App\Support\CurrentOrganization;
+use App\Support\EmployeeDocumentStorage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DocumentController extends Controller
 {
@@ -102,5 +106,32 @@ class DocumentController extends Controller
                 'type' => empty($validated['document_folder_id']) ? ($validated['type'] ?? null) : null,
             ]))
             ->with('status', __('documents.uploaded'));
+    }
+
+    public function download(Organization $organization, EmployeeDocument $document): StreamedResponse
+    {
+        $this->authorize('view', $document);
+        abort_unless($document->organization_id === $organization->id, 404);
+        abort_unless($document->employee_id === null, 404);
+        abort_unless(EmployeeDocumentStorage::exists($document->file_path), 404);
+
+        return Storage::disk('local')->download(
+            $document->file_path,
+            $document->original_filename,
+        );
+    }
+
+    public function destroy(Organization $organization, EmployeeDocument $document, EmployeeDocumentService $documents): RedirectResponse
+    {
+        $this->authorize('delete', $document);
+        abort_unless($document->organization_id === $organization->id, 404);
+        abort_unless($document->employee_id === null, 404);
+
+        $folderId = $document->document_folder_id;
+        $documents->delete($document);
+
+        return redirect()
+            ->route('documents.index', array_filter(['folder' => $folderId]))
+            ->with('status', __('documents.deleted'));
     }
 }

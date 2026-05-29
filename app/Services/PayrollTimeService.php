@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\CompensationType;
+use App\Enums\DailyHoursApprovalStatus;
 use App\Models\DailyHoursEntry;
 use App\Models\Employee;
 use App\Models\Organization;
@@ -52,19 +53,14 @@ class PayrollTimeService
             ->orderBy('first_name');
 
         if ($search) {
-            $employeesQuery->where(function ($q) use ($search): void {
-                $q->where('first_name', 'like', "%{$search}%")
-                    ->orWhere('last_name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('employee_code', 'like', "%{$search}%");
-            });
+            $employeesQuery->matchingSearch($search);
         }
 
         if ($project) {
             $employeesQuery->whereHas('projects', fn ($q) => $q->where('projects.id', $project->id));
         }
 
-        $employees = $employeesQuery->get();
+        $employees = $employeesQuery->with('projects:id')->get();
         $employeeIds = $employees->pluck('id');
 
         $entriesQuery = DailyHoursEntry::query()
@@ -84,22 +80,53 @@ class PayrollTimeService
 
         $rows = [];
         $grandHours = 0.0;
+        $grandPendingHours = 0.0;
         $grandGross = 0.0;
         $grandTrustEmployee = 0.0;
         $grandTrustEmployer = 0.0;
         $grandNet = 0.0;
+        $pendingEmployees = 0;
 
         foreach ($employees as $employee) {
             $daily = [];
+            $dailyMeta = [];
             $totalHours = 0.0;
+            $pendingHours = 0.0;
+            $hasPending = false;
             $rate = $this->rates->hourlyRateFor($employee, $start);
             $currency = $this->rates->hourlyCurrencyFor($employee);
 
             foreach ($days as $day) {
                 $key = $employee->id.'|'.$day->format('Y-m-d');
                 $dayEntries = $entries->get($key, collect());
-                $daily[$day->format('Y-m-d')] = (float) $dayEntries->sum('hours');
-                $totalHours += $daily[$day->format('Y-m-d')];
+                $allHours = (float) $dayEntries->sum('hours');
+                $approvedHours = (float) $dayEntries
+                    ->where('approval_status', DailyHoursApprovalStatus::Approved)
+                    ->sum('hours');
+                $dateKey = $day->format('Y-m-d');
+                $daily[$dateKey] = $allHours;
+                $totalHours += $approvedHours;
+                $pendingHours += max(0, $allHours - $approvedHours);
+
+                $cellPending = $dayEntries->contains(
+                    fn (DailyHoursEntry $entry) => $entry->hours > 0
+                        && $entry->approval_status === DailyHoursApprovalStatus::Pending,
+                );
+
+                if ($cellPending) {
+                    $hasPending = true;
+                }
+
+                $dailyMeta[$dateKey] = [
+                    'status' => $allHours <= 0
+                        ? 'empty'
+                        : ($cellPending ? 'pending' : 'approved'),
+                    'approved_hours' => $approvedHours,
+                ];
+            }
+
+            if ($hasPending) {
+                $pendingEmployees++;
             }
 
             $isMonthly = $employee->compensation_type === CompensationType::Monthly && $employee->fixed_monthly_salary;
@@ -117,15 +144,23 @@ class PayrollTimeService
             $net = round($gross - $trustEmployee, 2);
 
             $grandHours += $totalHours;
+            $grandPendingHours += $pendingHours;
             $grandGross += $gross;
             $grandTrustEmployee += $trustEmployee;
             $grandTrustEmployer += $trustEmployer;
             $grandNet += $net;
 
+            $hoursProject = $project ?? ($employee->projects->count() === 1 ? $employee->projects->first() : null);
+
             $rows[] = [
                 'employee' => $employee,
                 'daily' => $daily,
+                'daily_meta' => $dailyMeta,
                 'total_hours' => $totalHours,
+                'pending_hours' => round($pendingHours, 2),
+                'row_status' => $totalHours <= 0 && $pendingHours <= 0
+                    ? 'empty'
+                    : ($hasPending ? 'pending' : 'approved'),
                 'hourly_rate' => $rate,
                 'currency' => $currency,
                 'is_monthly' => (bool) $isMonthly,
@@ -137,18 +172,26 @@ class PayrollTimeService
                 'trust_employee_percent' => $trustEmployeePct,
                 'trust_employer_percent' => $trustEmployerPct,
                 'trust_is_override' => $employee->trust_override_percent !== null,
+                'hours_project' => $hoursProject,
+                'hours_project_id' => $hoursProject?->id,
+                'hours_editable' => $hoursProject !== null,
             ];
         }
+
+        $anyHoursEditable = collect($rows)->contains(fn (array $row): bool => $row['hours_editable']);
 
         return [
             'year' => $year,
             'month' => $month,
             'project' => $project,
             'editable' => $editable,
+            'any_hours_editable' => $anyHoursEditable,
             'days' => $days,
             'rows' => $rows,
             'totals' => [
                 'hours' => $grandHours,
+                'pending_hours' => round($grandPendingHours, 2),
+                'pending_employees' => $pendingEmployees,
                 'gross' => $grandGross,
                 'trust_employee' => $grandTrustEmployee,
                 'trust_employer' => $grandTrustEmployer,

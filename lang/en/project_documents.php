@@ -59,6 +59,8 @@ return [
     ],
     'field_title' => 'Title',
     'field_category' => 'Category',
+    'field_amount' => 'Amount (EUR)',
+    'field_amount_hint' => 'Optional — receipt, invoice, or expense total counted in project costs.',
     'field_file' => 'File',
     'export' => [
         'project' => 'Project',

@@ -20,6 +20,7 @@ return [
     'open_module' => 'Tap to open',
     'shortcut_leave' => 'Request and track time off',
     'shortcut_time' => 'Log hours and attendance',
+    'shortcut_hours' => 'Submit project hours for approval',
     'shortcut_expenses' => 'Submit expense claims',
     'shortcut_chat' => 'Message your team',
     'shortcut_profile' => 'View your HR profile',

@@ -28,7 +28,7 @@
                 {{ __('documents.templates.select_contract') }}
             </label>
             <select id="contract_template_select"
-                class="mt-1.5 w-full rounded-lg border border-ziifra-line bg-white px-3 py-2 text-sm text-ziifra-ink">
+                class="ziifra-documents-field mt-1.5 px-3">
                 @foreach ($contractTemplates as $contractTemplate)
                     <option value="{{ $contractTemplate->slug }}" @selected($contractTemplate->slug === $selectedContractSlug)>
                         {{ $contractTemplate->name }}
@@ -53,7 +53,7 @@
                             {{ __('documents.templates.select_employee') }}
                         </label>
                         <select id="contract_template_employee" name="employee_id" required
-                            class="mt-1.5 w-full rounded-lg border border-ziifra-line bg-white px-3 py-2 text-sm">
+                            class="ziifra-documents-field mt-1.5 px-3">
                             <option value="" disabled selected>{{ __('documents.select_employee') }}</option>
                             @foreach ($employees as $employee)
                                 <option value="{{ $employee->id }}" @selected(old('employee_id') == $employee->id)>

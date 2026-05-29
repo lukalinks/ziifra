@@ -20,11 +20,23 @@ class EmployeeDocumentPolicy
 
     public function view(User $user, EmployeeDocument $document): bool
     {
+        if ($document->employee_id === null) {
+            $role = $user->roleIn($document->organization);
+
+            return $role?->canViewEmployees() ?? false;
+        }
+
         return $user->can('view', $document->employee);
     }
 
     public function delete(User $user, EmployeeDocument $document): bool
     {
+        if ($document->employee_id === null) {
+            $role = $user->roleIn($document->organization);
+
+            return $role?->canManageEmployees() ?? false;
+        }
+
         return $user->can('update', $document->employee);
     }
 }

@@ -8,7 +8,7 @@ function initPayrollTimeGrid() {
     const csrf = root.dataset.csrf;
     const upsertUrl = root.dataset.upsertUrl;
     const rateUrlTemplate = root.dataset.rateUrlTemplate;
-    const projectId = root.dataset.projectId ? Number.parseInt(root.dataset.projectId, 10) : null;
+    const defaultProjectId = root.dataset.projectId ? Number.parseInt(root.dataset.projectId, 10) : null;
     const timers = new WeakMap();
 
     const number = (value) => {
@@ -18,14 +18,22 @@ function initPayrollTimeGrid() {
     };
 
     const flagState = (input, state) => {
-        input.classList.remove('ziifra-pt-cell--saving', 'ziifra-pt-cell--saved', 'ziifra-pt-cell--error');
+        input.classList.remove('ziifra-time-attendance-cell--saving', 'ziifra-time-attendance-cell--saved', 'ziifra-time-attendance-cell--error');
 
         if (state) {
-            input.classList.add(`ziifra-pt-cell--${state}`);
+            input.classList.add(`ziifra-time-attendance-cell--${state}`);
         }
     };
 
     const rateUrlFor = (employeeId) => rateUrlTemplate.replace('__EMPLOYEE__', employeeId);
+
+    const approvedHoursForInput = (input) => {
+        if (input.dataset.approvalStatus === 'approved') {
+            return number(input.value);
+        }
+
+        return 0;
+    };
 
     const recalcRow = (row) => {
         const isMonthly = row.dataset.monthly === '1';
@@ -34,7 +42,7 @@ function initPayrollTimeGrid() {
 
         let totalHours = 0;
         row.querySelectorAll('[data-pt-hours]').forEach((input) => {
-            totalHours += number(input.value);
+            totalHours += approvedHoursForInput(input);
         });
 
         const gross = isMonthly ? number(row.dataset.gross) : Math.round(totalHours * rate * 100) / 100;
@@ -73,7 +81,7 @@ function initPayrollTimeGrid() {
 
             let rowHours = 0;
             row.querySelectorAll('[data-pt-hours]').forEach((input) => {
-                rowHours += number(input.value);
+                rowHours += approvedHoursForInput(input);
             });
 
             const rowGross = isMonthly ? number(row.dataset.gross) : rowHours * rate;
@@ -100,6 +108,10 @@ function initPayrollTimeGrid() {
     };
 
     const saveHours = async (input) => {
+        const projectId = input.dataset.projectId
+            ? Number.parseInt(input.dataset.projectId, 10)
+            : defaultProjectId;
+
         if (! projectId) {
             return;
         }
@@ -128,6 +140,18 @@ function initPayrollTimeGrid() {
 
             if (! response.ok) {
                 throw new Error('save failed');
+            }
+
+            const data = await response.json();
+            input.dataset.approvalStatus = data.approval_status || 'pending';
+            input.dataset.ptApprovedHours = '0';
+            input.classList.remove('ziifra-time-attendance-cell--filled');
+            input.classList.add('ziifra-time-attendance-cell--pending');
+
+            const row = input.closest('[data-pt-row]');
+            if (row) {
+                row.dataset.rowStatus = 'pending';
+                recalcRow(row);
             }
 
             flagState(input, 'saved');

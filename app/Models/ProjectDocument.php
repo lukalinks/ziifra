@@ -18,6 +18,7 @@ class ProjectDocument extends Model
         'uploaded_by_user_id',
         'category',
         'title',
+        'amount',
         'file_path',
         'original_filename',
         'uploaded_at',
@@ -27,6 +28,7 @@ class ProjectDocument extends Model
     {
         return [
             'category' => ProjectDocumentCategory::class,
+            'amount' => 'decimal:2',
             'uploaded_at' => 'datetime',
         ];
     }

@@ -24,6 +24,9 @@ class ProjectDocumentService
             'uploaded_by_user_id' => $uploadedBy->id,
             'category' => $data['category'],
             'title' => $data['title'],
+            'amount' => isset($data['amount']) && $data['amount'] !== '' && $data['amount'] !== null
+                ? round((float) $data['amount'], 2)
+                : null,
             'file_path' => $stored['path'],
             'original_filename' => $stored['original_filename'],
             'uploaded_at' => now(),
