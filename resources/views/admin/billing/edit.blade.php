@@ -59,7 +59,7 @@
                     <div class="grid gap-4 sm:grid-cols-2">
                         <div>
                             <label for="plans_{{ $planKey }}_monthly_price" class="block text-sm font-medium text-slate-700">{{ __('admin.billing.monthly_price') }}</label>
-                            <input id="plans_{{ $planKey }}_monthly_price" name="plans[{{ $planKey }}][monthly_price]" type="number" min="0"
+                            <input id="plans_{{ $planKey }}_monthly_price" name="plans[{{ $planKey }}][monthly_price]" type="number" min="0" step="0.01"
                                 value="{{ old('plans.'.$planKey.'.monthly_price', $plan['monthly_price']) }}"
                                 @disabled($isTrial || $isEnterprise)
                                 class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900 disabled:bg-slate-100 disabled:text-slate-500">

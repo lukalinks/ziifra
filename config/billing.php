@@ -52,8 +52,8 @@ return [
         'pro' => [
             'name' => 'Pro',
             'employee_limit' => 200,
-            'price_label' => '€40 / month',
-            'monthly_price' => 40,
+            'price_label' => '€49.90 / month',
+            'monthly_price' => 49.9,
             'stripe_price_id' => null,
             'paypal_plan_id' => null,
             'enabled_features' => PlanFeature::values(),

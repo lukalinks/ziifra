@@ -21,6 +21,21 @@ class BillingConfigurationService
         return (int) ($this->settings()['trial_days'] ?? config('billing.trial_days', 14));
     }
 
+    public static function formatMonthlyPrice(float|int|null $price): ?string
+    {
+        if ($price === null) {
+            return null;
+        }
+
+        $price = (float) $price;
+
+        if (fmod($price, 1.0) === 0.0) {
+            return (string) (int) $price;
+        }
+
+        return rtrim(rtrim(number_format($price, 2, '.', ''), '0'), '.');
+    }
+
     /**
      * @return list<array{key: string, label: string, required: bool}>
      */
@@ -42,7 +57,7 @@ class BillingConfigurationService
      *     employee_limit: int|null,
      *     payroll: bool,
      *     price_label: string,
-     *     monthly_price: int|null,
+     *     monthly_price: float|null,
      *     stripe_price_id: string|null,
      *     paypal_plan_id: string|null,
      *     enabled_features: list<string>,
@@ -70,7 +85,7 @@ class BillingConfigurationService
      *     employee_limit: int|null,
      *     payroll: bool,
      *     price_label: string,
-     *     monthly_price: int|null,
+     *     monthly_price: float|null,
      *     stripe_price_id: string|null,
      *     paypal_plan_id: string|null,
      *     enabled_features: list<string>,
@@ -140,7 +155,7 @@ class BillingConfigurationService
      *     employee_limit: int|null,
      *     payroll: bool,
      *     price_label: string,
-     *     monthly_price: int|null,
+     *     monthly_price: float|null,
      *     stripe_price_id: string|null,
      *     paypal_plan_id: string|null,
      *     enabled_features: list<string>
@@ -166,7 +181,7 @@ class BillingConfigurationService
         if ($monthlyPrice === '' || $monthlyPrice === null) {
             $monthlyPrice = $default['monthly_price'] ?? null;
         } else {
-            $monthlyPrice = (int) $monthlyPrice;
+            $monthlyPrice = round((float) $monthlyPrice, 2);
         }
 
         if ($plan === SubscriptionPlan::Trial) {
@@ -229,7 +244,7 @@ class BillingConfigurationService
      *     employee_limit: int|null,
      *     payroll: bool,
      *     price_label: string,
-     *     monthly_price: int|null,
+     *     monthly_price: float|null,
      *     stripe_price_id: string|null,
      *     paypal_plan_id: string|null,
      *     enabled_features: list<string>
@@ -365,7 +380,7 @@ class BillingConfigurationService
      *     employee_limit: int|null,
      *     payroll: bool,
      *     price_label: string,
-     *     monthly_price: int|null,
+     *     monthly_price: float|null,
      *     stripe_price_id: string|null,
      *     paypal_plan_id: string|null,
      *     enabled_features: list<string>
@@ -404,7 +419,7 @@ class BillingConfigurationService
                 'payroll' => in_array(PlanFeature::Payroll->value, $enabledFeatures, true),
                 'price_label' => (string) ($plan['price_label'] ?? ''),
                 'monthly_price' => array_key_exists('monthly_price', $plan) && $plan['monthly_price'] !== null
-                    ? (int) $plan['monthly_price']
+                    ? round((float) $plan['monthly_price'], 2)
                     : null,
                 'stripe_price_id' => is_string($stripePriceId) && $stripePriceId !== '' ? $stripePriceId : null,
                 'paypal_plan_id' => is_string($paypalPlanId) && $paypalPlanId !== '' ? $paypalPlanId : null,

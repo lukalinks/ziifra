@@ -13,6 +13,8 @@ class LandingPageTest extends TestCase
         $response->assertOk();
         $response->assertSee('ZIIFRA', false);
         $response->assertSee('Start free trial', false);
+        $response->assertSee('€20', false);
+        $response->assertSee('€49.9', false);
         $response->assertSee('lang="en"', false);
     }
 

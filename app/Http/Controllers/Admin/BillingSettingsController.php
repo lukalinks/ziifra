@@ -34,7 +34,7 @@ class BillingSettingsController extends Controller
             'plans.*.name' => ['required', 'string', 'max:100'],
             'plans.*.employee_limit' => ['nullable', 'integer', 'min:1', 'max:100000'],
             'plans.*.price_label' => ['required', 'string', 'max:120'],
-            'plans.*.monthly_price' => ['nullable', 'integer', 'min:0', 'max:100000'],
+            'plans.*.monthly_price' => ['nullable', 'numeric', 'min:0', 'max:100000'],
             'plans.*.stripe_price_id' => ['nullable', 'string', 'max:255'],
             'plans.*.paypal_plan_id' => ['nullable', 'string', 'max:255'],
             'plans.*.enabled_features' => ['nullable', 'array'],

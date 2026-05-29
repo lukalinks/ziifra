@@ -319,7 +319,7 @@
                 <p class="font-mono text-xs uppercase tracking-widest text-ziifra-muted">{{ __('landing.pricing.plans.starter') }}</p>
                 <p class="mt-4 flex items-baseline gap-1">
                     @if ($starter['monthly_price'])
-                        <span class="text-4xl font-semibold tabular-nums text-ziifra-ink sm:text-5xl">€{{ $starter['monthly_price'] }}</span>
+                        <span class="text-4xl font-semibold tabular-nums text-ziifra-ink sm:text-5xl">€{{ \App\Services\BillingConfigurationService::formatMonthlyPrice($starter['monthly_price']) }}</span>
                         <span class="text-ziifra-muted">{{ __('landing.pricing.per_month') }}</span>
                     @else
                         <span class="text-3xl font-semibold text-ziifra-ink">{{ $starter['price_label'] }}</span>
@@ -348,7 +348,7 @@
                 <p class="mt-6 font-mono text-xs uppercase tracking-widest text-white/50">{{ __('landing.pricing.plans.pro') }}</p>
                 <p class="mt-4 flex items-baseline gap-1">
                     @if ($pro['monthly_price'])
-                        <span class="text-4xl font-semibold tabular-nums sm:text-5xl">€{{ $pro['monthly_price'] }}</span>
+                        <span class="text-4xl font-semibold tabular-nums sm:text-5xl">€{{ \App\Services\BillingConfigurationService::formatMonthlyPrice($pro['monthly_price']) }}</span>
                         <span class="text-white/45">{{ __('landing.pricing.per_month') }}</span>
                     @else
                         <span class="text-3xl font-semibold">{{ $pro['price_label'] }}</span>
