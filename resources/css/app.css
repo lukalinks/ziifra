@@ -4412,15 +4412,19 @@
     }
 
     .ziifra-employee-info-item-highlight {
-        @apply border-ziifra-accent/25 bg-gradient-to-br from-sky-50/50 to-ziifra-paper;
+        @apply border-ziifra-accent/30 bg-ziifra-accent/[0.06];
     }
 
     .ziifra-employee-info-label {
-        @apply block text-[0.65rem] font-semibold uppercase tracking-wide text-ziifra-muted;
+        @apply block text-xs font-semibold uppercase tracking-wide text-ziifra-ink-soft;
+    }
+
+    .ziifra-employee-info-item-highlight .ziifra-employee-info-label {
+        @apply text-ziifra-ink;
     }
 
     .ziifra-employee-info-value {
-        @apply mt-1 block text-sm font-medium text-ziifra-ink;
+        @apply mt-1 block text-sm font-semibold text-ziifra-ink;
     }
 
     .ziifra-employee-workspace-subsection {
@@ -4445,6 +4449,11 @@
 
     .ziifra-employee-workspace-panel .ziifra-dashboard-panel {
         @apply overflow-visible rounded-xl border border-ziifra-line/70 bg-ziifra-paper shadow-sm;
+    }
+
+    .ziifra-employee-workspace-panel[data-employee-panel='payroll'] .ziifra-employee-panel-head,
+    .ziifra-employee-workspace-panel[data-employee-panel='payroll'] .ziifra-employee-info-grid {
+        @apply relative z-[1];
     }
 
     .ziifra-employee-access--embedded {
@@ -4653,8 +4662,28 @@
     }
 
     .ziifra-app .bg-sky-50,
+    .ziifra-app .from-sky-50\/50,
     .ziifra-app .from-sky-50\/90 {
+        --tw-gradient-from: rgb(14 165 233 / 0.12);
+        --tw-gradient-to: rgb(14 165 233 / 0);
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+    }
+
+    .ziifra-app .bg-sky-50 {
         @apply bg-sky-500/10;
+    }
+
+    .ziifra-employee-info-item-highlight {
+        @apply border-ziifra-accent/35 bg-ziifra-accent/10;
+    }
+
+    .ziifra-employee-info-label {
+        @apply text-ziifra-muted;
+    }
+
+    .ziifra-employee-info-item-highlight .ziifra-employee-info-label,
+    .ziifra-employee-info-value {
+        @apply text-ziifra-ink;
     }
 
     .ziifra-app .text-sky-800 {
