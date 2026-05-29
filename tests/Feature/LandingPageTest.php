@@ -40,6 +40,20 @@ class LandingPageTest extends TestCase
         $response->assertSee('lang="sq"', false);
     }
 
+    public function test_landing_page_displays_german_feature_cards_when_locale_is_de(): void
+    {
+        $response = $this->withSession(['locale' => 'de'])->get(route('home'));
+
+        $response->assertOk();
+        $response->assertSee('Alles für den täglichen HR-Betrieb', false);
+        $response->assertSee('Belegschaft', false);
+        $response->assertSee('Urlaub', false);
+        $response->assertSee('Lohnabrechnung', false);
+        $response->assertDontSee('Workforce', false);
+        $response->assertDontSee('Time off', false);
+        $response->assertSee('lang="de"', false);
+    }
+
     public function test_privacy_and_terms_pages_are_available(): void
     {
         $this->get(route('privacy'))->assertOk()->assertSee('Privacy Policy');
