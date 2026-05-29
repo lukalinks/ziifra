@@ -38,6 +38,9 @@ return [
 
     'workspace_access' => 'Workspace login',
     'workspace_access_help' => 'Send an invitation so this person can sign in, request leave, and use the employee dashboard.',
+    'workspace_access_help_active' => 'This employee can sign in, request leave, submit project hours, and use the employee dashboard.',
+    'workspace_access_help_pending' => 'An invitation email was sent. They can accept it to activate their login.',
+    'workspace_access_help_no_email' => 'Add a work email on the profile before you can send a login invitation.',
     'login_active_as' => 'Signed in as :name (:email).',
     'login_invitation_pending' => 'Invitation sent to :email. Expires :date.',
     'login_no_email' => 'Add an email on the employee profile before activating login.',

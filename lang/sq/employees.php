@@ -10,6 +10,9 @@ return [
 
     'workspace_access' => 'Hyrja në hapësirën e punës',
     'workspace_access_help' => 'Dërgoni një ftesë që kjo person të hyjë, të kërkojë pushim dhe të përdorë panelin e punonjësit.',
+    'workspace_access_help_active' => 'Ky punonjës mund të hyjë, të kërkojë pushim, të regjistrojë orët e projektit dhe të përdorë panelin e punonjësit.',
+    'workspace_access_help_pending' => 'Një ftesë u dërgua me email. Personi mund ta pranojë për të aktivizuar hyrjen.',
+    'workspace_access_help_no_email' => 'Shtoni fillimisht një email pune në profil para se të dërgoni një ftesë hyrjeje.',
     'login_active_as' => 'I kyçur si :name (:email).',
     'login_invitation_pending' => 'Ftesa u dërgua te :email. Skadon :date.',
     'login_no_email' => 'Shtoni një email në profilin e punonjësit para aktivizimit të hyrjes.',

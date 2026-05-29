@@ -48,6 +48,15 @@ export function initEmployeeProfileTabs() {
             panel.hidden = panel.dataset.employeePanel !== tabId;
         });
 
+        if (tabId === 'access') {
+            const accessPanel = root.querySelector('[data-employee-panel="access"]');
+            const accessCard = accessPanel?.querySelector('.ziifra-employee-access-card');
+
+            if (accessCard && ! accessPanel.hidden) {
+                accessCard.scrollIntoView({ block: 'start', behavior: 'smooth' });
+            }
+        }
+
         if (updateUrl) {
             syncUrl(tabId);
         }

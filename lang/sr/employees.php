@@ -34,6 +34,9 @@ return [
 
     'workspace_access' => 'Prijava u radni prostor',
     'workspace_access_help' => 'Pošaljite pozivnicu da bi ova osoba mogla da se prijavi, traži odsustvo i koristi kontrolnu tablu zaposlenog.',
+    'workspace_access_help_active' => 'Ovaj zaposleni može da se prijavi, traži odsustvo, unosi sate po projektima i koristi kontrolnu tablu zaposlenog.',
+    'workspace_access_help_pending' => 'Pozivnica je poslata e-poštom. Osoba je može prihvatiti da aktivira prijavu.',
+    'workspace_access_help_no_email' => 'Prvo dodajte poslovni email u profil pre slanja pozivnice za prijavu.',
     'login_active_as' => 'Prijavljen kao :name (:email).',
     'login_invitation_pending' => 'Pozivnica poslata na :email. Ističe :date.',
     'login_no_email' => 'Dodajte email na profil zaposlenog pre aktivacije prijave.',

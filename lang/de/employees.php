@@ -10,6 +10,9 @@ return [
 
     'workspace_access' => 'Arbeitsbereich-Anmeldung',
     'workspace_access_help' => 'Senden Sie eine Einladung, damit diese Person sich anmelden, Urlaub beantragen und das Mitarbeiter-Dashboard nutzen kann.',
+    'workspace_access_help_active' => 'Diese Person kann sich anmelden, Urlaub beantragen, Projektstunden erfassen und das Mitarbeiter-Dashboard nutzen.',
+    'workspace_access_help_pending' => 'Eine Einladung wurde per E-Mail gesendet. Die Person kann sie annehmen, um die Anmeldung zu aktivieren.',
+    'workspace_access_help_no_email' => 'Fügen Sie zuerst eine geschäftliche E-Mail im Profil hinzu, bevor Sie eine Anmeldungseinladung senden.',
     'login_active_as' => 'Angemeldet als :name (:email).',
     'login_invitation_pending' => 'Einladung an :email gesendet. Läuft ab am :date.',
     'login_no_email' => 'Fügen Sie im Mitarbeiterprofil eine E-Mail hinzu, bevor Sie die Anmeldung aktivieren.',

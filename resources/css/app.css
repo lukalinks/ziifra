@@ -1708,12 +1708,12 @@
 
     .ziifra-list-badge-success,
     .ziifra-employee-badge-success {
-        @apply bg-emerald-50 text-emerald-800;
+        @apply border border-emerald-500/20 bg-emerald-50 text-emerald-800;
     }
 
     .ziifra-list-badge-warning,
     .ziifra-employee-badge-warning {
-        @apply bg-amber-50 text-amber-800;
+        @apply border border-amber-500/20 bg-amber-50 text-amber-800;
     }
 
     .ziifra-list-badge-danger,
@@ -4330,7 +4330,7 @@
     }
 
     .ziifra-employee-workspace {
-        @apply overflow-hidden rounded-xl border border-ziifra-line/80 bg-ziifra-paper shadow-sm;
+        @apply flex flex-col overflow-visible rounded-xl border border-ziifra-line/80 bg-ziifra-paper shadow-sm;
     }
 
     .ziifra-employee-edit-panel {
@@ -4346,7 +4346,7 @@
     }
 
     .ziifra-employee-workspace-tabs {
-        @apply sticky top-16 z-20 flex gap-1 overflow-x-auto border-b border-ziifra-line/60 bg-ziifra-paper/95 px-2 py-1.5 backdrop-blur-md;
+        @apply relative z-[2] flex shrink-0 gap-1.5 overflow-x-auto border-b border-ziifra-line/60 bg-ziifra-paper px-2 py-2;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
     }
@@ -4356,11 +4356,11 @@
     }
 
     .ziifra-employee-workspace-tab {
-        @apply inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-transparent px-3 py-2 text-sm font-medium text-ziifra-muted transition hover:bg-ziifra-cream/80 hover:text-ziifra-ink;
+        @apply relative z-0 inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg border border-transparent px-3 py-2 text-sm font-medium text-ziifra-muted transition hover:bg-ziifra-surface-hover hover:text-ziifra-ink;
     }
 
     .ziifra-employee-workspace-tab-active {
-        @apply border-ziifra-line/70 bg-ziifra-cream/50 text-ziifra-ink shadow-sm;
+        @apply relative z-[1] border-ziifra-line/70 bg-ziifra-surface text-ziifra-ink;
     }
 
     .ziifra-employee-workspace-tab-badge {
@@ -4368,15 +4368,15 @@
     }
 
     .ziifra-employee-workspace-tab-badge-warn {
-        @apply bg-amber-200/80 text-amber-900;
+        @apply border border-amber-500/25 bg-amber-500/15 text-amber-800;
     }
 
     .ziifra-employee-workspace-panels {
-        @apply min-w-0 bg-ziifra-cream/10;
+        @apply relative z-[1] min-w-0 flex-1 overflow-visible bg-ziifra-paper;
     }
 
     .ziifra-employee-workspace-panel {
-        @apply p-3 sm:p-4;
+        @apply relative z-[1] overflow-visible p-4 sm:p-5;
     }
 
     .ziifra-employee-workspace-panel[hidden] {
@@ -4444,7 +4444,36 @@
     }
 
     .ziifra-employee-workspace-panel .ziifra-dashboard-panel {
-        @apply overflow-hidden rounded-xl border border-ziifra-line/70 bg-ziifra-paper shadow-sm;
+        @apply overflow-visible rounded-xl border border-ziifra-line/70 bg-ziifra-paper shadow-sm;
+    }
+
+    .ziifra-employee-access--embedded {
+        @apply relative isolate;
+    }
+
+    .ziifra-employee-access-card {
+        @apply flex flex-col gap-4 rounded-xl border border-ziifra-line/70 bg-ziifra-paper p-4 shadow-sm sm:p-5;
+        scroll-margin-top: 5.5rem;
+    }
+
+    .ziifra-employee-access-card-head {
+        @apply space-y-3 border-b border-ziifra-line/60 pb-4;
+    }
+
+    .ziifra-employee-access-title {
+        @apply text-sm font-semibold text-ziifra-ink sm:text-base;
+    }
+
+    .ziifra-employee-access-callout {
+        @apply text-sm leading-relaxed text-ziifra-ink;
+    }
+
+    .ziifra-employee-access-status {
+        @apply flex gap-4;
+    }
+
+    .ziifra-employee-access .ziifra-employee-login-actions {
+        @apply flex flex-wrap gap-2 border-t border-ziifra-line/60 pt-4;
     }
 
     .ziifra-employee-workspace-panel .ziifra-dashboard-panel + .ziifra-dashboard-panel,
@@ -4662,6 +4691,15 @@
 
     .ziifra-employee-hero {
         @apply relative overflow-hidden rounded-2xl border border-ziifra-line/70 bg-gradient-to-br from-ziifra-paper via-ziifra-surface to-ziifra-accent/[0.08] p-4 shadow-sm sm:p-5 lg:p-7;
+    }
+
+    .ziifra-employee-access-card {
+        @apply border-ziifra-line/70 bg-ziifra-surface;
+    }
+
+    .ziifra-employee-access-callout,
+    .ziifra-employee-access-card .ziifra-employee-access-status p {
+        @apply text-ziifra-ink;
     }
 
     .ziifra-employee-shortcut {

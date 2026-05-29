@@ -38,6 +38,9 @@ return [
 
     'workspace_access' => 'Connexion à l\'espace de travail',
     'workspace_access_help' => 'Envoyez une invitation pour que cette personne puisse se connecter, demander des congés et utiliser le tableau de bord employé.',
+    'workspace_access_help_active' => 'Cet employé peut se connecter, demander des congés, saisir ses heures projet et utiliser le tableau de bord employé.',
+    'workspace_access_help_pending' => 'Une invitation a été envoyée par e-mail. La personne peut l\'accepter pour activer sa connexion.',
+    'workspace_access_help_no_email' => 'Ajoutez d\'abord un e-mail professionnel sur le profil avant d\'envoyer une invitation.',
     'login_active_as' => 'Connecté en tant que :name (:email).',
     'login_invitation_pending' => 'Invitation envoyée à :email. Expire le :date.',
     'login_no_email' => 'Ajoutez un e-mail sur le profil de l\'employé avant d\'activer la connexion.',
