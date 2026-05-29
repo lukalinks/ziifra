@@ -121,4 +121,29 @@ return [
     'allowance_tax_treatment_field' => 'Tax treatment',
     'allowance_default_label' => 'Allowance',
     'add_allowance_template_row' => 'Add allowance row',
+
+    'field_first_name' => 'First name',
+    'field_last_name' => 'Last name',
+    'field_employment_type' => 'Employment type',
+    'field_employment_status' => 'Employment status',
+    'field_linked_login' => 'Linked login account',
+    'field_linked_login_help' => 'Links a team member so they can request their own leave.',
+    'option_none' => '— None —',
+    'manage_departments' => 'Manage departments',
+    'manage_positions' => 'Manage positions',
+    'manage_custom_fields' => 'Manage custom fields',
+
+    'employment_types' => [
+        'full_time' => 'Full-time',
+        'part_time' => 'Part-time',
+        'contract' => 'Contract',
+        'intern' => 'Intern',
+        'temporary' => 'Temporary',
+    ],
+
+    'employment_statuses' => [
+        'active' => 'Active',
+        'on_leave' => 'On leave',
+        'terminated' => 'Terminated',
+    ],
 ];

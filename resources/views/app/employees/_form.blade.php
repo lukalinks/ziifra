@@ -11,14 +11,14 @@
 
 <div class="grid gap-4 sm:grid-cols-2">
     <div>
-        <label for="first_name" class="block text-sm font-medium text-ziifra-ink">First name</label>
+        <label for="first_name" class="block text-sm font-medium text-ziifra-ink">{{ __('employees.field_first_name') }}</label>
         <input id="first_name" name="first_name" type="text"
             value="{{ old('first_name', $employee?->first_name) }}"
             class="mt-1 block w-full rounded-lg border border-ziifra-line px-3 py-2">
         @error('first_name')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
-        <label for="last_name" class="block text-sm font-medium text-ziifra-ink">Last name</label>
+        <label for="last_name" class="block text-sm font-medium text-ziifra-ink">{{ __('employees.field_last_name') }}</label>
         <input id="last_name" name="last_name" type="text"
             value="{{ old('last_name', $employee?->last_name) }}"
             class="mt-1 block w-full rounded-lg border border-ziifra-line px-3 py-2">
@@ -32,23 +32,23 @@
         @error('employee_code')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
-        <label for="email" class="block text-sm font-medium text-ziifra-ink">Email</label>
+        <label for="email" class="block text-sm font-medium text-ziifra-ink">{{ __('employees.field_email') }}</label>
         <input id="email" name="email" type="email"
             value="{{ old('email', $employee?->email) }}"
             class="mt-1 block w-full rounded-lg border border-ziifra-line px-3 py-2">
         @error('email')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
-        <label for="phone" class="block text-sm font-medium text-ziifra-ink">Phone</label>
+        <label for="phone" class="block text-sm font-medium text-ziifra-ink">{{ __('employees.field_phone') }}</label>
         <input id="phone" name="phone" type="text"
             value="{{ old('phone', $employee?->phone) }}"
             class="mt-1 block w-full rounded-lg border border-ziifra-line px-3 py-2">
         @error('phone')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
-        <label for="department_id" class="block text-sm font-medium text-ziifra-ink">Department</label>
+        <label for="department_id" class="block text-sm font-medium text-ziifra-ink">{{ __('employees.field_department') }}</label>
         <select id="department_id" name="department_id" class="mt-1 block w-full rounded-lg border border-ziifra-line px-3 py-2">
-            <option value="">— None —</option>
+            <option value="">{{ __('employees.option_none') }}</option>
             @foreach ($departments as $department)
                 <option value="{{ $department->id }}" @selected(old('department_id', $employee?->department_id) == $department->id)>
                     {{ $department->name }}
@@ -58,9 +58,9 @@
         @error('department_id')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
-        <label for="position_id" class="block text-sm font-medium text-ziifra-ink">Position</label>
+        <label for="position_id" class="block text-sm font-medium text-ziifra-ink">{{ __('employees.field_position') }}</label>
         <select id="position_id" name="position_id" class="mt-1 block w-full rounded-lg border border-ziifra-line px-3 py-2">
-            <option value="">— None —</option>
+            <option value="">{{ __('employees.option_none') }}</option>
             @foreach ($positions as $position)
                 <option value="{{ $position->id }}" @selected(old('position_id', $employee?->position_id) == $position->id)>
                     {{ $position->title }}
@@ -70,9 +70,9 @@
         @error('position_id')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div class="sm:col-span-2">
-        <label for="manager_id" class="block text-sm font-medium text-ziifra-ink">Manager</label>
+        <label for="manager_id" class="block text-sm font-medium text-ziifra-ink">{{ __('employees.field_manager') }}</label>
         <select id="manager_id" name="manager_id" class="mt-1 block w-full rounded-lg border border-ziifra-line px-3 py-2">
-            <option value="">— None —</option>
+            <option value="">{{ __('employees.option_none') }}</option>
             @foreach ($managers as $manager)
                 @if ($employee && $manager->id === $employee->id)
                     @continue
@@ -86,9 +86,9 @@
     </div>
     @if (isset($linkableUsers))
         <div class="sm:col-span-2">
-            <label for="user_id" class="block text-sm font-medium text-ziifra-ink">Linked login account</label>
+            <label for="user_id" class="block text-sm font-medium text-ziifra-ink">{{ __('employees.field_linked_login') }}</label>
             <select id="user_id" name="user_id" class="mt-1 block w-full rounded-lg border border-ziifra-line px-3 py-2">
-                <option value="">— None —</option>
+                <option value="">{{ __('employees.option_none') }}</option>
                 @foreach ($linkableUsers as $user)
                     <option value="{{ $user->id }}" @selected(old('user_id', $employee?->user_id) == $user->id)>
                         {{ $user->name }} ({{ $user->email }})
@@ -98,7 +98,7 @@
                     <option value="{{ $employee->user_id }}" selected>{{ $employee->user->name }} ({{ $employee->user->email }})</option>
                 @endif
             </select>
-            <p class="mt-1 text-xs text-ziifra-muted">Links a team member so they can request their own leave.</p>
+            <p class="mt-1 text-xs text-ziifra-muted">{{ __('employees.field_linked_login_help') }}</p>
             @error('user_id')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
         </div>
     @endif
@@ -119,7 +119,7 @@
         </div>
     @endif
     <div>
-        <label for="employment_type" class="block text-sm font-medium text-ziifra-ink">Employment type</label>
+        <label for="employment_type" class="block text-sm font-medium text-ziifra-ink">{{ __('employees.field_employment_type') }}</label>
         <select id="employment_type" name="employment_type" class="mt-1 block w-full rounded-lg border border-ziifra-line px-3 py-2">
             @foreach ($types as $type)
                 <option value="{{ $type->value }}" @selected(old('employment_type', $employee?->employment_type?->value ?? ($defaultEmploymentType ?? 'full_time')) === $type->value)>
@@ -130,7 +130,7 @@
         @error('employment_type')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
-        <label for="employment_status" class="block text-sm font-medium text-ziifra-ink">Employment status</label>
+        <label for="employment_status" class="block text-sm font-medium text-ziifra-ink">{{ __('employees.field_employment_status') }}</label>
         <select id="employment_status" name="employment_status" class="mt-1 block w-full rounded-lg border border-ziifra-line px-3 py-2">
             @foreach ($statuses as $status)
                 <option value="{{ $status->value }}" @selected(old('employment_status', $employee?->employment_status?->value ?? 'active') === $status->value)>
@@ -141,7 +141,7 @@
         @error('employment_status')<p class="mt-1 text-sm text-red-600">{{ $message }}</p>@enderror
     </div>
     <div>
-        <label for="start_date" class="block text-sm font-medium text-ziifra-ink">Start date</label>
+        <label for="start_date" class="block text-sm font-medium text-ziifra-ink">{{ __('employees.field_start_date') }}</label>
         <input id="start_date" name="start_date" type="date"
             value="{{ old('start_date', $employee?->start_date?->format('Y-m-d')) }}"
             class="mt-1 block w-full rounded-lg border border-ziifra-line px-3 py-2">
@@ -231,12 +231,12 @@
 @endonce
 
 <p class="mt-4 text-sm text-ziifra-muted">
-    <a href="{{ route('settings.departments.index') }}" class="text-ziifra-accent-deep hover:text-ziifra-accent-deep">Manage departments</a>
+    <a href="{{ route('settings.departments.index') }}" class="text-ziifra-accent-deep hover:text-ziifra-accent-deep">{{ __('employees.manage_departments') }}</a>
     ·
-    <a href="{{ route('settings.positions.index') }}" class="text-ziifra-accent-deep hover:text-ziifra-accent-deep">Manage positions</a>
+    <a href="{{ route('settings.positions.index') }}" class="text-ziifra-accent-deep hover:text-ziifra-accent-deep">{{ __('employees.manage_positions') }}</a>
     @can('create', App\Models\EmployeeFieldDefinition::class)
         ·
-        <a href="{{ route('settings.employee-fields.index') }}" class="text-ziifra-accent-deep hover:text-ziifra-accent-deep">Manage custom fields</a>
+        <a href="{{ route('settings.employee-fields.index') }}" class="text-ziifra-accent-deep hover:text-ziifra-accent-deep">{{ __('employees.manage_custom_fields') }}</a>
     @endcan
 </p>
 

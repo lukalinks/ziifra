@@ -5,6 +5,18 @@ return [
     'back' => '← All settings',
     'back_to_settings' => '← Back to settings',
 
+    'hub' => [
+        'intro' => 'Manage :name workspace configuration.',
+        'billing_title' => 'Billing & plan',
+        'billing_card' => 'Subscription, trial status, and employee limits.',
+        'company_title' => 'Company',
+        'company_card' => 'Legal details, address, regional defaults, logo, and brand colors.',
+        'departments_card' => 'Organize employees into teams and reporting groups.',
+        'positions_card' => 'Job titles used when assigning roles to employees.',
+        'custom_fields_card' => 'Extra data fields on employee profiles (text, dates, files, and more).',
+        'leave_types_card' => 'Annual, sick, and other leave categories with yearly allowances.',
+    ],
+
     'company' => [
         'title' => 'Company settings',
         'complete_profile' => 'Complete your company profile',

@@ -1,25 +1,25 @@
 @extends('layouts.app')
 
-@section('title', 'Settings')
-@section('header', 'Settings')
+@section('title', __('settings.title'))
+@section('header', __('settings.title'))
 
 @section('content')
-<p class="text-sm text-ziifra-muted">Manage {{ $organization->name }} workspace configuration.</p>
+<p class="text-sm text-ziifra-muted">{{ __('settings.hub.intro', ['name' => $organization->name]) }}</p>
 
 <div class="mt-8 grid gap-4 sm:grid-cols-2">
     @if ($canManageBilling ?? false)
         <a href="{{ route('settings.billing') }}"
             class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">
-            <h2 class="text-lg font-semibold text-ziifra-ink">Billing & plan</h2>
-            <p class="mt-2 text-sm text-ziifra-muted">Subscription, trial status, and employee limits.</p>
+            <h2 class="text-lg font-semibold text-ziifra-ink">{{ __('settings.hub.billing_title') }}</h2>
+            <p class="mt-2 text-sm text-ziifra-muted">{{ __('settings.hub.billing_card') }}</p>
         </a>
     @endif
 
     @if ($canManageOrganization)
         <a href="{{ route('settings.company.edit') }}"
             class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">
-            <h2 class="text-lg font-semibold text-ziifra-ink">Company</h2>
-            <p class="mt-2 text-sm text-ziifra-muted">Legal details, address, regional defaults, logo, and brand colors.</p>
+            <h2 class="text-lg font-semibold text-ziifra-ink">{{ __('settings.hub.company_title') }}</h2>
+            <p class="mt-2 text-sm text-ziifra-muted">{{ __('settings.hub.company_card') }}</p>
         </a>
 
         <a href="{{ route('settings.payroll.edit') }}"
@@ -52,29 +52,29 @@
     @if ($canManageEmployees)
         <a href="{{ route('settings.departments.index') }}"
             class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">
-            <h2 class="text-lg font-semibold text-ziifra-ink">Departments</h2>
-            <p class="mt-2 text-sm text-ziifra-muted">Organize employees into teams and reporting groups.</p>
+            <h2 class="text-lg font-semibold text-ziifra-ink">{{ __('settings.departments.title') }}</h2>
+            <p class="mt-2 text-sm text-ziifra-muted">{{ __('settings.hub.departments_card') }}</p>
         </a>
 
         <a href="{{ route('settings.positions.index') }}"
             class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">
-            <h2 class="text-lg font-semibold text-ziifra-ink">Positions</h2>
-            <p class="mt-2 text-sm text-ziifra-muted">Job titles used when assigning roles to employees.</p>
+            <h2 class="text-lg font-semibold text-ziifra-ink">{{ __('settings.positions.title') }}</h2>
+            <p class="mt-2 text-sm text-ziifra-muted">{{ __('settings.hub.positions_card') }}</p>
         </a>
 
         @if ($canManageEmployeeFieldDefinitions ?? false)
             <a href="{{ route('settings.employee-fields.index') }}"
                 class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">
-                <h2 class="text-lg font-semibold text-ziifra-ink">Custom fields</h2>
-                <p class="mt-2 text-sm text-ziifra-muted">Extra data fields on employee profiles (text, dates, files, and more).</p>
+                <h2 class="text-lg font-semibold text-ziifra-ink">{{ __('settings.employee_fields.title') }}</h2>
+                <p class="mt-2 text-sm text-ziifra-muted">{{ __('settings.hub.custom_fields_card') }}</p>
             </a>
         @endif
 
         @if ($canManageLeave ?? false)
             <a href="{{ route('settings.leave-types.index') }}"
                 class="rounded-xl border border-ziifra-line/80 bg-ziifra-paper p-6 transition hover:border-ziifra-accent/40 hover:shadow-sm">
-                <h2 class="text-lg font-semibold text-ziifra-ink">Leave types</h2>
-                <p class="mt-2 text-sm text-ziifra-muted">Annual, sick, and other leave categories with yearly allowances.</p>
+                <h2 class="text-lg font-semibold text-ziifra-ink">{{ __('settings.leave_types.title') }}</h2>
+                <p class="mt-2 text-sm text-ziifra-muted">{{ __('settings.hub.leave_types_card') }}</p>
             </a>
         @endif
     @endif

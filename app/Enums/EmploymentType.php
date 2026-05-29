@@ -12,12 +12,6 @@ enum EmploymentType: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::FullTime => 'Full-time',
-            self::PartTime => 'Part-time',
-            self::Contract => 'Contract',
-            self::Intern => 'Intern',
-            self::Temporary => 'Temporary',
-        };
+        return __('employees.employment_types.'.$this->value);
     }
 }

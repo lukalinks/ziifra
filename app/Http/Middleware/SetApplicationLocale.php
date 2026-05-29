@@ -16,15 +16,9 @@ class SetApplicationLocale
 
     public function handle(Request $request, Closure $next): Response
     {
-        $preferred = $request->session()->get('locale');
-
-        if ($request->user() !== null) {
-            $preferred = $request->user()->locale ?? $preferred;
-        }
-
-        if ($preferred === null && $request->user() !== null) {
-            $preferred = CurrentOrganization::get()?->locale;
-        }
+        $preferred = $request->session()->get('locale')
+            ?? $request->user()?->locale
+            ?? CurrentOrganization::get()?->locale;
 
         if ($preferred === null) {
             $preferred = $this->locales->defaultCode();

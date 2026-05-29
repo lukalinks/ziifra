@@ -5,6 +5,18 @@ return [
     'back' => '← Tous les paramètres',
     'back_to_settings' => '← Retour aux paramètres',
 
+    'hub' => [
+        'intro' => 'Gérez la configuration de l\'espace de travail :name.',
+        'billing_title' => 'Facturation et forfait',
+        'billing_card' => 'Abonnement, statut d\'essai et limites d\'employés.',
+        'company_title' => 'Entreprise',
+        'company_card' => 'Informations légales, adresse, paramètres régionaux, logo et couleurs de marque.',
+        'departments_card' => 'Organisez les employés en équipes et groupes de reporting.',
+        'positions_card' => 'Intitulés de poste utilisés lors de l\'attribution des rôles.',
+        'custom_fields_card' => 'Champs supplémentaires sur les profils employés (texte, dates, fichiers, etc.).',
+        'leave_types_card' => 'Congés annuels, maladie et autres catégories avec allocations annuelles.',
+    ],
+
     'company' => [
         'title' => 'Paramètres de l\'entreprise',
         'complete_profile' => 'Complétez le profil de votre entreprise',

@@ -5,10 +5,24 @@ return [
     'back' => '← Të gjitha cilësimet',
     'back_to_settings' => '← Kthehu te cilësimet',
 
+    'hub' => [
+        'intro' => 'Menaxhoni konfigurimin e hapësirës së punës :name.',
+        'billing_title' => 'Faturimi dhe plani',
+        'billing_card' => 'Abonimi, statusi i provës dhe kufijtë e punonjësve.',
+        'company_title' => 'Kompania',
+        'company_card' => 'Të dhënat ligjore, adresa, parazgjedhjet rajonale, logoja dhe ngjyrat e markës.',
+        'departments_card' => 'Organizoni punonjësit në ekipe dhe grupe raportimi.',
+        'positions_card' => 'Titujt e punës që përdoren kur caktoni role për punonjësit.',
+        'custom_fields_card' => 'Fusha shtesë në profilet e punonjësve (tekst, data, skedarë dhe më shumë).',
+        'leave_types_card' => 'Pushimet vjetore, mjekësore dhe kategori të tjera me alokime vjetore.',
+    ],
+
     'company' => [
         'title' => 'Cilësimet e kompanisë',
         'complete_profile' => 'Plotësoni profilin e kompanisë',
         'complete_profile_hint' => 'Shtoni numrin fiskal (NUI), adresën dhe email-in e kompanisë që ZIIFRA t’i përdorë në dokumente dhe paga më vonë.',
+        'profile_completion' => 'Plotësimi i profilit',
+        'save_hint' => 'Ndryshimet zbatohen në gjithë hapësirën e punës, dokumentet dhe fletëpagesat.',
         'identity' => 'Identiteti i kompanisë',
         'identity_help' => 'Emrat ligjorë dhe tregtarë që përdoren në kontrata dhe fletëpagesa.',
         'display_name' => 'Emri i shfaqur',
@@ -106,6 +120,26 @@ return [
         'days_per_year' => 'Ditë në vit',
         'list' => 'Llojet e pushimeve',
         'empty' => 'Ende pa lloje pushimesh.',
+    ],
+
+    'invoices' => [
+        'title' => 'Cilësimet e faturave',
+        'card' => 'Teksti i fundit, TVSH, IBAN dhe të dhënat bankare për faturat dalëse.',
+        'saved' => 'Cilësimet e faturave u ruajtën.',
+        'footer_text' => 'Teksti i fundit në fatura',
+        'vat_percent' => 'TVSH e parazgjedhur (%)',
+        'vat_manual' => 'Lejo TVSH manuale për faturë',
+    ],
+
+    'chat' => [
+        'title' => 'Cilësimet e bisedës',
+        'card' => 'Aktivizo bisedën e hapësirës së punës dhe kontrollo nëse punonjësit mund të postojnë mesazhe.',
+        'saved' => 'Cilësimet e bisedës u ruajtën.',
+        'enabled' => 'Aktivizo bisedën',
+        'employees_can_write' => 'Punonjësit mund të shkruajnë mesazhe',
+        'employees_can_write_help' => 'Kur është joaktiv, vetëm administratorët dhe HR postojnë; punonjësit mund të lexojnë mesazhet.',
+        'private_chat_enabled' => 'Lejo mesazhe private',
+        'private_chat_enabled_help' => 'Kur është aktiv, anëtarët e ekipit mund t’i dërgojnë mesazhe direkt njëri-tjetrit.',
     ],
 
     'employee_fields' => [

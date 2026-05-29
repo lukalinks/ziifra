@@ -121,4 +121,29 @@ return [
     'allowance_tax_treatment_field' => 'Traitement fiscal',
     'allowance_default_label' => 'Indemnité',
     'add_allowance_template_row' => 'Ajouter une ligne d\'indemnité',
+
+    'field_first_name' => 'Prénom',
+    'field_last_name' => 'Nom',
+    'field_employment_type' => 'Type d\'emploi',
+    'field_employment_status' => 'Statut d\'emploi',
+    'field_linked_login' => 'Compte de connexion lié',
+    'field_linked_login_help' => 'Lie un membre de l\'équipe pour qu\'il puisse demander ses propres congés.',
+    'option_none' => '— Aucun —',
+    'manage_departments' => 'Gérer les départements',
+    'manage_positions' => 'Gérer les postes',
+    'manage_custom_fields' => 'Gérer les champs personnalisés',
+
+    'employment_types' => [
+        'full_time' => 'Temps plein',
+        'part_time' => 'Temps partiel',
+        'contract' => 'Contrat',
+        'intern' => 'Stagiaire',
+        'temporary' => 'Temporaire',
+    ],
+
+    'employment_statuses' => [
+        'active' => 'Actif',
+        'on_leave' => 'En congé',
+        'terminated' => 'Terminé',
+    ],
 ];

@@ -84,12 +84,6 @@ enum OrganizationRole: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Owner => 'Owner',
-            self::Admin => 'Admin',
-            self::Hr => 'HR',
-            self::Manager => 'Manager',
-            self::Employee => 'Employee',
-        };
+        return __('team.roles.'.$this->value);
     }
 }
