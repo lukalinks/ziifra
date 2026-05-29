@@ -59,6 +59,13 @@ return [
     'expired' => 'Expired :date',
     'expiring_soon' => 'Expires soon (:date)',
     'type' => 'Type',
+
+    'document_types' => [
+        'contract' => 'Employment contract',
+        'id_document' => 'ID / passport',
+        'certificate' => 'Certificate / diploma',
+        'other' => 'Other',
+    ],
     'document_title' => 'Title',
     'file' => 'File',
     'notes' => 'Notes (optional)',

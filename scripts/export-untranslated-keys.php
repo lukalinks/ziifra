@@ -20,31 +20,31 @@ function flatten(string $file): array
 }
 
 $locale = $argv[1] ?? 'sq';
+$file = $argv[2] ?? null;
 $enDir = dirname(__DIR__).'/lang/en';
 $targetDir = dirname(__DIR__)."/lang/{$locale}";
-$total = 0;
 
-foreach (glob("{$enDir}/*.php") as $enFile) {
-    $base = basename($enFile);
+$files = $file ? [basename($file)] : array_map('basename', glob("{$enDir}/*.php"));
+
+foreach ($files as $base) {
+    $enFile = "{$enDir}/{$base}";
     $targetFile = "{$targetDir}/{$base}";
     if (! file_exists($targetFile)) {
         continue;
     }
     $en = flatten($enFile);
     $target = flatten($targetFile);
-    $same = 0;
+    $gaps = [];
     foreach ($en as $key => $enValue) {
-        if (str_ends_with($key, '.icon')) {
-            continue;
-        }
         if (($target[$key] ?? null) === $enValue) {
-            $same++;
+            $gaps[$key] = $enValue;
         }
     }
-    if ($same > 0) {
-        echo "{$base}: {$same} still English\n";
-        $total += $same;
+    if ($gaps !== []) {
+        echo "=== {$base} ===\n";
+        foreach ($gaps as $k => $v) {
+            echo "{$k} => {$v}\n";
+        }
+        echo "\n";
     }
 }
-
-echo "Total still English in {$locale}: {$total}\n";

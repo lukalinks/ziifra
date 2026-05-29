@@ -59,6 +59,13 @@ return [
     'expired' => 'Expiré le :date',
     'expiring_soon' => 'Expire bientôt (:date)',
     'type' => 'Type',
+
+    'document_types' => [
+        'contract' => 'Contrat de travail',
+        'id_document' => 'Pièce d\'identité / passeport',
+        'certificate' => 'Certificat / diplôme',
+        'other' => 'Autre',
+    ],
     'document_title' => 'Titre',
     'file' => 'Fichier',
     'notes' => 'Notes (facultatif)',

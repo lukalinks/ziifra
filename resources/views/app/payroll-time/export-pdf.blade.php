@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Payroll &amp; Time</title>
+    <title>{{ __('payroll_time.export_pdf.title') }}</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #1a1a1a; }
         .header { width: 100%; margin-bottom: 16px; }
@@ -38,12 +38,12 @@
                 @endif
             </td>
             <td style="width: 40%; text-align: right;">
-                <h1>Payroll &amp; Time</h1>
+                <h1>{{ __('payroll_time.export_pdf.title') }}</h1>
                 <div class="muted">{{ $year }}@if($month) / {{ \Carbon\Carbon::create(null, $month)->format('F') }}@endif</div>
                 @if ($project)
-                    <div class="muted">Project: {{ $project->name }}</div>
+                    <div class="muted">{{ __('payroll_time.export_pdf.project', ['name' => $project->name]) }}</div>
                 @endif
-                <div class="muted">Trust: {{ $trustEmployeePct }}% employee + {{ $trustEmployerPct }}% company</div>
+                <div class="muted">{{ __('payroll_time.export_pdf.trust_line', ['employee' => $trustEmployeePct, 'company' => $trustEmployerPct]) }}</div>
             </td>
         </tr>
     </table>
@@ -51,14 +51,14 @@
     <table class="grid">
         <thead>
             <tr>
-                <th>Employee</th>
-                <th>Code</th>
-                <th class="num">Hours</th>
-                <th class="num">Rate/h</th>
-                <th class="num">Gross</th>
-                <th class="num">Trust (emp.)</th>
-                <th class="num">Trust (co.)</th>
-                <th class="num">Net</th>
+                <th>{{ __('payroll_time.export_pdf.employee') }}</th>
+                <th>{{ __('payroll_time.export_pdf.code') }}</th>
+                <th class="num">{{ __('payroll_time.export_pdf.hours') }}</th>
+                <th class="num">{{ __('payroll_time.export_pdf.rate_h') }}</th>
+                <th class="num">{{ __('payroll_time.export_pdf.gross') }}</th>
+                <th class="num">{{ __('payroll_time.export_pdf.trust_emp') }}</th>
+                <th class="num">{{ __('payroll_time.export_pdf.trust_co') }}</th>
+                <th class="num">{{ __('payroll_time.export_pdf.net') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -77,7 +77,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="2">TOTAL</td>
+                <td colspan="2">{{ __('payroll_time.export_pdf.total') }}</td>
                 <td class="num">{{ number_format($totals['hours'], 1) }}</td>
                 <td class="num"></td>
                 <td class="num">{{ number_format($totals['gross'], 2) }}</td>
@@ -89,13 +89,13 @@
     </table>
 
     <table class="totals">
-        <tr><td class="label">Gross total</td><td class="val">{{ number_format($totals['gross'], 2) }}</td></tr>
-        <tr><td class="label">Trust (employee {{ $trustEmployeePct }}%)</td><td class="val">{{ number_format($totals['trust_employee'], 2) }}</td></tr>
-        <tr><td class="label">Trust (company {{ $trustEmployerPct }}%)</td><td class="val">{{ number_format($totals['trust_employer'], 2) }}</td></tr>
+        <tr><td class="label">{{ __('payroll_time.export_pdf.gross_total') }}</td><td class="val">{{ number_format($totals['gross'], 2) }}</td></tr>
+        <tr><td class="label">{{ __('payroll_time.export_pdf.trust_employee', ['pct' => $trustEmployeePct]) }}</td><td class="val">{{ number_format($totals['trust_employee'], 2) }}</td></tr>
+        <tr><td class="label">{{ __('payroll_time.export_pdf.trust_company', ['pct' => $trustEmployerPct]) }}</td><td class="val">{{ number_format($totals['trust_employer'], 2) }}</td></tr>
         @if ($vatPct > 0)
-            <tr><td class="label">TVSH ({{ $vatPct }}%)</td><td class="val">{{ number_format($totals['gross'] * $vatPct / 100, 2) }}</td></tr>
+            <tr><td class="label">{{ __('payroll_time.export_pdf.vat', ['pct' => $vatPct]) }}</td><td class="val">{{ number_format($totals['gross'] * $vatPct / 100, 2) }}</td></tr>
         @endif
-        <tr><td class="label">Net payable</td><td class="val">{{ number_format($totals['net'], 2) }}</td></tr>
+        <tr><td class="label">{{ __('payroll_time.export_pdf.net_payable') }}</td><td class="val">{{ number_format($totals['net'], 2) }}</td></tr>
     </table>
 </body>
 </html>

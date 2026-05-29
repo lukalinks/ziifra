@@ -12,12 +12,6 @@ enum ExpenseCategory: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Travel => 'Travel',
-            self::Meals => 'Meals & entertainment',
-            self::Office => 'Office supplies',
-            self::Equipment => 'Equipment',
-            self::Other => 'Other',
-        };
+        return __('expenses.categories.'.$this->value);
     }
 }

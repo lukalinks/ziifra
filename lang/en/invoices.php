@@ -73,4 +73,11 @@ return [
     'confirm_send' => 'Mark this invoice as sent to the client?',
     'confirm_paid' => 'Mark this invoice as paid?',
     'confirm_cancel' => 'Cancel this invoice?',
+
+    'statuses' => [
+        'draft' => 'Draft',
+        'sent' => 'Sent',
+        'paid' => 'Paid',
+        'cancelled' => 'Cancelled',
+    ],
 ];

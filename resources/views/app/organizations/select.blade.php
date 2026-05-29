@@ -1,10 +1,10 @@
 @extends('layouts.guest')
 
-@section('title', 'Select organization')
+@section('title', __('auth_pages.organizations.title'))
 
 @section('content')
-<h1 class="text-2xl font-bold text-ziifra-ink">Select workspace</h1>
-<p class="mt-2 text-sm text-ziifra-muted">Choose which company you want to manage.</p>
+<h1 class="text-2xl font-bold text-ziifra-ink">{{ __('auth_pages.organizations.heading') }}</h1>
+<p class="mt-2 text-sm text-ziifra-muted">{{ __('auth_pages.organizations.subtitle') }}</p>
 
 <form method="POST" action="{{ route('organizations.select.store') }}" class="mt-8 space-y-4">
     @csrf
@@ -16,12 +16,12 @@
                 <span class="font-medium text-ziifra-ink">{{ $organization->name }}</span>
                 <a href="{{ route('dashboard', ['organization' => $organization->slug]) }}"
                     class="text-xs font-medium text-ziifra-accent-deep hover:underline"
-                    onclick="event.stopPropagation();">Open →</a>
+                    onclick="event.stopPropagation();">{{ __('auth_pages.organizations.open') }}</a>
             </span>
         </label>
     @endforeach
     <button type="submit" class="ziifra-btn-primary w-full !rounded-xl">
-        Continue
+        {{ __('auth_pages.organizations.continue') }}
     </button>
 </form>
 @endsection

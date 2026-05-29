@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head><meta charset="utf-8"><title>Employees</title></head>
+<head><meta charset="utf-8"><title>{{ __('employees.export_pdf_title') }}</title></head>
 <body style="font-family: DejaVu Sans, sans-serif; font-size: 11px;">
-    <h1>{{ $organization->name }} — Employees</h1>
+    <h1>{{ __('employees.export_pdf_heading', ['organization' => $organization->name]) }}</h1>
     <table width="100%" cellpadding="5" cellspacing="0" border="1" style="border-collapse: collapse;">
         <thead>
             <tr>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Department</th>
-                <th>Status</th>
+                <th>{{ __('employees.export_pdf_code') }}</th>
+                <th>{{ __('employees.export_pdf_name') }}</th>
+                <th>{{ __('employees.export_pdf_email') }}</th>
+                <th>{{ __('employees.export_pdf_department') }}</th>
+                <th>{{ __('employees.export_pdf_status') }}</th>
             </tr>
         </thead>
         <tbody>

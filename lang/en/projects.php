@@ -65,4 +65,24 @@ return [
     'next_month' => 'Next month',
     'current_month' => 'Current month',
     'edit_subtitle' => 'Update project details, dates, budget, and team assignments.',
+
+    'statuses' => [
+        'planning' => 'Planning',
+        'active' => 'Active',
+        'on_hold' => 'On hold',
+        'completed' => 'Completed',
+        'cancelled' => 'Cancelled',
+    ],
+
+    'task_statuses' => [
+        'todo' => 'To do',
+        'in_progress' => 'In progress',
+        'done' => 'Done',
+    ],
+
+    'task_priorities' => [
+        'low' => 'Low',
+        'medium' => 'Medium',
+        'high' => 'High',
+    ],
 ];

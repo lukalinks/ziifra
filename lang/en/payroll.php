@@ -35,6 +35,11 @@ return [
     'year' => 'Year',
     'month' => 'Month',
     'status' => 'Status',
+
+    'run_statuses' => [
+        'draft' => 'Draft',
+        'locked' => 'Locked',
+    ],
     'employees' => 'Employees',
     'count' => ':count payroll runs',
     'employee_count' => '{0} No employees|{1} :count employee|[2,*] :count employees',

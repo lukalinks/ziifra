@@ -17,11 +17,11 @@
         <p class="mt-3 text-sm text-ziifra-muted">@yield('detail')</p>
         <div class="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <x-theme-switcher />
-            <a href="{{ url('/') }}" class="ziifra-btn-app">Back to home</a>
+            <a href="{{ url('/') }}" class="ziifra-btn-app">{{ __('auth_pages.errors.back_to_home') }}</a>
             @auth
-                <a href="{{ route('organizations.select') }}" class="ziifra-btn-app-outline">Select workspace</a>
+                <a href="{{ route('organizations.select') }}" class="ziifra-btn-app-outline">{{ __('auth_pages.errors.select_workspace') }}</a>
             @else
-                <a href="{{ route('login') }}" class="ziifra-btn-app-outline">Log in</a>
+                <a href="{{ route('login') }}" class="ziifra-btn-app-outline">{{ __('auth_pages.errors.log_in') }}</a>
             @endauth
         </div>
     </div>

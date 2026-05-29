@@ -55,4 +55,24 @@ return [
     'delete_confirm' => 'Supprimer cette saisie de temps ?',
     'manual_entry_hint' => 'Ajoutez ou corrigez un créneau manuellement. La sortie peut rester vide si l\'employé est encore en service.',
     'recorded_by' => 'Enregistré par :name',
+
+    'week_days' => [
+        'mon' => 'Lundi',
+        'tue' => 'Mardi',
+        'wed' => 'Mercredi',
+        'thu' => 'Jeudi',
+        'fri' => 'Vendredi',
+        'sat' => 'Samedi',
+        'sun' => 'Dimanche',
+    ],
+
+    'week_days_short' => [
+        'mon' => 'Lun',
+        'tue' => 'Mar',
+        'wed' => 'Mer',
+        'thu' => 'Jeu',
+        'fri' => 'Ven',
+        'sat' => 'Sam',
+        'sun' => 'Dim',
+    ],
 ];

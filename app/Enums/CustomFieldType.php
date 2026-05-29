@@ -13,14 +13,7 @@ enum CustomFieldType: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Text => 'Text',
-            self::Number => 'Number',
-            self::Date => 'Date',
-            self::Boolean => 'Yes / No',
-            self::Select => 'Dropdown',
-            self::File => 'File upload',
-        };
+        return __('settings.employee_fields.field_types.'.$this->value);
     }
 
     public function htmlInputType(): string

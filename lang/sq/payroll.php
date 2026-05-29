@@ -35,6 +35,11 @@ return [
     'year' => 'Viti',
     'month' => 'Muaji',
     'status' => 'Statusi',
+
+    'run_statuses' => [
+        'draft' => 'Skicë',
+        'locked' => 'I kyçur',
+    ],
     'employees' => 'Punonjësit',
     'count' => ':count cikle pagash',
     'employee_count' => '{0} Asnjë punonjës|{1} :count punonjës|[2,*] :count punonjës',
@@ -75,7 +80,7 @@ return [
     'print_payslip' => 'Printo listpagesën',
     'download_pdf' => 'Shkarko PDF',
     'download_all_pdf' => 'Shkarko të gjitha listpagesat (ZIP)',
-    'email_payslip' => 'Email',
+    'email_payslip' => 'E-postë',
     'email_all_payslips' => 'Dërgo të gjitha listpagesat me email',
     'email_confirm_all' => 'Të dërgohen email-et e listpagesave për çdo punonjës që ka adresë email të regjistruar?',
     'email_unavailable' => 'Pa email',
@@ -112,7 +117,7 @@ return [
         'payslip' => 'Listpagesa',
     ],
 
-    'snapshot_email' => 'Email',
+    'snapshot_email' => 'E-postë',
     'snapshot_department' => 'Departamenti',
     'snapshot_position' => 'Pozicioni',
     'employer_contribution_note' => 'Kontributi i punëdhënësit (nuk zbritet nga paga bruto).',

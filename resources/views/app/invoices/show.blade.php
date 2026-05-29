@@ -96,7 +96,7 @@
                 <button type="submit" class="text-sm text-red-600 hover:underline">{{ __('invoices.delete') }}</button>
             </form>
         @endcan
-        <a href="{{ route('invoices.index') }}" class="ziifra-btn-app-outline">Back</a>
+        <a href="{{ route('invoices.index') }}" class="ziifra-btn-app-outline">{{ __('common.back') }}</a>
         @can('view', $invoice)
             <a href="{{ route('invoices.pdf', $invoice) }}" class="ziifra-btn-app-outline">{{ __('invoices.download_pdf') }}</a>
             <a href="{{ route('invoices.export', $invoice) }}" class="ziifra-btn-app-outline">{{ __('invoices.export_excel') }}</a>

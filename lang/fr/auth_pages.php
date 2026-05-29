@@ -98,6 +98,26 @@ return [
         'back_to_login' => 'Retour à la connexion',
     ],
 
+    'accept_invitation' => [
+        'title' => 'Accepter l\'invitation',
+        'expired_heading' => 'Invitation expirée',
+        'expired_detail' => 'Cette invitation n\'est plus valide. Demandez à votre administrateur d\'en envoyer une nouvelle.',
+        'join_heading' => 'Rejoindre :org',
+        'invited_as' => 'Vous avez été invité en tant que :role sur ZIIFRA.',
+        'your_name' => 'Votre nom',
+        'password' => 'Mot de passe',
+        'confirm_password' => 'Confirmer le mot de passe',
+        'existing_account_hint' => 'Connectez-vous avec votre compte ZIIFRA existant (:email).',
+        'logged_in_hint' => 'Vous êtes connecté en tant que :email. Cliquez ci-dessous pour rejoindre cette organisation.',
+        'submit' => 'Accepter l\'invitation',
+    ],
+
+    'errors' => [
+        'back_to_home' => 'Retour à l\'accueil',
+        'select_workspace' => 'Choisir un espace de travail',
+        'log_in' => 'Se connecter',
+    ],
+
     'oauth_complete' => [
         'title' => 'Finaliser l\'inscription',
         'aside_heading' => 'Presque terminé',

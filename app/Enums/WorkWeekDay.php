@@ -14,28 +14,12 @@ enum WorkWeekDay: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Mon => 'Monday',
-            self::Tue => 'Tuesday',
-            self::Wed => 'Wednesday',
-            self::Thu => 'Thursday',
-            self::Fri => 'Friday',
-            self::Sat => 'Saturday',
-            self::Sun => 'Sunday',
-        };
+        return __('time.week_days.'.$this->value);
     }
 
     public function shortLabel(): string
     {
-        return match ($this) {
-            self::Mon => 'Mon',
-            self::Tue => 'Tue',
-            self::Wed => 'Wed',
-            self::Thu => 'Thu',
-            self::Fri => 'Fri',
-            self::Sat => 'Sat',
-            self::Sun => 'Sun',
-        };
+        return __('time.week_days_short.'.$this->value);
     }
 
     /**

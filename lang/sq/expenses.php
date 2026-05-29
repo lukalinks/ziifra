@@ -9,7 +9,7 @@ return array (
   'rejected' => 'Kërkesa e shpenzimit u refuzua.',
   'cancelled' => 'Kërkesa e shpenzimit u anulua.',
   'empty' => 'Ende pa kërkesa shpenzimesh.',
-  'count' => ':count claims',
+  'count' => ':count kërkesa',
   'filter' => 'Filtro',
   'clear_filters' => 'Pastro',
   'all_statuses' => 'Të gjitha statuset',
@@ -42,4 +42,12 @@ return array (
   'scan_pdf_unsupported' => 'U ngarkua PDF. Plotësimi automatik funksionon me foto (JPG, PNG). Plotësoni manualisht.',
   'scan_unsupported_format' => 'Ky lloj skedari nuk skanohet. Përdorni JPG, PNG ose WEBP.',
   'scan_no_data' => 'Nuk u gjetën të dhëna të përdorshme në këtë faturë.',
+
+  'categories' => [
+    'travel' => 'Udhëtim',
+    'meals' => 'Vaktet dhe argëtimi',
+    'office' => 'Materiale zyre',
+    'equipment' => 'Pajisje',
+    'other' => 'Tjetër',
+  ],
 );

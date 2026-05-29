@@ -65,4 +65,24 @@ return [
     'next_month' => 'Mois suivant',
     'current_month' => 'Mois en cours',
     'edit_subtitle' => 'Mettre à jour les détails du projet, les dates, le budget et les affectations d\'équipe.',
+
+    'statuses' => [
+        'planning' => 'Planification',
+        'active' => 'Actif',
+        'on_hold' => 'En pause',
+        'completed' => 'Terminé',
+        'cancelled' => 'Annulé',
+    ],
+
+    'task_statuses' => [
+        'todo' => 'À faire',
+        'in_progress' => 'En cours',
+        'done' => 'Terminé',
+    ],
+
+    'task_priorities' => [
+        'low' => 'Faible',
+        'medium' => 'Moyenne',
+        'high' => 'Élevée',
+    ],
 ];

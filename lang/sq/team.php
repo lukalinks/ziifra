@@ -3,7 +3,7 @@
 return [
     'title' => 'Ekipi',
     'invite_heading' => 'Fto anëtar ekipi',
-    'field_email' => 'Email',
+    'field_email' => 'E-postë',
     'field_role' => 'Roli',
     'send_invitation' => 'Dërgo ftesën',
     'members' => 'Anëtarët',
@@ -14,7 +14,7 @@ return [
     'roles' => [
         'owner' => 'Pronar',
         'admin' => 'Administrator',
-        'hr' => 'HR',
+        'hr' => 'Burimet njerëzore',
         'manager' => 'Menaxher',
         'employee' => 'Punonjës',
     ],

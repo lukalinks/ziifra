@@ -29,6 +29,12 @@ return [
         'legal_name' => 'Raison sociale',
         'legal_name_placeholder' => 'Telle qu\'enregistrée auprès de l\'ARBK',
         'legal_form' => 'Forme juridique',
+        'legal_forms' => [
+            'shpk' => 'SH.P.K',
+            'bi' => 'BI — Entreprise individuelle',
+            'branch' => 'Succursale d\'une autre société',
+            'partnership' => 'Société en nom collectif',
+        ],
         'select' => '— Sélectionner —',
         'registration_number' => 'N° d\'immatriculation',
         'fiscal_number' => 'Numéro fiscal (NUI)',
@@ -106,12 +112,22 @@ return [
         'title' => 'Départements',
         'add' => 'Ajouter un département',
         'empty' => 'Aucun département pour le moment.',
+        'field_name' => 'Nom',
+        'submit' => 'Ajouter un département',
+        'list_title' => 'Départements',
+        'employees_count' => '{0} Aucun employé|{1} :count employé|[2,*] :count employés',
+        'confirm_remove' => 'Supprimer ce département ? Les employés qui y sont rattachés seront détachés.',
     ],
 
     'positions' => [
         'title' => 'Postes',
         'add' => 'Ajouter un poste',
         'empty' => 'Aucun poste pour le moment.',
+        'field_title' => 'Intitulé',
+        'submit' => 'Ajouter un poste',
+        'list_title' => 'Postes',
+        'employees_count' => '{0} Aucun employé|{1} :count employé|[2,*] :count employés',
+        'confirm_remove' => 'Supprimer ce poste ? Les employés qui l\'ont seront détachés.',
     ],
 
     'leave_types' => [
@@ -150,5 +166,13 @@ return [
         'dropdown_options' => 'Options de liste déroulante (séparées par des virgules)',
         'defined_fields' => 'Champs définis',
         'empty' => 'Aucun champ personnalisé pour le moment. Ajoutez des définitions de champs ici (propriétaires et administrateurs de l\'organisation uniquement).',
+        'field_types' => [
+            'text' => 'Texte',
+            'number' => 'Nombre',
+            'date' => 'Date',
+            'boolean' => 'Oui / Non',
+            'select' => 'Liste déroulante',
+            'file' => 'Téléversement de fichier',
+        ],
     ],
 ];

@@ -42,4 +42,12 @@ return [
     'scan_pdf_unsupported' => 'PDF uploaded. Auto-fill works with photo receipts (JPG, PNG). Please enter details manually.',
     'scan_unsupported_format' => 'This file type cannot be scanned. Use JPG, PNG, or WEBP.',
     'scan_no_data' => 'No usable data was found on this receipt.',
+
+    'categories' => [
+        'travel' => 'Travel',
+        'meals' => 'Meals & entertainment',
+        'office' => 'Office supplies',
+        'equipment' => 'Equipment',
+        'other' => 'Other',
+    ],
 ];

@@ -10,10 +10,6 @@ enum ProjectTaskStatus: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Todo => 'To do',
-            self::InProgress => 'In progress',
-            self::Done => 'Done',
-        };
+        return __('projects.task_statuses.'.$this->value);
     }
 }

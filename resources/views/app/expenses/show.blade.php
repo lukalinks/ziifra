@@ -79,7 +79,7 @@
                 </form>
             @endif
         @endcan
-        <a href="{{ route('expenses.index') }}" class="ziifra-btn-app-outline">Back</a>
+        <a href="{{ route('expenses.index') }}" class="ziifra-btn-app-outline">{{ __('common.back') }}</a>
     </div>
 </div>
 @endsection

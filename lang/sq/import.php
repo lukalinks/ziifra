@@ -21,8 +21,8 @@ return array (
     'department' => 'Emri i departamentit (duhet të ekzistojë)',
     'position' => 'Titulli i pozicionit (duhet të ekzistojë)',
     'manager_email' => 'Email i menaxherit (punonjës ekzistues)',
-    'employment_type' => 'full_time, part_time, contract, intern, temporary',
-    'employment_status' => 'active, on_leave, terminated',
+    'employment_type' => 'Lloji i punësimit: full_time, part_time, contract, intern, temporary',
+    'employment_status' => 'Statusi i punësimit: active, on_leave, terminated',
     'start_date' => 'Data e fillimit (VVVV-MM-DD)',
   ),
   'errors' => 

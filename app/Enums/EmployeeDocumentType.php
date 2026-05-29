@@ -11,11 +11,6 @@ enum EmployeeDocumentType: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Contract => 'Employment contract',
-            self::IdDocument => 'ID / passport',
-            self::Certificate => 'Certificate / diploma',
-            self::Other => 'Other',
-        };
+        return __('documents.document_types.'.$this->value);
     }
 }

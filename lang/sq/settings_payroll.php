@@ -6,5 +6,5 @@ return [
     'saved' => 'Cilësimet e pagave u ruajtën.',
     'trust_employee' => 'Trust — punonjësi (%)',
     'trust_employer' => 'Trust — punëdhënësi (%)',
-    'vat_percent' => 'TVSH (%)',
+    'vat_percent' => 'Përqindja e TVSH-së (%)',
 ];

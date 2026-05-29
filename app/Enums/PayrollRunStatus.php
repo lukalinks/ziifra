@@ -9,9 +9,6 @@ enum PayrollRunStatus: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Draft => 'Draft',
-            self::Locked => 'Locked',
-        };
+        return __('payroll.run_statuses.'.$this->value);
     }
 }

@@ -11,11 +11,6 @@ enum OrganizationLegalForm: string
 
     public function label(): string
     {
-        return match ($this) {
-            self::Shpk => 'SH.P.K',
-            self::BusinessIndividual => 'BI — Business Individual',
-            self::BranchOfOther => 'Branch of Other Company',
-            self::Partnership => 'Partnership',
-        };
+        return __('settings.company.legal_forms.'.$this->value);
     }
 }

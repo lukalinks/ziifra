@@ -9,7 +9,7 @@
     @include('app.projects._form', ['project' => null, 'statuses' => $statuses, 'employees' => $employees])
     <div class="mt-6 flex gap-3">
         <button type="submit" class="ziifra-btn-primary">{{ __('projects.save') }}</button>
-        <a href="{{ route('projects.index') }}" class="ziifra-btn-app-outline">Cancel</a>
+        <a href="{{ route('projects.index') }}" class="ziifra-btn-app-outline">{{ __('common.cancel') }}</a>
     </div>
 </form>
 @endsection

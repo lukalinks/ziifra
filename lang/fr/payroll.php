@@ -35,6 +35,11 @@ return [
     'year' => 'Année',
     'month' => 'Mois',
     'status' => 'Statut',
+
+    'run_statuses' => [
+        'draft' => 'Brouillon',
+        'locked' => 'Verrouillé',
+    ],
     'employees' => 'Employés',
     'count' => ':count cycles de paie',
     'employee_count' => '{0} Aucun employé|{1} :count employé|[2,*] :count employés',

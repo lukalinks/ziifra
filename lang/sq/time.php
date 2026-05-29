@@ -55,4 +55,24 @@ return array (
   'delete_confirm' => 'Të fshihet ky regjistrim?',
   'manual_entry_hint' => 'Shtoni ose korrigjoni një turn manualisht. Dalja mund të lihet bosh nëse punonjësi ende punon.',
   'recorded_by' => 'Regjistruar nga :name',
+
+  'week_days' => [
+    'mon' => 'E hënë',
+    'tue' => 'E martë',
+    'wed' => 'E mërkurë',
+    'thu' => 'E enjte',
+    'fri' => 'E premte',
+    'sat' => 'E shtunë',
+    'sun' => 'E diel',
+  ],
+
+  'week_days_short' => [
+    'mon' => 'Hën',
+    'tue' => 'Mar',
+    'wed' => 'Mër',
+    'thu' => 'Enj',
+    'fri' => 'Pre',
+    'sat' => 'Sht',
+    'sun' => 'Die',
+  ],
 );

@@ -73,4 +73,11 @@ return [
     'confirm_send' => 'Marquer cette facture comme envoyée au client ?',
     'confirm_paid' => 'Marquer cette facture comme payée ?',
     'confirm_cancel' => 'Annuler cette facture ?',
+
+    'statuses' => [
+        'draft' => 'Brouillon',
+        'sent' => 'Envoyée',
+        'paid' => 'Payée',
+        'cancelled' => 'Annulée',
+    ],
 ];

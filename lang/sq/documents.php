@@ -59,6 +59,13 @@ return [
     'expired' => 'Skadoi më :date',
     'expiring_soon' => 'Skadon së shpejti (:date)',
     'type' => 'Lloji',
+
+    'document_types' => [
+        'contract' => 'Kontratë pune',
+        'id_document' => 'ID / pasaportë',
+        'certificate' => 'Certifikatë / diplomë',
+        'other' => 'Tjetër',
+    ],
     'document_title' => 'Titulli',
     'file' => 'Skedari',
     'notes' => 'Shënime (opsionale)',

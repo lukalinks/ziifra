@@ -55,4 +55,24 @@ return [
     'delete_confirm' => 'Delete this time entry?',
     'manual_entry_hint' => 'Add or correct a shift manually. Clock out can be left empty if the employee is still working.',
     'recorded_by' => 'Recorded by :name',
+
+    'week_days' => [
+        'mon' => 'Monday',
+        'tue' => 'Tuesday',
+        'wed' => 'Wednesday',
+        'thu' => 'Thursday',
+        'fri' => 'Friday',
+        'sat' => 'Saturday',
+        'sun' => 'Sunday',
+    ],
+
+    'week_days_short' => [
+        'mon' => 'Mon',
+        'tue' => 'Tue',
+        'wed' => 'Wed',
+        'thu' => 'Thu',
+        'fri' => 'Fri',
+        'sat' => 'Sat',
+        'sun' => 'Sun',
+    ],
 ];

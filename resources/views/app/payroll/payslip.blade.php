@@ -32,7 +32,7 @@
                 <button type="submit" class="ziifra-btn-primary">{{ __('payroll.email_payslip') }}</button>
             </form>
         @endif
-        <a href="{{ $run->showUrl() }}" class="rounded-lg border border-ziifra-line px-4 py-2 text-sm font-medium hover:bg-ziifra-cream">Back</a>
+        <a href="{{ $run->showUrl() }}" class="rounded-lg border border-ziifra-line px-4 py-2 text-sm font-medium hover:bg-ziifra-cream">{{ __('common.back') }}</a>
     </div>
 
     @if ($logoDataUri)

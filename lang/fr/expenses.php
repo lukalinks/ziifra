@@ -42,4 +42,12 @@ return [
     'scan_pdf_unsupported' => 'PDF téléversé. Le remplissage automatique fonctionne avec les reçus photo (JPG, PNG). Saisissez les détails manuellement.',
     'scan_unsupported_format' => 'Ce type de fichier ne peut pas être analysé. Utilisez JPG, PNG ou WEBP.',
     'scan_no_data' => 'Aucune donnée exploitable n\'a été trouvée sur ce reçu.',
+
+    'categories' => [
+        'travel' => 'Déplacements',
+        'meals' => 'Repas et divertissement',
+        'office' => 'Fournitures de bureau',
+        'equipment' => 'Équipement',
+        'other' => 'Autre',
+    ],
 ];

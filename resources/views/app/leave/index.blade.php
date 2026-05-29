@@ -73,7 +73,7 @@
     @if ($canCreateForOthers)
         <form method="GET" action="{{ route('leave.index') }}" class="flex flex-wrap items-end gap-3">
             <div class="min-w-[10rem] flex-1 sm:flex-none">
-                <label for="status" class="sr-only">Status</label>
+                <label for="status" class="sr-only">{{ __('leave.filter_status') }}</label>
                 <select id="status" name="status" class="ziifra-input w-full">
                     <option value="">{{ __('leave.all_statuses') }}</option>
                     @foreach ($statuses as $status)
@@ -82,7 +82,7 @@
                 </select>
             </div>
             <div class="min-w-[10rem] flex-1 sm:flex-none">
-                <label for="employee_id" class="sr-only">Employee</label>
+                <label for="employee_id" class="sr-only">{{ __('leave.filter_employee') }}</label>
                 <select id="employee_id" name="employee_id" class="ziifra-input w-full">
                     <option value="">{{ __('leave.all_employees') }}</option>
                     @foreach ($employees as $employee)
@@ -91,7 +91,7 @@
                 </select>
             </div>
             <div class="min-w-[10rem] flex-1 sm:flex-none">
-                <label for="leave_type_id" class="sr-only">Type</label>
+                <label for="leave_type_id" class="sr-only">{{ __('leave.filter_type') }}</label>
                 <select id="leave_type_id" name="leave_type_id" class="ziifra-input w-full">
                     <option value="">{{ __('leave.all_types') }}</option>
                     @foreach ($leaveTypes as $type)
@@ -104,7 +104,7 @@
     @else
         <form method="GET" action="{{ route('leave.index') }}" class="flex flex-wrap items-end gap-3">
             <div class="min-w-[10rem] flex-1 sm:max-w-xs">
-                <label for="status" class="sr-only">Status</label>
+                <label for="status" class="sr-only">{{ __('leave.filter_status') }}</label>
                 <select id="status" name="status" class="ziifra-input w-full">
                     <option value="">{{ __('leave.all_statuses') }}</option>
                     @foreach ($statuses as $status)
