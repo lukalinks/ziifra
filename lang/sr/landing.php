@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'title' => 'ZIIFRA — HR upravljanje za kompanije na Kosovu',
-    'meta_description' => 'ZIIFRA — Moderni HR i operativni softver za kompanije na Kosovu. Jedno sigurno radno okruženje za vaš tim.',
+    'title' => 'ZIIFRA — HR i operativna platforma za rastuće timove',
+    'meta_description' => 'ZIIFRA — Moderni HR i operativni softver za kompanije u regionu. Jedno sigurno radno okruženje za vaš tim.',
 
     'nav' => [
         'features' => 'Funkcije',
@@ -15,7 +15,7 @@ return [
     ],
 
     'footer' => [
-        'blurb' => 'Profesionalni HR softver za kompanije koje posluju na Kosovu. Siguran, multi-tenant i prilagođen lokalnoj usklađenosti.',
+        'blurb' => 'Profesionalni HR softver za moderne kompanije. Siguran, multi-tenant i prilagođen lokalnoj usklađenosti.',
         'product' => 'Proizvod',
         'legal' => 'Pravno',
         'privacy' => 'Privatnost',
@@ -25,7 +25,7 @@ return [
     ],
 
     'hero' => [
-        'eyebrow' => 'HR i operacije za Kosovo',
+        'eyebrow' => 'HR i operativna platforma',
         'tagline_connected' => 'Sve povezano.',
         'tagline_built' => 'Napravljeno da vodi vaše poslovanje.',
         'lead' => 'Jedno radno okruženje za HR, plate, projekte i finansije — sa strukturom koju rastući timovi trebaju, bez suvišnog nereda.',
@@ -74,11 +74,13 @@ return [
 
     'compliance' => [
         'label' => 'Usklađenost',
-        'title' => 'Kosovski radni podrazumevani',
+        'title' => 'HR i radni standardi',
         'subtitle' => 'EUR, lokalni kontekst i evidencije spremne za reviziju od prvog dana.',
-        'country' => 'Država',
-        'currency' => 'Valuta',
-        'languages' => '6 jezika',
+        'stats' => [
+            ['code' => 'Multi', 'label' => 'Regioni'],
+            ['code' => 'EUR', 'label' => 'Valuta'],
+            ['code' => '6', 'label' => 'Jezika'],
+        ],
     ],
 
     'why' => [
@@ -97,7 +99,7 @@ return [
         'title' => 'U pogonu za tri koraka',
         'subtitle' => 'Registrujte radni prostor, pozovite tim i vodite HR sa jedne kontrolne table.',
         'list' => [
-            ['title' => 'Kreirajte radni prostor', 'desc' => 'Registrujte kompaniju, otpremite logo i podesite kosovske podrazumevane vrednosti.'],
+            ['title' => 'Kreirajte radni prostor', 'desc' => 'Registrujte kompaniju, otpremite logo i podesite lokalne podrazumevane vrednosti.'],
             ['title' => 'Dodajte tim', 'desc' => 'Uvezite zaposlene, postavite odeljenja i pozovite HR i menadžere.'],
             ['title' => 'Pokrenite', 'desc' => 'Uključite module koje trebate i vodite svakodnevni HR sa jedne table.'],
         ],
@@ -131,10 +133,10 @@ return [
         'label' => 'FAQ',
         'title' => 'Pitanja',
         'items' => [
-            ['q' => 'Da li je ZIIFRA samo za Kosovo?', 'a' => 'Da. ZIIFRA je dizajnirana za kompanije koje posluju na Kosovu, sa lokalnim podrazumevanim vrednostima i funkcijama usmerenim na usklađenost.'],
+            ['q' => 'Koje zemlje ZIIFRA podržava?', 'a' => 'ZIIFRA odgovara kompanijama na Balkanu i šire. U radnom prostoru podesite državu, valutu, praznike i pravila plata.'],
             ['q' => 'Koji jezici su podržani?', 'a' => 'Engleski, albanski (Shqip), nemački, srpski, francuski i hrvatski. Prebacujte se bilo kada iz zaglavlja; svaki radni prostor može postaviti svoj podrazumevani jezik.'],
             ['q' => 'Da li su moji podaci sigurni?', 'a' => 'Podaci svake kompanije su izolovani po organizaciji sa šifrovanim vezama i politikama pristupa po ulogama.'],
-            ['q' => 'Šta je uključeno u Pro?', 'a' => 'Starter pokriva HR, odsustva, projekte, vreme i troškove. Pro dodaje kosovske cikluse plate, platne liste i izvoz spreman za računovođu.'],
+            ['q' => 'Šta je uključeno u Pro?', 'a' => 'Starter pokriva HR, odsustva, projekte, vreme i troškove. Pro dodaje cikluse plate, platne liste i izvoz spreman za računovođu.'],
             ['q' => 'Mogu li zaposleni koristiti ZIIFRA na mobilnom?', 'a' => 'Da. Portal zaposlenih radi na mobilnom za svakodnevne zadatke poput odsustava i troškova.'],
         ],
     ],

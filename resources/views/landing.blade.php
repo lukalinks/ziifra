@@ -232,10 +232,10 @@
                 <h3 class="mt-4 text-2xl font-semibold">{{ __('landing.compliance.title') }}</h3>
                 <p class="mt-3 text-sm leading-relaxed text-white/55">{{ __('landing.compliance.subtitle') }}</p>
                 <div class="mt-10 grid grid-cols-1 gap-3 border-t border-white/10 pt-8 sm:grid-cols-3">
-                    @foreach(['XK' => __('landing.compliance.country'), 'EUR' => __('landing.compliance.currency'), '6' => __('landing.compliance.languages')] as $code => $name)
+                    @foreach(__('landing.compliance.stats') as $stat)
                         <div class="rounded-xl border border-white/10 bg-white/5 p-3 text-center">
-                            <p class="font-mono text-lg font-bold text-ziifra-accent-glow">{{ $code }}</p>
-                            <p class="mt-1 text-[0.65rem] uppercase tracking-wider text-white/45">{{ $name }}</p>
+                            <p class="font-mono text-lg font-bold text-ziifra-accent-glow">{{ $stat['code'] }}</p>
+                            <p class="mt-1 text-[0.65rem] uppercase tracking-wider text-white/45">{{ $stat['label'] }}</p>
                         </div>
                     @endforeach
                 </div>

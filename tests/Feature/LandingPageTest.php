@@ -49,6 +49,7 @@ class LandingPageTest extends TestCase
         $response->assertSee('Belegschaft', false);
         $response->assertSee('Urlaub', false);
         $response->assertSee('Lohnabrechnung', false);
+        $response->assertSee('Arbeitsrecht-Standards', false);
         $response->assertDontSee('Workforce', false);
         $response->assertDontSee('Time off', false);
         $response->assertSee('lang="de"', false);

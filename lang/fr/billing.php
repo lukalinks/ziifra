@@ -58,7 +58,7 @@ return [
         'team_invitations' => 'Invitations d\'équipe',
         'departments' => 'Départements et postes',
         'employee_import' => 'Import CSV d\'employés',
-        'payroll' => 'Paie Kosovo',
+        'payroll' => 'Paie',
         'reports' => 'Rapports et exports',
         'projects' => 'Projets et tâches',
         'time_tracking' => 'Temps et présence',

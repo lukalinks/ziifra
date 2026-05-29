@@ -1,8 +1,8 @@
 <?php
 
 return array (
-  'title' => 'ZIIFRA — Menaxhimi i burimeve njerëzore për kompanitë në Kosovë',
-  'meta_description' => 'ZIIFRA — Menaxhimi i burimeve njerëzore për kompanitë në Kosovë. Punëtorët, pushimet dhe përputhshmëria në një vend.',
+  'title' => 'ZIIFRA — Platformë HR dhe operacionesh për ekipe në rritje',
+  'meta_description' => 'ZIIFRA — Softuer modern HR dhe operacionesh për kompanitë në rajon. Një hapësirë e sigurt pune për ekipin tuaj.',
   'nav' => 
   array (
     'features' => 'Veçoritë',
@@ -15,7 +15,7 @@ return array (
   ),
   'footer' => 
   array (
-    'blurb' => 'Softuer profesional HR për kompanitë që operojnë në Kosovë. I sigurt, me qira të shumëfishta dhe i ndërtuar për përputhshmëri lokale.',
+    'blurb' => 'Softuer profesional HR për kompanitë moderne. I sigurt, me qira të shumëfishta dhe i ndërtuar për përputhshmëri lokale.',
     'product' => 'Produkti',
     'legal' => 'Ligjore',
     'privacy' => 'Privatësia',
@@ -135,11 +135,26 @@ return array (
   'compliance' => 
   array (
     'label' => 'Përputhshmëria',
-    'title' => 'Parazgjedhjet e punës në Kosovë',
+    'title' => 'Standardet HR dhe të punës',
     'subtitle' => 'EUR, kontekst lokal dhe regjistra të gatshëm për auditim që nga dita e parë.',
-    'country' => 'Shteti',
-    'currency' => 'Monedha',
-    'languages' => 'Gjuhët',
+    'stats' =>
+    array (
+      0 =>
+      array (
+        'code' => 'Multi',
+        'label' => 'Rajonet',
+      ),
+      1 =>
+      array (
+        'code' => 'EUR',
+        'label' => 'Monedha',
+      ),
+      2 =>
+      array (
+        'code' => '6',
+        'label' => 'Gjuhë',
+      ),
+    ),
   ),
   'why' => 
   array (
@@ -291,8 +306,8 @@ return array (
     array (
       0 => 
       array (
-        'q' => 'A është ZIIFRA vetëm për Kosovën?',
-        'a' => 'Po. ZIIFRA është projektuar për kompanitë që operojnë në Kosovë, me parazgjedhje lokale dhe veçori për përputhshmëri.',
+        'q' => 'Cilat vende mbështet ZIIFRA?',
+        'a' => 'ZIIFRA funksionon për kompanitë në Ballkan dhe më gjerë. Konfiguroni vendin, monedhën, festat dhe rregullat e pagave në hapësirën tuaj të punës.',
       ),
       1 => 
       array (
@@ -307,7 +322,7 @@ return array (
       3 => 
       array (
         'q' => 'Çfarë përfshin Pro?',
-        'a' => 'Gjithçka në Starter plus ciklet e pagave në Kosovë, fletëpagat PDF dhe eksporte të gatshme për kontabilistin.',
+        'a' => 'Gjithçka në Starter plus ciklet e pagave, fletëpagat PDF dhe eksporte të gatshme për kontabilistin.',
       ),
       4 => 
       array (

@@ -5,12 +5,8 @@
     <title>{{ $invoice->invoice_number }}</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; color: #0f172a; font-size: 12px; line-height: 1.45; }
-        .header { width: 100%; margin-bottom: 26px; }
-        .header td { vertical-align: top; }
-        .logo { max-height: 60px; max-width: 200px; margin-bottom: 8px; }
-        .company-name { font-size: 18px; font-weight: bold; }
         .muted { color: #64748b; }
-        .doc-title { font-size: 24px; font-weight: bold; letter-spacing: 0.5px; }
+        .doc-title { font-size: 26px; font-weight: bold; letter-spacing: 0.5px; color: #0f172a; }
         .parties { width: 100%; margin-bottom: 18px; }
         .parties td { vertical-align: top; width: 50%; }
         .label { color: #64748b; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }
@@ -39,27 +35,12 @@
         $footerText = $invoiceSettings['footer_text'] ?? null;
     @endphp
 
-    <table class="header">
-        <tr>
-            <td style="width: 60%;">
-                @if ($logo)
-                    <img src="{{ $logo }}" alt="" class="logo"><br>
-                @endif
-                <span class="company-name">{{ $organization->name }}</span>
-                @if ($organization->legal_name)<div>{{ $organization->legal_name }}</div>@endif
-                @if ($organization->vat_number)<div class="muted">VAT/TVSH: {{ $organization->vat_number }}</div>@endif
-                @if ($organization->address_line_1)<div class="muted">{{ $organization->address_line_1 }}</div>@endif
-                @if ($organization->city)<div class="muted">{{ trim(($organization->postal_code ? $organization->postal_code.' ' : '').$organization->city) }}</div>@endif
-                @if ($organization->email)<div class="muted">{{ $organization->email }}</div>@endif
-            </td>
-            <td style="width: 40%; text-align: right;">
-                <div class="doc-title">{{ __('invoices.invoice') }}</div>
-                <div style="margin-top: 6px;"><strong>{{ $invoice->invoice_number }}</strong></div>
-                <div class="muted">{{ __('invoices.issue_date') }}: {{ $invoice->issue_date->format('M j, Y') }}</div>
-                <div class="muted">{{ __('invoices.due_date') }}: {{ $invoice->due_date->format('M j, Y') }}</div>
-            </td>
-        </tr>
-    </table>
+    <x-pdf.company-header :organization="$organization" :logo="$logo">
+        <div class="doc-title">{{ __('invoices.invoice') }}</div>
+        <div style="margin-top: 8px;"><strong>{{ $invoice->invoice_number }}</strong></div>
+        <div class="muted" style="margin-top: 6px;">{{ __('invoices.issue_date') }}: {{ $invoice->issue_date->format('M j, Y') }}</div>
+        <div class="muted">{{ __('invoices.due_date') }}: {{ $invoice->due_date->format('M j, Y') }}</div>
+    </x-pdf.company-header>
 
     <table class="parties">
         <tr>

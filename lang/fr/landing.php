@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'title' => 'ZIIFRA — Gestion RH pour les entreprises au Kosovo',
-    'meta_description' => 'ZIIFRA — Logiciel RH et opérations moderne pour les entreprises au Kosovo. Un espace sécurisé pour votre équipe.',
+    'title' => 'ZIIFRA — Plateforme RH et opérations pour équipes en croissance',
+    'meta_description' => 'ZIIFRA — Logiciel RH et opérations moderne pour les entreprises de la région. Un espace sécurisé pour votre équipe.',
 
     'nav' => [
         'features' => 'Fonctionnalités',
@@ -15,7 +15,7 @@ return [
     ],
 
     'footer' => [
-        'blurb' => 'Logiciel RH professionnel pour les entreprises au Kosovo. Sécurisé, multi-locataire et adapté à la conformité locale.',
+        'blurb' => 'Logiciel RH professionnel pour les entreprises modernes. Sécurisé, multi-locataire et adapté à la conformité locale.',
         'product' => 'Produit',
         'legal' => 'Mentions légales',
         'privacy' => 'Confidentialité',
@@ -25,7 +25,7 @@ return [
     ],
 
     'hero' => [
-        'eyebrow' => 'RH et opérations pour le Kosovo',
+        'eyebrow' => 'Plateforme RH et opérations',
         'tagline_connected' => 'Tout est connecté.',
         'tagline_built' => 'Conçu pour piloter votre entreprise.',
         'lead' => 'Un espace pour les RH, la paie, les projets et la finance — avec la structure dont les équipes en croissance ont besoin, sans surcharge.',
@@ -74,11 +74,13 @@ return [
 
     'compliance' => [
         'label' => 'Conformité',
-        'title' => 'Paramètres travail Kosovo',
+        'title' => 'Normes RH et travail',
         'subtitle' => 'EUR, contexte local et dossiers prêts pour l\'audit dès le premier jour.',
-        'country' => 'Pays',
-        'currency' => 'Devise',
-        'languages' => '6 langues',
+        'stats' => [
+            ['code' => 'Multi', 'label' => 'Régions'],
+            ['code' => 'EUR', 'label' => 'Devise'],
+            ['code' => '6', 'label' => 'Langues'],
+        ],
     ],
 
     'why' => [
@@ -97,7 +99,7 @@ return [
         'title' => 'Opérationnel en trois étapes',
         'subtitle' => 'Créez votre espace, invitez l\'équipe et gérez les RH depuis un seul tableau de bord.',
         'list' => [
-            ['title' => 'Créer l\'espace', 'desc' => 'Enregistrez votre entreprise, téléversez votre logo et configurez les paramètres Kosovo.'],
+            ['title' => 'Créer l\'espace', 'desc' => 'Enregistrez votre entreprise, téléversez votre logo et configurez vos paramètres locaux.'],
             ['title' => 'Ajouter l\'équipe', 'desc' => 'Importez les employés, définissez les départements et invitez les RH et managers.'],
             ['title' => 'Lancer', 'desc' => 'Activez les modules nécessaires et gérez le quotidien RH depuis un tableau de bord.'],
         ],
@@ -180,10 +182,10 @@ return [
         'label' => 'FAQ',
         'title' => 'Questions',
         'items' => [
-            ['q' => 'ZIIFRA est-il réservé au Kosovo ?', 'a' => 'Oui. ZIIFRA est conçu pour les entreprises au Kosovo, avec des paramètres locaux et des fonctionnalités orientées conformité.'],
+            ['q' => 'Quels pays ZIIFRA prend-il en charge ?', 'a' => 'ZIIFRA convient aux entreprises des Balkans et au-delà. Configurez pays, devise, jours fériés et règles de paie dans votre espace.'],
             ['q' => 'Quelles langues sont prises en charge ?', 'a' => 'Anglais, albanais (Shqip), allemand, serbe, français et croate. Changez à tout moment depuis l\'en-tête ; chaque espace peut définir sa langue par défaut.'],
             ['q' => 'Mes données sont-elles sécurisées ?', 'a' => 'Les données de chaque entreprise sont isolées par organisation, avec connexions chiffrées et politiques par rôle.'],
-            ['q' => 'Qu\'inclut le forfait Pro ?', 'a' => 'Starter couvre RH, congés, projets, temps et dépenses. Pro ajoute les cycles de paie Kosovo, bulletins et exports pour comptables.'],
+            ['q' => 'Qu\'inclut le forfait Pro ?', 'a' => 'Starter couvre RH, congés, projets, temps et dépenses. Pro ajoute les cycles de paie, bulletins et exports pour comptables.'],
             ['q' => 'Les employés peuvent-ils utiliser ZIIFRA sur mobile ?', 'a' => 'Oui. Le portail employé fonctionne sur mobile pour les tâches courantes comme les congés et les dépenses.'],
         ],
     ],

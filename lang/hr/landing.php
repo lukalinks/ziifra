@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'title' => 'ZIIFRA — Upravljanje ljudskim resursima za tvrtke na Kosovu',
-    'meta_description' => 'ZIIFRA — Moderni HR i operativni softver za tvrtke na Kosovu. Jedno sigurno radno okruženje za vaš tim.',
+    'title' => 'ZIIFRA — HR i operativna platforma za rastuće timove',
+    'meta_description' => 'ZIIFRA — Moderni HR i operativni softver za tvrtke u regiji. Jedno sigurno radno okruženje za vaš tim.',
 
     'nav' => [
         'features' => 'Značajke',
@@ -15,7 +15,7 @@ return [
     ],
 
     'footer' => [
-        'blurb' => 'Profesionalni HR softver za tvrtke koje posluju na Kosovu. Siguran, višestanarski i prilagođen lokalnoj usklađenosti.',
+        'blurb' => 'Profesionalni HR softver za moderne tvrtke. Siguran, višestanarski i prilagođen lokalnoj usklađenosti.',
         'product' => 'Proizvod',
         'legal' => 'Pravno',
         'privacy' => 'Privatnost',
@@ -25,7 +25,7 @@ return [
     ],
 
     'hero' => [
-        'eyebrow' => 'HR i operacije za Kosovo',
+        'eyebrow' => 'HR i operativna platforma',
         'tagline_connected' => 'Sve je povezano.',
         'tagline_built' => 'Izrađeno za vođenje vašeg poslovanja.',
         'lead' => 'Jedno radno okruženje za HR, plaće, projekte i financije — sa strukturom koju rastući timovi trebaju, bez suvišnog nereda.',
@@ -74,11 +74,13 @@ return [
 
     'compliance' => [
         'label' => 'Usklađenost',
-        'title' => 'Kosovski radni zadani postavci',
+        'title' => 'HR i radni standardi',
         'subtitle' => 'EUR, lokalni kontekst i evidencije spremne za reviziju od prvog dana.',
-        'country' => 'Država',
-        'currency' => 'Valuta',
-        'languages' => '6 jezika',
+        'stats' => [
+            ['code' => 'Multi', 'label' => 'Regije'],
+            ['code' => 'EUR', 'label' => 'Valuta'],
+            ['code' => '6', 'label' => 'Jezika'],
+        ],
     ],
 
     'why' => [
@@ -97,7 +99,7 @@ return [
         'title' => 'U pogonu u tri koraka',
         'subtitle' => 'Registrirajte radni prostor, pozovite tim i vodite HR s jedne nadzorne ploče.',
         'list' => [
-            ['title' => 'Stvorite radni prostor', 'desc' => 'Registrirajte tvrtku, učitajte logo i konfigurirajte kosovske zadane postavke.'],
+            ['title' => 'Stvorite radni prostor', 'desc' => 'Registrirajte tvrtku, učitajte logo i konfigurirajte lokalne zadane postavke.'],
             ['title' => 'Dodajte tim', 'desc' => 'Uvezite zaposlenike, postavite odjele i pozovite HR i menadžere.'],
             ['title' => 'Pokrenite', 'desc' => 'Uključite module koje trebate i vodite svakodnevni HR s jedne nadzorne ploče.'],
         ],
@@ -131,10 +133,10 @@ return [
         'label' => 'FAQ',
         'title' => 'Pitanja',
         'items' => [
-            ['q' => 'Je li ZIIFRA samo za Kosovo?', 'a' => 'Da. ZIIFRA je dizajnirana za tvrtke koje posluju na Kosovu, s lokalnim zadanim postavkama i značajkama usmjerenim na usklađenost.'],
+            ['q' => 'Koje zemlje ZIIFRA podržava?', 'a' => 'ZIIFRA odgovara tvrtkama na Balkanu i šire. U radnom prostoru konfigurirate državu, valutu, praznike i pravila plaća.'],
             ['q' => 'Koji su jezici podržani?', 'a' => 'Engleski, albanski (Shqip), njemački, srpski, francuski i hrvatski. Promijenite bilo kada iz zaglavlja; svaki radni prostor može postaviti zadani jezik.'],
             ['q' => 'Jesu li moji podaci sigurni?', 'a' => 'Podaci svake tvrtke izolirani su po organizaciji sa šifriranim vezama i politikama pristupa po ulogama.'],
-            ['q' => 'Što uključuje Pro?', 'a' => 'Starter pokriva HR, odsustva, projekte, vrijeme i troškove. Pro dodaje kosovske cikluse plaća, platne liste i izvoz spreman za računovođu.'],
+            ['q' => 'Što uključuje Pro?', 'a' => 'Starter pokriva HR, odsustva, projekte, vrijeme i troškove. Pro dodaje cikluse plaća, platne liste i izvoz spreman za računovođu.'],
             ['q' => 'Mogu li zaposlenici koristiti ZIIFRA na mobitelu?', 'a' => 'Da. Portal zaposlenika radi na mobitelu za svakodnevne zadatke poput odsustava i troškova.'],
         ],
     ],

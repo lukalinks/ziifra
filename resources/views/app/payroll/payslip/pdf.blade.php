@@ -17,7 +17,6 @@
             'compact' => '15px',
             default => '18px',
         };
-        $legalLines = ($template['show_legal_block'] ?? true) ? $organization->payslipLegalLines() : [];
     @endphp
     <style>
         body {
@@ -27,12 +26,7 @@
             margin: 24px;
             line-height: 1.45;
         }
-        .accent-bar {
-            border-bottom: 3px solid {{ $primaryColor }};
-            padding-bottom: 10px;
-            margin-bottom: 16px;
-        }
-        h1 { margin: 0 0 4px 0; font-size: {{ $hSize }}; }
+        h1 { margin: 0 0 4px 0; font-size: {{ $hSize }}; color: #0f172a; }
         .muted { color: #555; font-size: {{ $layout === 'compact' ? '9px' : '10px' }}; }
         table.lines { width: 100%; max-width: 420px; border-collapse: collapse; margin-top: 18px; }
         table.lines td { padding: 6px 4px; border-bottom: 1px solid #ddd; vertical-align: top; }
@@ -40,27 +34,17 @@
         table.lines td.label { color: #444; }
         .net-row td { border-bottom: none; padding-top: 10px; font-size: {{ $layout === 'compact' ? '11px' : '12px' }}; }
         .employer-note { font-size: 9px; color: #666; font-style: italic; }
-        .legal { margin-top: 22px; padding-top: 12px; border-top: 1px solid #eee; }
-        .legal ul { margin: 6px 0 0 16px; padding: 0; }
-        .legal li { margin-bottom: 2px; }
+        .signature { margin-top: 22px; padding-top: 12px; border-top: 1px solid #eee; font-size: 10px; color: #444; }
         .footer { margin-top: 20px; font-size: 9px; color: #666; }
     </style>
 </head>
 <body>
-@if ($logoDataUri)
-    <div style="margin-bottom:10px;">
-        <img src="{{ $logoDataUri }}" alt="" style="max-height:52px;max-width:200px;">
+<x-pdf.company-header :organization="$organization" :logo="$logoDataUri">
+    <div style="border-bottom: 3px solid {{ $primaryColor }}; padding-bottom: 10px;">
+        <h1>{{ __('payroll.payslip_title') }}</h1>
+        <p class="muted" style="margin: 6px 0 0 0;">{{ __('payroll.payslip_period', ['period' => $run->periodLabel()]) }}</p>
     </div>
-@endif
-
-<div class="accent-bar">
-    <p style="margin:0;font-weight:bold;">{{ $appName }}</p>
-    @if ($organization->brand_tagline)
-        <p class="muted" style="margin:4px 0 0 0;">{{ $organization->brand_tagline }}</p>
-    @endif
-    <h1>{{ __('payroll.payslip_title') }}</h1>
-    <p class="muted" style="margin:6px 0 0 0;">{{ __('payroll.payslip_period', ['period' => $run->periodLabel()]) }}</p>
-</div>
+</x-pdf.company-header>
 
 <p style="margin:0;"><strong>{{ __('payroll.columns.employee') }}:</strong> {{ $item->employeeName() }}</p>
 @if (! empty($snapshot['email']))
@@ -135,14 +119,19 @@
     </tr>
 </table>
 
-@if ($legalLines !== [])
-    <div class="legal">
+@if (($template['show_legal_block'] ?? true) && ($organization->signatory_name || $organization->bank_iban))
+    <div class="signature">
         <p style="margin:0;font-weight:bold;font-size:10px;text-transform:uppercase;color:#777;">{{ __('payroll.payslip_employer_section') }}</p>
-        <ul>
-            @foreach ($legalLines as $line)
-                <li>{{ $line }}</li>
-            @endforeach
-        </ul>
+        @if ($organization->signatory_name)
+            <p style="margin:8px 0 0 0;">
+                {{ $organization->signatory_name }}@if ($organization->signatory_title), {{ $organization->signatory_title }}@endif
+            </p>
+        @endif
+        @if ($organization->bank_iban)
+            <p style="margin:4px 0 0 0;" class="muted">
+                {{ trim(($organization->bank_name ? $organization->bank_name.' — ' : '').$organization->bank_iban) }}
+            </p>
+        @endif
     </div>
 @endif
 

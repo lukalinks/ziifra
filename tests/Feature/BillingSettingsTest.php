@@ -83,7 +83,7 @@ class BillingSettingsTest extends TestCase
             $billing->enabledFeatures('starter'),
         );
         $this->assertTrue($billing->plan('pro')['payroll']);
-        $this->assertContains('Kosovo payroll', $billing->plan('pro')['features']);
+        $this->assertContains('Payroll', $billing->plan('pro')['features']);
     }
 
     public function test_super_admin_can_configure_payment_provider_plan_ids(): void

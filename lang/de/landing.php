@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'title' => 'ZIIFRA — HR-Management für Unternehmen im Kosovo',
-    'meta_description' => 'ZIIFRA — Moderne HR- und Betriebssoftware für Unternehmen im Kosovo. Ein sicherer Arbeitsbereich für Ihr Team.',
+    'title' => 'ZIIFRA — HR- & Betriebsplattform für wachsende Teams',
+    'meta_description' => 'ZIIFRA — Moderne HR- und Betriebssoftware für Unternehmen in der Region. Ein sicherer Arbeitsbereich für Ihr Team.',
 
     'nav' => [
         'features' => 'Funktionen',
@@ -15,7 +15,7 @@ return [
     ],
 
     'footer' => [
-        'blurb' => 'Professionelle HR-Software für Unternehmen im Kosovo. Sicher, mandantenfähig und für lokale Compliance gebaut.',
+        'blurb' => 'Professionelle HR-Software für moderne Unternehmen. Sicher, mandantenfähig und für lokale Compliance gebaut.',
         'product' => 'Produkt',
         'legal' => 'Rechtliches',
         'privacy' => 'Datenschutz',
@@ -25,7 +25,7 @@ return [
     ],
 
     'hero' => [
-        'eyebrow' => 'HR & Betrieb für den Kosovo',
+        'eyebrow' => 'HR- & Betriebsplattform',
         'tagline_connected' => 'Alles verbunden.',
         'tagline_built' => 'Gebaut, um Ihr Unternehmen zu führen.',
         'lead' => 'Ein Arbeitsbereich für HR, Lohnabrechnung, Projekte und Finanzen — mit der Struktur, die wachsende Teams brauchen, ohne Ballast.',
@@ -74,11 +74,13 @@ return [
 
     'compliance' => [
         'label' => 'Compliance',
-        'title' => 'Kosovo-Arbeitsstandards',
+        'title' => 'HR- & Arbeitsrecht-Standards',
         'subtitle' => 'EUR, lokaler Kontext und auditfähige Unterlagen ab Tag eins.',
-        'country' => 'Land',
-        'currency' => 'Währung',
-        'languages' => '6 Sprachen',
+        'stats' => [
+            ['code' => 'Multi', 'label' => 'Regionen'],
+            ['code' => 'EUR', 'label' => 'Währung'],
+            ['code' => '6', 'label' => 'Sprachen'],
+        ],
     ],
 
     'why' => [
@@ -97,7 +99,7 @@ return [
         'title' => 'In drei Schritten live',
         'subtitle' => 'Workspace registrieren, Team einladen und HR von einem Dashboard aus betreiben.',
         'list' => [
-            ['title' => 'Workspace erstellen', 'desc' => 'Unternehmen registrieren, Logo hochladen und Kosovo-Standards konfigurieren.'],
+            ['title' => 'Workspace erstellen', 'desc' => 'Unternehmen registrieren, Logo hochladen und lokale Standards konfigurieren.'],
             ['title' => 'Team hinzufügen', 'desc' => 'Mitarbeitende importieren, Abteilungen setzen und HR sowie Manager einladen.'],
             ['title' => 'Live gehen', 'desc' => 'Benötigte Module aktivieren und tägliches HR von einem Dashboard aus steuern.'],
         ],
@@ -131,10 +133,10 @@ return [
         'label' => 'FAQ',
         'title' => 'Fragen',
         'items' => [
-            ['q' => 'Ist ZIIFRA nur für den Kosovo?', 'a' => 'Ja. ZIIFRA ist für Unternehmen im Kosovo konzipiert, mit lokalen Standards und Compliance-Funktionen.'],
+            ['q' => 'Für welche Länder ist ZIIFRA geeignet?', 'a' => 'ZIIFRA eignet sich für Unternehmen auf dem Balkan und darüber hinaus. Land, Währung, Feiertage und Lohnregeln konfigurieren Sie im Workspace.'],
             ['q' => 'Welche Sprachen werden unterstützt?', 'a' => 'Englisch, Albanisch (Shqip), Deutsch, Serbisch, Französisch und Kroatisch. Wechseln Sie jederzeit im Header; jeder Workspace kann eine Standardsprache setzen.'],
             ['q' => 'Sind meine Daten sicher?', 'a' => 'Daten jedes Unternehmens sind mandantengetrennt mit verschlüsselten Verbindungen und rollenbasierten Richtlinien.'],
-            ['q' => 'Was ist in Pro enthalten?', 'a' => 'Starter umfasst HR, Urlaub, Projekte, Zeit und Spesen. Pro ergänzt Kosovo-Lohnläufe, Lohnabrechnungen und steuerfertige Exporte.'],
+            ['q' => 'Was ist in Pro enthalten?', 'a' => 'Starter umfasst HR, Urlaub, Projekte, Zeit und Spesen. Pro ergänzt Lohnläufe, Lohnabrechnungen und steuerfertige Exporte.'],
             ['q' => 'Können Mitarbeitende ZIIFRA auf dem Handy nutzen?', 'a' => 'Ja. Das Mitarbeitendenportal funktioniert mobil für alltägliche Aufgaben wie Urlaub und Spesen.'],
         ],
     ],

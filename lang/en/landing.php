@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'title' => 'ZIIFRA — HR management for companies in Kosovo',
-    'meta_description' => 'ZIIFRA — Modern HR and operations software for companies in Kosovo. One secure workspace for your team.',
+    'title' => 'ZIIFRA — HR & operations platform for growing teams',
+    'meta_description' => 'ZIIFRA — Modern HR and operations software for companies across the region. One secure workspace for your team.',
 
     'nav' => [
         'features' => 'Features',
@@ -15,7 +15,7 @@ return [
     ],
 
     'footer' => [
-        'blurb' => 'Professional HR software for companies operating in Kosovo. Secure, multi-tenant, and built for local compliance.',
+        'blurb' => 'Professional HR software for modern companies. Secure, multi-tenant, and built for local compliance.',
         'product' => 'Product',
         'legal' => 'Legal',
         'privacy' => 'Privacy',
@@ -25,7 +25,7 @@ return [
     ],
 
     'hero' => [
-        'eyebrow' => 'HR & operations for Kosovo',
+        'eyebrow' => 'HR & operations platform',
         'tagline_connected' => 'Everything connected.',
         'tagline_built' => 'Built to run your business.',
         'lead' => 'One workspace for HR, payroll, projects, and finance — with the structure growing teams need and none of the clutter.',
@@ -74,11 +74,13 @@ return [
 
     'compliance' => [
         'label' => 'Compliance',
-        'title' => 'Kosovo labour defaults',
+        'title' => 'HR & labour standards',
         'subtitle' => 'EUR, local context, and audit-ready records from day one.',
-        'country' => 'Country',
-        'currency' => 'Currency',
-        'languages' => '6 languages',
+        'stats' => [
+            ['code' => 'Multi', 'label' => 'Regions'],
+            ['code' => 'EUR', 'label' => 'Currency'],
+            ['code' => '6', 'label' => 'Languages'],
+        ],
     ],
 
     'why' => [
@@ -97,7 +99,7 @@ return [
         'title' => 'Live in three steps',
         'subtitle' => 'Register your workspace, invite your team, and start running HR from one dashboard.',
         'list' => [
-            ['title' => 'Create workspace', 'desc' => 'Register your company, upload your logo, and configure Kosovo defaults.'],
+            ['title' => 'Create workspace', 'desc' => 'Register your company, upload your logo, and configure your local defaults.'],
             ['title' => 'Add your team', 'desc' => 'Import employees, set departments, and invite HR and managers.'],
             ['title' => 'Go live', 'desc' => 'Turn on the modules you need and run day-to-day HR from one dashboard.'],
         ],
@@ -131,10 +133,10 @@ return [
         'label' => 'FAQ',
         'title' => 'Questions',
         'items' => [
-            ['q' => 'Is ZIIFRA only for Kosovo?', 'a' => 'Yes. ZIIFRA is designed for companies operating in Kosovo, with local defaults and compliance-oriented features.'],
+            ['q' => 'Which countries does ZIIFRA support?', 'a' => 'ZIIFRA works for companies across the Balkans and beyond. Configure country, currency, holidays, and payroll rules for your workspace.'],
             ['q' => 'What languages are supported?', 'a' => 'English, Albanian (Shqip), German, Serbian, French, and Croatian. Switch anytime from the header; each workspace can set its own default language.'],
             ['q' => 'Is my data secure?', 'a' => 'Each company\'s data is isolated by organization with encrypted connections and role-based policies.'],
-            ['q' => 'What is included in Pro?', 'a' => 'Starter covers HR, leave, projects, time, and expenses. Pro adds Kosovo payroll runs, payslips, and accountant-ready exports.'],
+            ['q' => 'What is included in Pro?', 'a' => 'Starter covers HR, leave, projects, time, and expenses. Pro adds payroll runs, payslips, and accountant-ready exports.'],
             ['q' => 'Can employees use ZIIFRA on their phone?', 'a' => 'Yes. The employee portal works on mobile for everyday tasks like leave and expenses.'],
         ],
     ],
