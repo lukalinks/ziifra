@@ -27,19 +27,19 @@ class PayrollTimeController extends Controller
 
         $organization = CurrentOrganization::check();
         $year = (int) $request->integer('year', now()->year);
-        $month = (int) $request->integer('month', now()->month);
+        $monthFilter = $this->resolveMonthFilter($request);
+        $monthAll = $monthFilter['all'];
+        $month = $monthFilter['month'];
 
         $projectId = $request->has('project_id')
             ? ($request->integer('project_id') ?: null)
-            : Project::query()->orderBy('name')->value('id');
+            : null;
 
-        $grid = $payrollTime->grid(
-            $organization,
-            $year,
-            $month,
-            $projectId,
-            $request->string('search')->trim()->toString() ?: null,
-        );
+        $search = $request->string('search')->trim()->toString() ?: null;
+
+        $grid = $monthAll
+            ? $payrollTime->yearGrid($organization, $year, $projectId, $search)
+            : $payrollTime->grid($organization, $year, $month, $projectId, $search);
 
         $projects = Project::query()->orderBy('name')->get(['id', 'name']);
         $archive = app(PayrollTimeArchiveService::class);
@@ -51,6 +51,7 @@ class PayrollTimeController extends Controller
             'grid' => $grid,
             'year' => $year,
             'month' => $month,
+            'monthAll' => $monthAll,
             'years' => $payrollTime->availableYears(),
             'projects' => $projects,
             'search' => $request->string('search')->trim()->toString(),
@@ -205,8 +206,10 @@ class PayrollTimeController extends Controller
 
         $organization = CurrentOrganization::check();
         $year = (int) $request->integer('year', now()->year);
-        $month = $request->filled('month') ? (int) $request->integer('month') : null;
+        $monthFilter = $this->resolveMonthFilter($request);
+        $month = $monthFilter['all'] ? null : $monthFilter['month'];
         $projectId = $request->integer('project_id') ?: null;
+        $search = $request->string('search')->trim()->toString() ?: null;
 
         if ($request->boolean('archive') && $month !== null) {
             $this->authorize('create', Employee::class);
@@ -218,7 +221,7 @@ class PayrollTimeController extends Controller
                 ->with('status', __('payroll_time.archived_to_documents'));
         }
 
-        return $export->pdf($organization, $year, $month, $projectId);
+        return $export->pdf($organization, $year, $month, $projectId, $search);
     }
 
     public function archivePastMonths(Request $request, Organization $organization, PayrollTimeArchiveService $archive): RedirectResponse
@@ -240,11 +243,14 @@ class PayrollTimeController extends Controller
     {
         $this->authorize('viewAny', Employee::class);
 
+        $monthFilter = $this->resolveMonthFilter($request);
+
         return $export->excel(
             CurrentOrganization::check(),
             (int) $request->integer('year', now()->year),
-            $request->filled('month') ? (int) $request->integer('month') : null,
+            $monthFilter['all'] ? null : $monthFilter['month'],
             $request->integer('project_id') ?: null,
+            $request->string('search')->trim()->toString() ?: null,
         );
     }
 
@@ -257,11 +263,13 @@ class PayrollTimeController extends Controller
         $this->authorize('view', $employee);
         abort_unless($employee->organization_id === $organization->id, 404);
 
+        $monthFilter = $this->resolveMonthFilter($request);
+
         return $export->employeePdf(
             $organization,
             $employee,
             (int) $request->integer('year', now()->year),
-            $request->filled('month') ? (int) $request->integer('month') : null,
+            $monthFilter['all'] ? null : $monthFilter['month'],
             $request->integer('project_id') ?: null,
         );
     }
@@ -275,12 +283,32 @@ class PayrollTimeController extends Controller
         $this->authorize('view', $employee);
         abort_unless($employee->organization_id === $organization->id, 404);
 
+        $monthFilter = $this->resolveMonthFilter($request);
+
         return $export->employeeExcel(
             $organization,
             $employee,
             (int) $request->integer('year', now()->year),
-            $request->filled('month') ? (int) $request->integer('month') : null,
+            $monthFilter['all'] ? null : $monthFilter['month'],
             $request->integer('project_id') ?: null,
         );
+    }
+
+    /**
+     * @return array{all: bool, month: int|null}
+     */
+    protected function resolveMonthFilter(Request $request): array
+    {
+        if (! $request->has('month')) {
+            return ['all' => false, 'month' => (int) now()->month];
+        }
+
+        $raw = $request->input('month');
+
+        if ($raw === 'all') {
+            return ['all' => true, 'month' => null];
+        }
+
+        return ['all' => false, 'month' => max(1, min(12, (int) $raw))];
     }
 }

@@ -83,17 +83,44 @@ class PayrollTimeGridTest extends TestCase
         $this->assertTrue($grid['any_hours_editable']);
     }
 
-    public function test_payroll_time_defaults_to_first_project(): void
+    public function test_payroll_time_defaults_to_all_projects_and_lists_all_employees(): void
     {
         $demo = $this->seedDemoOrganization();
+        $organization = $demo['organization'];
         $this->actingAsOwner($demo);
 
-        $first = Project::query()->orderBy('name')->first();
-        $this->assertNotNull($first);
+        $project = Project::query()->create([
+            'organization_id' => $organization->id,
+            'name' => 'Only Site',
+            'status' => 'active',
+        ]);
 
-        $response = $this->get(route('payroll-time.index', $demo['organization']));
+        $onProject = Employee::factory()->create([
+            'organization_id' => $organization->id,
+            'first_name' => 'On',
+            'last_name' => 'ProjectOnly',
+        ]);
+        $onProject->projects()->attach($project->id);
+
+        $notOnProject = Employee::factory()->create([
+            'organization_id' => $organization->id,
+            'first_name' => 'No',
+            'last_name' => 'ProjectLink',
+        ]);
+
+        $expectedCount = Employee::query()->where('organization_id', $organization->id)->count();
+
+        $response = $this->get(route('payroll-time.index', $organization));
 
         $response->assertOk();
-        $response->assertViewHas('grid', fn (array $grid) => $grid['project']?->id === $first->id);
+        $response->assertViewHas('grid', function (array $grid) use ($expectedCount, $notOnProject) {
+            $this->assertNull($grid['project']);
+            $this->assertCount($expectedCount, $grid['rows']);
+            $this->assertTrue(
+                collect($grid['rows'])->contains(fn (array $row) => $row['employee']->id === $notOnProject->id),
+            );
+
+            return true;
+        });
     }
 }

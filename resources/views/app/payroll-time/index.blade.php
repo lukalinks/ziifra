@@ -5,9 +5,15 @@
 
 @section('content')
 @php
-    $exportMonthParams = ['year' => $year, 'month' => $month, 'project_id' => request('project_id')];
-    $exportYearParams = ['year' => $year, 'project_id' => request('project_id')];
-    $archiveMonthParams = array_merge($exportMonthParams, ['archive' => 1]);
+    $exportBase = array_filter([
+        'year' => $year,
+        'project_id' => request('project_id'),
+        'search' => $search ?: null,
+    ]);
+    $exportParams = $monthAll
+        ? array_merge($exportBase, ['month' => 'all'])
+        : array_merge($exportBase, ['month' => $month]);
+    $archiveMonthParams = $monthAll ? null : array_merge($exportParams, ['archive' => 1]);
 @endphp
 
 <div class="ziifra-dashboard-page" data-payroll-time
@@ -36,9 +42,13 @@
 
     <div class="mb-4 flex flex-wrap items-center gap-2">
         <span class="text-xs font-medium uppercase tracking-wide text-ziifra-muted">{{ __('payroll_time.download_all') }}:</span>
-        <a href="{{ route('payroll-time.export.pdf', $exportMonthParams) }}" class="ziifra-btn-app-outline !text-sm">{{ __('payroll_time.pdf_month') }}</a>
-        <a href="{{ route('payroll-time.export.excel', $exportMonthParams) }}" class="ziifra-btn-app-outline !text-sm">{{ __('payroll_time.excel_month') }}</a>
-        @if ($canManage)
+        <a href="{{ route('payroll-time.export.pdf', $exportParams) }}" class="ziifra-btn-app-outline !text-sm">
+            {{ $monthAll ? __('payroll_time.pdf_year') : __('payroll_time.pdf_month') }}
+        </a>
+        <a href="{{ route('payroll-time.export.excel', $exportParams) }}" class="ziifra-btn-app-outline !text-sm">
+            {{ $monthAll ? __('payroll_time.excel_year') : __('payroll_time.excel_month') }}
+        </a>
+        @if ($canManage && ! $monthAll)
             <span class="mx-1 text-ziifra-line">|</span>
             <a href="{{ route('payroll-time.export.pdf', $archiveMonthParams) }}" class="ziifra-btn-app-outline !text-sm">{{ __('payroll_time.save_to_documents') }}</a>
             <form method="POST" action="{{ route('payroll-time.archive.past', $organization) }}" class="inline">

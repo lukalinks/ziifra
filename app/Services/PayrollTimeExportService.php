@@ -13,17 +13,17 @@ class PayrollTimeExportService
         protected PayrollTimeService $payrollTime,
     ) {}
 
-    public function pdf(Organization $organization, int $year, ?int $month, ?int $projectId)
+    public function pdf(Organization $organization, int $year, ?int $month, ?int $projectId, ?string $search = null)
     {
-        $data = $this->exportData($organization, $year, $month, $projectId);
+        $data = $this->exportData($organization, $year, $month, $projectId, null, $search);
 
         return Pdf::loadView('app.payroll-time.export-pdf', $data)
             ->download($this->filename($organization, $year, $month, 'pdf'));
     }
 
-    public function excel(Organization $organization, int $year, ?int $month, ?int $projectId): StreamedResponse
+    public function excel(Organization $organization, int $year, ?int $month, ?int $projectId, ?string $search = null): StreamedResponse
     {
-        $data = $this->exportData($organization, $year, $month, $projectId);
+        $data = $this->exportData($organization, $year, $month, $projectId, null, $search);
 
         return $this->streamCsv($data['rows'], $data['totals'], $this->filename($organization, $year, $month, 'csv'));
     }
@@ -31,9 +31,9 @@ class PayrollTimeExportService
     /**
      * @return array<string, mixed>
      */
-    public function exportData(Organization $organization, int $year, ?int $month, ?int $projectId, ?int $employeeId = null): array
+    public function exportData(Organization $organization, int $year, ?int $month, ?int $projectId, ?int $employeeId = null, ?string $search = null): array
     {
-        return $this->buildExportData($organization, $year, $month, $projectId, $employeeId);
+        return $this->buildExportData($organization, $year, $month, $projectId, $employeeId, $search);
     }
 
     /**
@@ -97,7 +97,7 @@ class PayrollTimeExportService
     /**
      * @return array<string, mixed>
      */
-    protected function buildExportData(Organization $organization, int $year, ?int $month, ?int $projectId, ?int $employeeId = null): array
+    protected function buildExportData(Organization $organization, int $year, ?int $month, ?int $projectId, ?int $employeeId = null, ?string $search = null): array
     {
         $settings = $organization->resolvedPayrollSettings();
 
@@ -111,61 +111,18 @@ class PayrollTimeExportService
             'payrollSettings' => $settings,
         ];
 
-        if ($month !== null) {
-            $grid = $this->payrollTime->grid($organization, $year, $month, $projectId);
-            $rows = $this->filterRows($grid['rows'], $employeeId);
+        $grid = $month !== null
+            ? $this->payrollTime->grid($organization, $year, $month, $projectId, $search)
+            : $this->payrollTime->yearGrid($organization, $year, $projectId, $search);
 
-            return array_merge($base, [
-                'year' => $year,
-                'month' => $month,
-                'project' => $grid['project'],
-                'rows' => $rows,
-                'totals' => $this->totalsFor($rows, $grid['totals'], $employeeId),
-            ]);
-        }
-
-        $mergedRows = [];
-        $totals = ['hours' => 0.0, 'gross' => 0.0, 'trust_employee' => 0.0, 'trust_employer' => 0.0, 'net' => 0.0];
-        $project = null;
-
-        for ($m = 1; $m <= 12; $m++) {
-            $grid = $this->payrollTime->grid($organization, $year, $m, $projectId);
-            $project = $grid['project'] ?? $project;
-
-            foreach ($this->filterRows($grid['rows'], $employeeId) as $row) {
-                $id = $row['employee']->id;
-
-                if (! isset($mergedRows[$id])) {
-                    $mergedRows[$id] = $row;
-                    $mergedRows[$id]['total_hours'] = 0;
-                    $mergedRows[$id]['gross'] = 0;
-                    $mergedRows[$id]['trust_employee'] = 0;
-                    $mergedRows[$id]['trust_employer'] = 0;
-                    $mergedRows[$id]['net'] = 0;
-                }
-
-                $mergedRows[$id]['total_hours'] += $row['total_hours'];
-                $mergedRows[$id]['gross'] += $row['gross'];
-                $mergedRows[$id]['trust_employee'] += $row['trust_employee'];
-                $mergedRows[$id]['trust_employer'] += $row['trust_employer'];
-                $mergedRows[$id]['net'] += $row['net'];
-            }
-        }
-
-        $rows = array_values($mergedRows);
-
-        foreach ($rows as $row) {
-            foreach (['hours' => 'total_hours', 'gross' => 'gross', 'trust_employee' => 'trust_employee', 'trust_employer' => 'trust_employer', 'net' => 'net'] as $key => $field) {
-                $totals[$key] += $row[$field];
-            }
-        }
+        $rows = $this->filterRows($grid['rows'], $employeeId);
 
         return array_merge($base, [
             'year' => $year,
-            'month' => null,
-            'project' => $project,
+            'month' => $month,
+            'project' => $grid['project'],
             'rows' => $rows,
-            'totals' => $totals,
+            'totals' => $this->totalsFor($rows, $grid['totals'], $employeeId),
         ]);
     }
 

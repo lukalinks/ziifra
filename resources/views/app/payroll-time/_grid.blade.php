@@ -1,9 +1,16 @@
 @php
-    $monthCarbon = \Carbon\Carbon::create($year, $month, 1);
-    $isCurrentMonth = $monthCarbon->isSameMonth(now());
+    $monthAll = $monthAll ?? false;
+    $monthCarbon = $monthAll ? now() : \Carbon\Carbon::create($year, $month, 1);
+    $isCurrentMonth = ! $monthAll && $monthCarbon->isSameMonth(now());
     $currency = $organization->currency ?? 'EUR';
     $quickMonths = collect(range(0, 3))->map(fn (int $offset) => $monthCarbon->copy()->subMonths(3 - $offset));
-    $selectedMonth = $monthCarbon->format('Y-m');
+    $filterParams = fn (array $extra = []) => array_filter(array_merge([
+        'organization' => $organization,
+        'year' => $year,
+        'month' => $monthAll ? 'all' : $month,
+        'project_id' => request('project_id'),
+        'search' => $search ?: null,
+    ], $extra));
 @endphp
 
 <section class="ziifra-time-attendance" data-payroll-time-grid>
@@ -13,7 +20,7 @@
                 <input type="hidden" name="project_id" value="{{ request('project_id') }}">
             @endif
             <input type="hidden" name="year" value="{{ $year }}">
-            <input type="hidden" name="month" value="{{ $month }}">
+            <input type="hidden" name="month" value="{{ $monthAll ? 'all' : $month }}">
             <label for="pt-search" class="sr-only">{{ __('payroll_time.search') }}</label>
             <svg class="ziifra-time-attendance-search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
@@ -23,55 +30,57 @@
         </form>
 
         <div class="ziifra-time-attendance-month-controls">
-            <form method="GET" class="ziifra-time-attendance-month-form" data-payroll-time-filter>
+            <form method="GET" class="ziifra-time-attendance-month-form flex flex-wrap items-center gap-2" data-payroll-time-filter>
                 @if (request('project_id') !== null && request('project_id') !== '')
                     <input type="hidden" name="project_id" value="{{ request('project_id') }}">
                 @endif
                 @if ($search)
                     <input type="hidden" name="search" value="{{ $search }}">
                 @endif
+                <label for="pt-year-select" class="sr-only">{{ __('payroll_time.year') }}</label>
+                <select id="pt-year-select" name="year" class="ziifra-time-attendance-month-select" data-auto-submit aria-label="{{ __('payroll_time.year') }}">
+                    @foreach ($years as $y)
+                        <option value="{{ $y }}" @selected($year === $y)>{{ $y }}</option>
+                    @endforeach
+                </select>
                 <label for="pt-month-select" class="sr-only">{{ __('payroll_time.month') }}</label>
-                <select id="pt-month-select" name="month" class="ziifra-time-attendance-month-select" data-auto-submit>
+                <select id="pt-month-select" name="month" class="ziifra-time-attendance-month-select" data-auto-submit aria-label="{{ __('payroll_time.month') }}">
+                    <option value="all" @selected($monthAll)>{{ __('payroll_time.all_months') }}</option>
                     @for ($m = 1; $m <= 12; $m++)
                         @php $opt = \Carbon\Carbon::create($year, $m, 1); @endphp
-                        <option value="{{ $m }}" @selected($month === $m)>{{ __('daily_hours.month_label', ['month' => $opt->format('F Y')]) }}</option>
+                        <option value="{{ $m }}" @selected(! $monthAll && $month === $m)>{{ $opt->translatedFormat('F') }}</option>
                     @endfor
                 </select>
-                <input type="hidden" name="year" value="{{ $year }}">
             </form>
 
-            <div class="ziifra-time-attendance-month-chips" role="group" aria-label="{{ __('payroll_time.month') }}">
-                @foreach ($quickMonths as $quickMonth)
-                    @php
-                        $chipYear = $quickMonth->year;
-                        $chipMonth = $quickMonth->month;
-                    @endphp
-                    <a href="{{ route('payroll-time.index', array_filter([
-                        'organization' => $organization,
-                        'year' => $chipYear,
-                        'month' => $chipMonth,
-                        'project_id' => request('project_id'),
-                        'search' => $search ?: null,
-                    ])) }}"
-                        @class(['ziifra-time-attendance-month-chip', 'ziifra-time-attendance-month-chip--active' => $chipYear === $year && $chipMonth === $month])>
-                        {{ $quickMonth->format('M') }}
-                    </a>
-                @endforeach
-            </div>
+            @if (! $monthAll)
+                <div class="ziifra-time-attendance-month-chips" role="group" aria-label="{{ __('payroll_time.month') }}">
+                    @foreach ($quickMonths as $quickMonth)
+                        @php
+                            $chipYear = $quickMonth->year;
+                            $chipMonth = $quickMonth->month;
+                        @endphp
+                        <a href="{{ route('payroll-time.index', $filterParams(['year' => $chipYear, 'month' => $chipMonth])) }}"
+                            @class(['ziifra-time-attendance-month-chip', 'ziifra-time-attendance-month-chip--active' => $chipYear === $year && $chipMonth === $month])>
+                            {{ $quickMonth->format('M') }}
+                        </a>
+                    @endforeach
+                </div>
+            @endif
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
             <form method="GET" class="flex items-center gap-2" data-payroll-time-filter>
                 <input type="hidden" name="year" value="{{ $year }}">
-                <input type="hidden" name="month" value="{{ $month }}">
+                <input type="hidden" name="month" value="{{ $monthAll ? 'all' : $month }}">
                 @if ($search)
                     <input type="hidden" name="search" value="{{ $search }}">
                 @endif
                 <label for="pt-project-toolbar" class="sr-only">{{ __('payroll_time.project') }}</label>
                 <select id="pt-project-toolbar" name="project_id" class="ziifra-input !py-1.5 !text-xs" data-auto-submit>
-                    <option value="">{{ __('payroll_time.all_projects') }}</option>
+                    <option value="" @selected(! request()->filled('project_id'))>{{ __('payroll_time.all_projects') }}</option>
                     @foreach ($projects as $p)
-                        <option value="{{ $p->id }}" @selected(request('project_id') == $p->id)>{{ $p->name }}</option>
+                        <option value="{{ $p->id }}" @selected(request()->filled('project_id') && (int) request('project_id') === $p->id)>{{ $p->name }}</option>
                     @endforeach
                 </select>
             </form>
@@ -83,6 +92,8 @@
             <p class="font-medium">{{ __('payroll_time.empty') }}</p>
             <p class="mt-1 text-sm opacity-70">{{ __('payroll_time.empty_hint') }}</p>
         </div>
+    @elseif ($monthAll)
+        @include('app.payroll-time._grid-year')
     @else
         <div class="ziifra-time-attendance-grid-wrap" data-payroll-time-table>
             <table class="ziifra-time-attendance-grid">
@@ -211,10 +222,10 @@
                                 @endif
                             </td>
                             <td class="ziifra-time-attendance-grid-status whitespace-nowrap text-center text-xs">
-                                <a href="{{ route('payroll-time.employee.export.pdf', ['employee' => $emp, 'year' => $year, 'month' => $month, 'project_id' => request('project_id')]) }}"
+                                <a href="{{ route('payroll-time.employee.export.pdf', ['employee' => $emp, 'year' => $year, 'month' => $month, 'project_id' => request('project_id'), 'search' => $search ?: null]) }}"
                                     class="text-ziifra-accent-deep hover:underline">PDF</a>
                                 <span class="mx-0.5 opacity-40">·</span>
-                                <a href="{{ route('payroll-time.employee.export.excel', ['employee' => $emp, 'year' => $year, 'month' => $month, 'project_id' => request('project_id')]) }}"
+                                <a href="{{ route('payroll-time.employee.export.excel', ['employee' => $emp, 'year' => $year, 'month' => $month, 'project_id' => request('project_id'), 'search' => $search ?: null]) }}"
                                     class="text-ziifra-accent-deep hover:underline">Excel</a>
                             </td>
                         </tr>

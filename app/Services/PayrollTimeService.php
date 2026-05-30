@@ -201,12 +201,119 @@ class PayrollTimeService
     }
 
     /**
+     * Year overview: one row per employee with hours per calendar month (no daily cells).
+     *
+     * @return array{
+     *     year: int,
+     *     month: null,
+     *     month_all: true,
+     *     project: Project|null,
+     *     editable: bool,
+     *     any_hours_editable: bool,
+     *     days: list<Carbon>,
+     *     months: list<Carbon>,
+     *     rows: list<array<string, mixed>>,
+     *     totals: array<string, float>
+     * }
+     */
+    public function yearGrid(
+        Organization $organization,
+        int $year,
+        ?int $projectId = null,
+        ?string $search = null,
+    ): array {
+        $byMonth = [];
+        $project = null;
+
+        for ($m = 1; $m <= 12; $m++) {
+            $byMonth[$m] = $this->grid($organization, $year, $m, $projectId, $search);
+            $project = $project ?? $byMonth[$m]['project'];
+        }
+
+        $merged = [];
+        $totals = [
+            'hours' => 0.0,
+            'pending_hours' => 0.0,
+            'pending_employees' => 0,
+            'gross' => 0.0,
+            'trust_employee' => 0.0,
+            'trust_employer' => 0.0,
+            'net' => 0.0,
+        ];
+
+        foreach ($byMonth as $m => $grid) {
+            foreach ($grid['rows'] as $row) {
+                $id = $row['employee']->id;
+
+                if (! isset($merged[$id])) {
+                    $merged[$id] = [
+                        'employee' => $row['employee'],
+                        'monthly_hours' => array_fill(1, 12, 0.0),
+                        'total_hours' => 0.0,
+                        'pending_hours' => 0.0,
+                        'row_status' => 'empty',
+                        'hourly_rate' => $row['hourly_rate'],
+                        'currency' => $row['currency'],
+                        'is_monthly' => $row['is_monthly'],
+                        'gross' => 0.0,
+                        'trust_employee' => 0.0,
+                        'trust_employer' => 0.0,
+                        'net' => 0.0,
+                        'trust_employee_percent' => $row['trust_employee_percent'],
+                        'hours_editable' => false,
+                    ];
+                }
+
+                $merged[$id]['monthly_hours'][$m] = $row['total_hours'];
+                $merged[$id]['total_hours'] += $row['total_hours'];
+                $merged[$id]['pending_hours'] += $row['pending_hours'];
+                $merged[$id]['gross'] += $row['gross'];
+                $merged[$id]['trust_employee'] += $row['trust_employee'];
+                $merged[$id]['trust_employer'] += $row['trust_employer'];
+                $merged[$id]['net'] += $row['net'];
+
+                if ($row['row_status'] === 'pending') {
+                    $merged[$id]['row_status'] = 'pending';
+                } elseif ($row['row_status'] === 'approved' && $merged[$id]['row_status'] !== 'pending') {
+                    $merged[$id]['row_status'] = 'approved';
+                }
+            }
+
+            $totals['hours'] += $grid['totals']['hours'];
+            $totals['pending_hours'] += $grid['totals']['pending_hours'];
+            $totals['pending_employees'] = max($totals['pending_employees'], $grid['totals']['pending_employees']);
+            $totals['gross'] += $grid['totals']['gross'];
+            $totals['trust_employee'] += $grid['totals']['trust_employee'];
+            $totals['trust_employer'] += $grid['totals']['trust_employer'];
+            $totals['net'] += $grid['totals']['net'];
+        }
+
+        $months = collect(range(1, 12))
+            ->map(fn (int $m) => Carbon::create($year, $m, 1))
+            ->values()
+            ->all();
+
+        return [
+            'year' => $year,
+            'month' => null,
+            'month_all' => true,
+            'project' => $project,
+            'editable' => false,
+            'any_hours_editable' => false,
+            'days' => [],
+            'months' => $months,
+            'rows' => array_values($merged),
+            'totals' => $totals,
+        ];
+    }
+
+    /**
      * @return list<int>
      */
     public function availableYears(): array
     {
         $current = (int) now()->year;
 
-        return range($current, $current + 10);
+        return range($current - 3, $current + 1);
     }
 }
