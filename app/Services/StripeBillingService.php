@@ -50,6 +50,7 @@ class StripeBillingService
             'mode' => 'subscription',
             'customer' => $customerId,
             'customer_update' => ['address' => 'auto'],
+            'payment_method_types' => config('stripe.payment_method_types', ['card']),
             'line_items' => [[
                 'price' => $priceId,
                 'quantity' => 1,
