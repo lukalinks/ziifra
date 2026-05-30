@@ -215,6 +215,13 @@
                     </div>
                 @elseif ($plan === \App\Enums\SubscriptionPlan::Enterprise)
                     <p class="mt-4 text-xs text-ziifra-muted">{{ __('billing.enterprise_contact') }}</p>
+                @elseif ($stripeEnabled && ! filled($details['stripe_price_id'] ?? null))
+                    <p class="mt-4 text-xs text-amber-800">{{ __('billing.stripe_price_missing', ['plan' => $details['name'] ?? $plan->label()]) }}</p>
+                    @if ($isPlatformAdmin)
+                        <p class="mt-1 text-xs">
+                            <a href="{{ $adminBillingUrl }}" class="font-medium text-ziifra-accent-deep underline hover:no-underline">{{ __('billing.open_plans_billing') }}</a>
+                        </p>
+                    @endif
                 @else
                     <p class="mt-4 text-xs text-ziifra-muted">{{ __('billing.checkout_unavailable') }}</p>
                 @endif

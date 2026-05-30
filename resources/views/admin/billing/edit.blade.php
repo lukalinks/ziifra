@@ -120,7 +120,7 @@
                             <label for="plans_{{ $planKey }}_stripe_price_id" class="block text-sm font-medium text-slate-700">{{ __('admin.billing.stripe_price_id') }}</label>
                             <input id="plans_{{ $planKey }}_stripe_price_id" name="plans[{{ $planKey }}][stripe_price_id]" type="text"
                                 value="{{ old('plans.'.$planKey.'.stripe_price_id', $plan['stripe_price_id']) }}"
-                                placeholder="price_..."
+                                placeholder="{{ __('admin.billing.stripe_price_placeholder') }}"
                                 class="mt-1 block w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm shadow-sm focus:border-slate-900 focus:outline-none focus:ring-1 focus:ring-slate-900">
                             <p class="mt-1 text-xs text-slate-500">{{ __('admin.billing.stripe_price_help') }}</p>
                             @error('plans.'.$planKey.'.stripe_price_id')<p class="mt-2 text-sm text-red-600">{{ $message }}</p>@enderror

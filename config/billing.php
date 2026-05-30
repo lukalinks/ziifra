@@ -34,7 +34,7 @@ return [
             'employee_limit' => 50,
             'price_label' => '€20 / month',
             'monthly_price' => 20,
-            'stripe_price_id' => null,
+            'stripe_price_id' => env('STRIPE_PRICE_STARTER') ?: null,
             'paypal_plan_id' => null,
             'enabled_features' => [
                 PlanFeature::Employees->value,
@@ -54,7 +54,7 @@ return [
             'employee_limit' => 200,
             'price_label' => '€49.90 / month',
             'monthly_price' => 49.9,
-            'stripe_price_id' => null,
+            'stripe_price_id' => env('STRIPE_PRICE_PRO') ?: null,
             'paypal_plan_id' => null,
             'enabled_features' => PlanFeature::values(),
         ],

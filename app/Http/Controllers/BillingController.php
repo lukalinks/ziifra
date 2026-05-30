@@ -18,6 +18,8 @@ use App\Services\PayPalBillingService;
 
 use App\Services\StripeBillingService;
 
+use App\Services\StripePriceSyncService;
+
 use App\Support\CurrentOrganization;
 
 use App\Support\PayPalConfig;
@@ -77,6 +79,10 @@ class BillingController extends Controller
         );
 
 
+
+        if ($stripe->isConfigured() && ! StripeConfig::checkoutDiagnostics()['ready']) {
+            app(StripePriceSyncService::class)->syncAll();
+        }
 
         $stripeDiagnostics = StripeConfig::checkoutDiagnostics();
 

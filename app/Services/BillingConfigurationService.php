@@ -73,6 +73,10 @@ class BillingConfigurationService
         foreach ($defaults as $key => $default) {
             $override = is_array($overrides[$key] ?? null) ? $overrides[$key] : [];
             $merged[$key] = $this->mergePlan($default, $override);
+            $merged[$key]['stripe_price_id'] = $this->resolveStripePriceId(
+                $merged[$key]['stripe_price_id'],
+                $default['stripe_price_id'] ?? null,
+            );
             $merged[$key]['features'] = $this->marketingFeatures($merged[$key]['enabled_features']);
         }
 
@@ -146,6 +150,40 @@ class BillingConfigurationService
         );
 
         Cache::forget(self::CACHE_KEY);
+
+        app(StripePriceSyncService::class)->syncAll();
+    }
+
+    public function stripeProductId(string $planKey): ?string
+    {
+        $plans = $this->settings()['plans'] ?? [];
+        $id = $plans[$planKey]['stripe_product_id'] ?? null;
+
+        return is_string($id) && $id !== '' ? $id : null;
+    }
+
+    public function updateStripePriceId(string $planKey, string $priceId, ?string $productId = null): void
+    {
+        $settings = $this->settings();
+
+        if (! isset($settings['plans'][$planKey]) || ! is_array($settings['plans'][$planKey])) {
+            $settings['plans'][$planKey] = [];
+        }
+
+        $settings['plans'][$planKey]['stripe_price_id'] = $priceId;
+
+        if ($productId !== null && $productId !== '') {
+            $settings['plans'][$planKey]['stripe_product_id'] = $productId;
+        }
+
+        PlatformSetting::query()->updateOrCreate(
+            ['key' => self::SETTINGS_KEY],
+            ['value' => array_merge($settings, [
+                'updated_at' => now()->toIso8601String(),
+            ])],
+        );
+
+        Cache::forget(self::CACHE_KEY);
     }
 
     /**
@@ -194,6 +232,10 @@ class BillingConfigurationService
         $paypalPlanId = $input['paypal_plan_id'] ?? null;
         $paypalPlanId = is_string($paypalPlanId) && trim($paypalPlanId) !== '' ? trim($paypalPlanId) : null;
 
+        $existingPlan = $this->settings()['plans'][$key] ?? [];
+        $stripeProductId = $existingPlan['stripe_product_id'] ?? null;
+        $stripeProductId = is_string($stripeProductId) && $stripeProductId !== '' ? $stripeProductId : null;
+
         $enabledFeatures = $this->normalizeEnabledFeatures($plan, $input, $default);
 
         return [
@@ -203,6 +245,7 @@ class BillingConfigurationService
             'price_label' => trim((string) ($input['price_label'] ?? $default['price_label'])),
             'monthly_price' => $monthlyPrice,
             'stripe_price_id' => $stripePriceId,
+            'stripe_product_id' => $stripeProductId,
             'paypal_plan_id' => $paypalPlanId,
             'enabled_features' => $enabledFeatures,
         ];
@@ -250,6 +293,20 @@ class BillingConfigurationService
      *     enabled_features: list<string>
      * }
      */
+    /**
+     * Prefer admin/DB price ID; fall back to config default (includes STRIPE_PRICE_* from .env).
+     */
+    protected function resolveStripePriceId(?string $merged, ?string $configDefault): ?string
+    {
+        foreach ([$merged, $configDefault] as $candidate) {
+            if (is_string($candidate) && $candidate !== '') {
+                return $candidate;
+            }
+        }
+
+        return null;
+    }
+
     protected function mergePlan(array $default, array $override): array
     {
         $employeeLimit = array_key_exists('employee_limit', $override)

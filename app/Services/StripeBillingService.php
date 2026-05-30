@@ -32,6 +32,8 @@ class StripeBillingService
     {
         $this->ensureConfigured();
 
+        app(StripePriceSyncService::class)->ensurePriceForPlan($plan);
+
         $priceId = StripeConfig::priceIdFor($plan);
 
         if ($priceId === null) {
